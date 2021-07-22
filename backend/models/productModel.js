@@ -1,4 +1,6 @@
 import mongoose from 'mongoose'
+import slug from 'mongoose-slug-generator'
+import mongooseDelete from 'mongoose-delete'
 
 const reviewSchema = mongoose.Schema(
   {
@@ -64,11 +66,23 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
+    slug: {
+      type: String,
+      slug: 'name',
+      unique: true,
+    },
   },
   {
     timestamps: true,
   }
 )
+
+// Add plugins
+mongoose.plugin(slug)
+productSchema.plugin(mongooseDelete, {
+  deletedAt: true,
+  overrideMethods: 'all',
+})
 
 const Product = mongoose.model('Product', productSchema)
 
