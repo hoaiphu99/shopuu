@@ -1,9 +1,11 @@
 import asyncHandler from 'express-async-handler'
 import Order from '../models/orderModel.js'
+import User from '../models/userModel.js'
 
 // @desc    Create new order
 // @router  POST /api/orders
 // @access  private
+// @etc     before create order must to checked countInStock of product
 const addOrderItems = asyncHandler(async (req, res) => {
   const {
     orderItems,
@@ -39,10 +41,13 @@ const addOrderItems = asyncHandler(async (req, res) => {
 // @router  GET /api/orders/:id
 // @access  private
 const getOrderById = asyncHandler(async (req, res) => {
-  const order = await Order.findById(req.params.id).populate(
-    'user',
-    'name email'
-  )
+  const order = await Order.findById(req.params.id).populate([
+    {
+      path: 'orderItems',
+      populate: { path: 'product', select: 'name image price slug' },
+    },
+    { path: 'user', select: 'name email' },
+  ])
 
   if (order) {
     res.json(order)

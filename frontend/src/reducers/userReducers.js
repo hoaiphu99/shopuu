@@ -14,6 +14,7 @@ import {
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
+  USER_UPDATE_PROFILE_RESET,
   USER_LIST_REQUEST,
   USER_LIST_SUCCESS,
   USER_LIST_FAIL,
@@ -21,6 +22,7 @@ import {
   USER_DELETE_REQUEST,
   USER_DELETE_SUCCESS,
   USER_DELETE_FAIL,
+  USER_DELETE_RESET,
   USER_UPDATE_REQUEST,
   USER_UPDATE_SUCCESS,
   USER_UPDATE_FAIL,
@@ -66,7 +68,7 @@ export const userDetailsReducer = (state = { user: {} }, action) => {
     case USER_DETAILS_FAIL:
       return { loading: false, error: action.payload }
     case USER_DETAILS_RESET:
-      return { user: {} }
+      return {}
     default:
       return state
   }
@@ -77,9 +79,11 @@ export const userUpdateProfileReducer = (state = {}, action) => {
     case USER_UPDATE_PROFILE_REQUEST:
       return { loading: true }
     case USER_UPDATE_PROFILE_SUCCESS:
-      return { loading: false, success: true, userInfo: action.payload }
+      return { loading: false, success: true, user: action.payload }
     case USER_UPDATE_PROFILE_FAIL:
       return { loading: false, error: action.payload }
+    case USER_UPDATE_PROFILE_RESET:
+      return { loading: false }
     default:
       return state
   }
@@ -109,6 +113,8 @@ export const userDeleteReducer = (state = {}, action) => {
       return { loading: false, success: true }
     case USER_DELETE_FAIL:
       return { loading: false, error: action.payload }
+    case USER_DELETE_RESET:
+      return {}
 
     default:
       return state

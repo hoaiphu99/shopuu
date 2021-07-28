@@ -1,10 +1,10 @@
 import React from 'react'
-import { Alert } from 'react-bootstrap'
+import { Alert } from 'antd'
 
-const Message = ({ variant, children }) => {
-  return <Alert variant={variant}>{children}</Alert>
+const Message = ({ message, type }) => {
+  return <Alert message={message} type={type} />
 }
 
-Message.defaultProps = { variant: 'info' }
+Message.defaultProps = { type: 'info' }
 
 export default Message

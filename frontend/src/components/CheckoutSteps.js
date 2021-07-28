@@ -1,48 +1,49 @@
 import React from 'react'
-import { Nav } from 'react-bootstrap'
-import { LinkContainer } from 'react-router-bootstrap'
+import { Steps } from 'antd'
+import {
+  UserOutlined,
+  SolutionOutlined,
+  DollarCircleOutlined,
+  WalletOutlined,
+} from '@ant-design/icons'
 
 const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
+  const { Step } = Steps
   return (
-    <Nav className='justify-content-center mb-4'>
-      <Nav.Item>
-        {step1 ? (
-          <LinkContainer to='/login'>
-            <Nav.Link>Sign In</Nav.Link>
-          </LinkContainer>
-        ) : (
-          <Nav.Link disabled>Sign In</Nav.Link>
-        )}
-      </Nav.Item>
-
-      <Nav.Item>
-        {step2 ? (
-          <LinkContainer to='/shipping'>
-            <Nav.Link>Shipping</Nav.Link>
-          </LinkContainer>
-        ) : (
-          <Nav.Link disabled>Shipping</Nav.Link>
-        )}
-      </Nav.Item>
-      <Nav.Item>
-        {step3 ? (
-          <LinkContainer to='/payment'>
-            <Nav.Link>Payment</Nav.Link>
-          </LinkContainer>
-        ) : (
-          <Nav.Link disabled>Payment</Nav.Link>
-        )}
-      </Nav.Item>
-      <Nav.Item>
-        {step4 ? (
-          <LinkContainer to='/placeorder'>
-            <Nav.Link>Place Order</Nav.Link>
-          </LinkContainer>
-        ) : (
-          <Nav.Link disabled>Place Order</Nav.Link>
-        )}
-      </Nav.Item>
-    </Nav>
+    <Steps>
+      {step1 ? (
+        <Step status='finish' title='Login' icon={<UserOutlined />} />
+      ) : (
+        <Step status='wait' title='Login' icon={<UserOutlined />} />
+      )}
+      {step2 ? (
+        <Step
+          status='finish'
+          title='Shipping Address'
+          icon={<SolutionOutlined />}
+        />
+      ) : (
+        <Step
+          status='wait'
+          title='Shipping Address'
+          icon={<SolutionOutlined />}
+        />
+      )}
+      {step3 ? (
+        <Step
+          status='finish'
+          title='Payment Method'
+          icon={<WalletOutlined />}
+        />
+      ) : (
+        <Step status='wait' title='Payment Method' icon={<WalletOutlined />} />
+      )}
+      {step4 ? (
+        <Step status='finish' title='Pay' icon={<DollarCircleOutlined />} />
+      ) : (
+        <Step status='wait' title='Pay' icon={<DollarCircleOutlined />} />
+      )}
+    </Steps>
   )
 }
 

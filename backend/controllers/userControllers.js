@@ -8,7 +8,10 @@ import generateToken from '../utils/generateToken.js'
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body
 
-  const user = await User.findOne({ email: email })
+  const user = await User.findOne({ email: email }).populate({
+    path: 'cartItems',
+    populate: { path: 'product', select: 'name image slug price countInStock' },
+  })
 
   if (user && (await user.matchPassword(password))) {
     res.json({
@@ -28,13 +31,19 @@ const authUser = asyncHandler(async (req, res) => {
 // @router  GET /api/users/profile
 // @access  private
 const getUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id)
+  const user = await User.findById(req.user._id).populate({
+    path: 'cartItems',
+    populate: { path: 'product', select: 'name image' },
+  })
 
   if (user) {
     res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      phone: user.phone,
+      shippingAddress: user.shippingAddress,
+      cartItems: user.cartItems,
       isAdmin: user.isAdmin,
     })
   } else {
@@ -47,7 +56,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @router  GET /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body
+  const { name, email, password, phone, shippingAddress } = req.body
 
   const userExist = await User.findOne({ email })
 
@@ -56,13 +65,21 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error('User already exists')
   }
 
-  const user = await User.create({ name, email, password })
+  const user = await User.create({
+    name,
+    email,
+    password,
+    phone,
+    shippingAddress,
+  })
 
   if (user) {
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      phone: user.phone,
+      shippingAddress: user.shippingAddress,
       isAdmin: user.isAdmin,
       token: generateToken(user._id),
     })
@@ -76,14 +93,14 @@ const registerUser = asyncHandler(async (req, res) => {
 // @router  PUT /api/users/profile
 // @access  private
 const updateUserProfile = asyncHandler(async (req, res) => {
+  const { name, email, phone, shippingAddress } = req.body
   const user = await User.findById(req.user._id)
 
   if (user) {
-    user.name = req.body.name || user.name
-    user.email = req.body.email || user.email
-    if (req.body.password) {
-      user.password = req.body.password
-    }
+    user.name = name || user.name
+    user.email = email || user.email
+    user.phone = phone || user.phone
+    user.shippingAddress = shippingAddress || user.shippingAddress
 
     const updateUser = await user.save()
 
@@ -91,6 +108,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       _id: updateUser._id,
       name: updateUser.name,
       email: updateUser.email,
+      phone: updateUser.phone,
+      shippingAddress: updateUser.shippingAddress,
       isAdmin: updateUser.isAdmin,
       token: generateToken(updateUser._id),
     })
@@ -117,7 +136,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 
   if (user) {
     await user.remove()
-    res.json({ message: 'User removed' })
+    res.json({ message: 'User deleted' })
   } else {
     res.status(404)
     throw new Error('User not found')

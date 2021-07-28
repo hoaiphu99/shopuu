@@ -1,4 +1,6 @@
 import {
+  CART_MY,
+  CART_MY_RESET,
   CART_ADD_ITEM,
   CART_REMOVE_ITEM,
   CART_SAVE_SHIPPING_ADDRESS,
@@ -10,6 +12,18 @@ export const cartReducer = (
   action
 ) => {
   switch (action.type) {
+    case CART_MY:
+      return {
+        cartItems: action.payload,
+      }
+      break
+    case CART_MY_RESET:
+      //localStorage.removeItem('cartItems')
+      return {
+        cartItems: [],
+        shippingAddress: {},
+      }
+      break
     case CART_ADD_ITEM:
       const item = action.payload
 

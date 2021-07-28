@@ -70,12 +70,11 @@ export const listTopProducts = () => async (dispatch) => {
   }
 }
 
-export const detailsProduct = (id) => async (dispatch) => {
+export const detailsProduct = (slug) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_DETAILS_REQUEST })
 
-    const { data } = await axios.get(`/api/products/${id}`)
-
+    const { data } = await axios.get(`/api/products/${slug}/get`)
     dispatch({
       type: PRODUCT_DETAILS_SUCCESS,
       payload: data,

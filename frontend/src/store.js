@@ -28,6 +28,18 @@ import {
   orderListMyReducer,
   orderListReducer,
 } from './reducers/orderReducers'
+import {
+  categoryListReducer,
+  categoryCreateReducer,
+  categoryUpdateReducer,
+  categoryDeleteReducer,
+} from './reducers/categoryReducers'
+import {
+  brandListReducer,
+  brandCreateReducer,
+  brandUpdateReducer,
+  brandDeleteReducer,
+} from './reducers/brandReducers'
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -37,7 +49,9 @@ const reducer = combineReducers({
   productDelete: productDeleteReducer,
   productReviewCreate: productReviewCreateReducer,
   productTopRated: productTopRatedReducer,
+
   cart: cartReducer,
+
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   userDetails: userDetailsReducer,
@@ -45,30 +59,45 @@ const reducer = combineReducers({
   userList: userListReducer,
   userDelete: userDeleteReducer,
   userUpdate: userUpdateReducer,
+
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
   orderPay: orderPayReducer,
   orderDeliver: orderDeliverReducer,
   orderListMy: orderListMyReducer,
   orderList: orderListReducer,
-})
 
-const cartItemsFromStorage = localStorage.getItem('cartItems')
-  ? JSON.parse(localStorage.getItem('cartItems'))
-  : []
+  categoryList: categoryListReducer,
+  categoryCreate: categoryCreateReducer,
+  categoryUpdate: categoryUpdateReducer,
+  categoryDelete: categoryDeleteReducer,
+
+  brandList: brandListReducer,
+  brandCreate: brandCreateReducer,
+  brandUpdate: brandUpdateReducer,
+  brandDelete: brandDeleteReducer,
+})
 
 const userInfoFromStorage = localStorage.getItem('userInfo')
   ? JSON.parse(localStorage.getItem('userInfo'))
   : null
 
-const shippingAddressFromStorage = localStorage.getItem('shippingAddress')
-  ? JSON.parse(localStorage.getItem('shippingAddress'))
-  : {}
+const cartItemsFromStorage =
+  localStorage.getItem('userInfo') &&
+  localStorage.getItem(
+    `cartItems@${JSON.parse(localStorage.getItem('userInfo'))._id}`
+  )
+    ? JSON.parse(
+        localStorage.getItem(
+          `cartItems@${JSON.parse(localStorage.getItem('userInfo'))._id}`
+        )
+      )
+    : []
 
 const initialState = {
   cart: {
     cartItems: cartItemsFromStorage,
-    shippingAddress: shippingAddressFromStorage,
+    shippingAddress: {},
   },
   userLogin: { userInfo: userInfoFromStorage },
 }

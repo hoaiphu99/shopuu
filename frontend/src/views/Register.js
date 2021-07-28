@@ -1,19 +1,31 @@
 import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import { Link } from 'react-router-dom'
-import { Form, Button, Row, Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import Message from '../components/Message'
-import Loader from '../components/Loader'
-import FormContainer from '../components/FormContainer'
+import { formItemLayout, tailFormItemLayout } from '../constants/formConstants'
+
 import { register } from '../actions/userActions'
 import { USER_REGISTER_RESET } from '../constants/userConstants'
+import {
+  Form,
+  Input,
+  Select,
+  Row,
+  Col,
+  Checkbox,
+  Button,
+  Typography,
+  message,
+} from 'antd'
 
 const Register = ({ location, history }) => {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [message, setMessage] = useState(null)
+  const [provinces, setProvinces] = useState([])
+  const [districts, setDistricts] = useState([])
+  const [wards, setWards] = useState([])
+
+  const [form] = Form.useForm()
+  const { Option } = Select
+  const { Title } = Typography
 
   const dispatch = useDispatch()
 
@@ -22,79 +34,233 @@ const Register = ({ location, history }) => {
 
   const redirect = location.search ? location.search.split('=')[1] : ''
 
+  const key = 'register'
+
   useEffect(() => {
+    const getProvinces = async () => {
+      const { data } = await axios.get('https://vapi.vnappmob.com/api/province')
+      setProvinces(data.results)
+    }
+    getProvinces()
+
     if (userInfo) {
+      message.success({ content: 'Register success!', key, duration: 2 })
       dispatch({ type: USER_REGISTER_RESET })
-      history.push(redirect)
+      setTimeout(() => {
+        history.push(redirect)
+      }, 2000)
     }
   }, [history, userInfo, redirect])
 
-  const submitHandler = (e) => {
-    e.preventDefault()
-    if (password !== confirmPassword) {
-      setMessage('Password do not match')
+  const getDistricts = async (city) => {
+    try {
+      const { data } = await axios.get(
+        `https://vapi.vnappmob.com/api/province/district/${city}`
+      )
+      setDistricts(data.results)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getWards = async (district) => {
+    try {
+      const { data } = await axios.get(
+        `https://vapi.vnappmob.com/api/province/ward/${district}`
+      )
+      setWards(data.results)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const onValuesChange = (changedValues) => {
+    if (changedValues.city) getDistricts(changedValues.city)
+    if (changedValues.district) getWards(changedValues.district)
+  }
+
+  const submitHandler = (values) => {
+    const city = provinces.find((item) => item.province_id === values.city)
+    const district = districts.find(
+      (item) => item.district_id === values.district
+    )
+    const ward = wards.find((item) => item.ward_id === values.ward)
+
+    const data = {
+      email: values.email,
+      password: values.password,
+      name: values.name,
+      phone: values.phone,
+      shippingAddress: {
+        address: values.address,
+        city: city.province_name,
+        district: district.district_name,
+        ward: ward.ward_name,
+      },
+    }
+
+    if (data.password.length < 6) {
     } else {
-      dispatch(register(name, email, password))
+      dispatch(register(data))
     }
   }
 
   return (
-    <FormContainer>
-      <h1>Sign Up</h1>
-      {message && <Message variant='danger'>{message}</Message>}
-      {error && <Message variant='danger'>{error}</Message>}
-      {loading && <Loader />}
-      <Form onSubmit={submitHandler}>
-        <Form.Group controlId='name'>
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            type='text'
-            placeholder='Lam Hoai Phu'
-            value={name}
-            onChange={(e) => setName(e.target.value)}></Form.Control>
-        </Form.Group>
-        <Form.Group controlId='email'>
-          <Form.Label className='mt-4'>Email Address</Form.Label>
-          <Form.Control
-            type='email'
-            placeholder='example@example.com'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}></Form.Control>
-        </Form.Group>
-        <Form.Group controlId='password'>
-          <Form.Label className='mt-4'>Password</Form.Label>
-          <Form.Control
-            type='password'
-            placeholder='Enter password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}></Form.Control>
-        </Form.Group>
-        <Form.Group controlId='confirmPassword'>
-          <Form.Label className='mt-4'>Confirm Password</Form.Label>
-          <Form.Control
-            type='password'
-            placeholder='Confirm Password'
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}></Form.Control>
-        </Form.Group>
-
-        <Button
-          type='submit'
-          variant='primary'
-          className='btn btn-success mt-2'>
-          Register
-        </Button>
-      </Form>
-
-      <Row className='py-3'>
-        <Col>
-          Have an Account?{' '}
-          <Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>
-            Login
-          </Link>
+    <>
+      <Row justify='center'>
+        <Col span={3}>
+          <Title>Sign Up</Title>
         </Col>
       </Row>
-    </FormContainer>
+      <Row justify='center'>
+        {loading && message.loading('Register...', key)}
+        {error && message.error({ content: `${error}`, key, duration: 2 })}
+        <Col span={8} pull={2}>
+          <Form
+            onValuesChange={onValuesChange}
+            {...formItemLayout}
+            form={form}
+            name='register'
+            onFinish={submitHandler}
+            scrollToFirstError>
+            <Form.Item
+              name='email'
+              label='E-mail'
+              rules={[
+                {
+                  type: 'email',
+                  message: 'The input is not valid E-mail!',
+                },
+                {
+                  required: true,
+                  message: 'Please input your E-mail!',
+                },
+              ]}>
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              name='password'
+              label='Password'
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your password!',
+                },
+              ]}
+              hasFeedback>
+              <Input.Password />
+            </Form.Item>
+
+            <Form.Item
+              name='confirm'
+              label='Confirm Password'
+              dependencies={['password']}
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: 'Please confirm your password!',
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve()
+                    }
+                    return Promise.reject(
+                      new Error(
+                        'The two passwords that you entered do not match!'
+                      )
+                    )
+                  },
+                }),
+              ]}>
+              <Input.Password />
+            </Form.Item>
+
+            <Form.Item
+              name='name'
+              label='Name'
+              tooltip='What do you want others to call you?'
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your name!',
+                  whitespace: true,
+                },
+              ]}>
+              <Input />
+            </Form.Item>
+
+            <Form.Item name='phone' label='Phone Number'>
+              <Input style={{ width: '100%' }} />
+            </Form.Item>
+
+            <Form.Item
+              name='address'
+              label='Address'
+              tooltip='Your address for delivery orders'>
+              <Input />
+            </Form.Item>
+
+            <Form.Item name='city' label='City'>
+              <Select placeholder='select your city'>
+                {provinces &&
+                  provinces.map((p) => (
+                    <Option key={p.province_id} value={p.province_id}>
+                      {p.province_name}
+                    </Option>
+                  ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item name='district' label='District'>
+              <Select placeholder='select your district'>
+                {districts &&
+                  districts.map((d) => (
+                    <Option key={d.district_id} value={d.district_id}>
+                      {d.district_name}
+                    </Option>
+                  ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item name='ward' label='Ward'>
+              <Select placeholder='select your ward'>
+                {wards &&
+                  wards.map((w) => (
+                    <Option key={w.ward_id} value={w.ward_id}>
+                      {w.ward_name}
+                    </Option>
+                  ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              name='agreement'
+              valuePropName='checked'
+              rules={[
+                {
+                  validator: (_, value) =>
+                    value
+                      ? Promise.resolve()
+                      : Promise.reject(new Error('Should accept agreement')),
+                },
+              ]}
+              {...tailFormItemLayout}>
+              <Checkbox>
+                I have read the <a href=''>agreement</a>
+              </Checkbox>
+            </Form.Item>
+            <Form.Item {...tailFormItemLayout}>
+              <Button type='primary' htmlType='submit'>
+                Register
+              </Button>
+            </Form.Item>
+          </Form>
+        </Col>
+      </Row>
+    </>
   )
 }
 

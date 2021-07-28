@@ -3,6 +3,7 @@ import {
   ORDER_CREATE_REQUEST,
   ORDER_CREATE_SUCCESS,
   ORDER_CREATE_FAIL,
+  ORDER_CREATE_RESET,
   ORDER_DETAILS_REQUEST,
   ORDER_DETAILS_SUCCESS,
   ORDER_DETAILS_FAIL,
@@ -43,6 +44,10 @@ export const createOrder = (order) => async (dispatch, getState) => {
     dispatch({
       type: ORDER_CREATE_SUCCESS,
       payload: data,
+    })
+    
+    dispatch({
+      type: ORDER_CREATE_RESET,
     })
 
     localStorage.removeItem('cartItems')

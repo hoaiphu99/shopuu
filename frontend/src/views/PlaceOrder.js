@@ -1,18 +1,32 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Row,
-  Col,
-  ListGroup,
-  Image,
-  Card,
-  Button,
-  ListGroupItem,
-} from 'react-bootstrap'
+// import {
+//   Row,
+//   Col,
+//   ListGroup,
+//   Image,
+//   Card,
+//   Button,
+//   ListGroupItem,
+// } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import CheckoutSteps from '../components/CheckoutSteps'
 import Message from '../components/Message'
 import { createOrder } from '../actions/orderActions'
+import { removeAllFromCart } from '../actions/cartActions'
+import { getUserDetails } from '../actions/userActions'
+import {
+  Row,
+  Col,
+  Descriptions,
+  Card,
+  Badge,
+  Button,
+  message,
+  Divider,
+  Typography,
+  Image,
+} from 'antd'
 
 const PlaceOrder = ({ history }) => {
   const dispatch = useDispatch()
@@ -33,18 +47,31 @@ const PlaceOrder = ({ history }) => {
   const orderCreate = useSelector((state) => state.orderCreate)
   const { order, success, error } = orderCreate
 
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+
+  const userDetails = useSelector((state) => state.userDetails)
+  const { loading, user } = userDetails
+
   useEffect(() => {
+    if (!userInfo) {
+      history.push('/login')
+    } else {
+      dispatch(getUserDetails('profile'))
+    }
     if (success) {
+      dispatch(removeAllFromCart())
       history.push(`/order/${order._id}`)
     }
     // eslint-disable-next-line
   }, [history, success])
 
   const placeOrderHandler = () => {
+    console.log(user.shippingAddress)
     dispatch(
       createOrder({
         orderItems: cart.cartItems,
-        shippingAddress: cart.shippingAddress,
+        shippingAddress: user.shippingAddress,
         paymentMethod: cart.paymentMethod,
         itemsPrice: cart.itemsPrice,
         shippingPrice: cart.shippingPrice,
@@ -55,17 +82,76 @@ const PlaceOrder = ({ history }) => {
 
   return (
     <>
-      <CheckoutSteps step1 step2 step3 step4 />
       <Row>
-        <Col md={8}>
-          <ListGroup variant='flush'>
+        <Col span={12} offset={6}>
+          <CheckoutSteps step1 step2 step3 step4 />
+          <Divider />
+        </Col>
+      </Row>
+      <Row gutter={16}>
+        <Col span={16}>
+          <Divider orientation='left'>Place Order</Divider>
+          <Descriptions layout='vertical' bordered>
+            <Descriptions.Item label='Address' span={3}>
+              {user && user.shippingAddress && user.shippingAddress.address},{' '}
+              {user && user.shippingAddress && user.shippingAddress.city},{' '}
+              {user && user.shippingAddress && user.shippingAddress.district},{' '}
+              {user && user.shippingAddress && user.shippingAddress.ward}
+            </Descriptions.Item>
+            <Descriptions.Item label='Payment Method'>
+              {cart.paymentMethod}
+            </Descriptions.Item>
+            <Descriptions.Item label='Items Price'>
+              ${cart.itemsPrice}
+            </Descriptions.Item>
+            <Descriptions.Item label='Shipping Price'>
+              ${cart.shippingPrice}
+            </Descriptions.Item>
+
+            <Descriptions.Item label='Order Items'>
+              <Row justify='start' align='top'>
+                {cart.cartItems.length === 0 ? (
+                  <Message message='Your cart is empty' />
+                ) : (
+                  cart.cartItems.map((item) => (
+                    <>
+                      <Col span={6}>
+                        <Image src={item.image} alt={item.name} width={150} />
+                      </Col>
+                      <Col span={8}>
+                        <Typography.Text>
+                          <Link to={`/product/${item.slug}`} target='_blank'>
+                            {' '}
+                            {item.name}
+                          </Link>
+                        </Typography.Text>
+                      </Col>
+                      <Col span={3}>
+                        <Typography.Title level={5}>Price</Typography.Title>
+                        <Typography.Text>${item.price}</Typography.Text>
+                      </Col>
+                      <Col span={4}>
+                        <Typography.Title level={5}>Total</Typography.Title>
+                        <Typography.Text>
+                          ${item.qty * item.price}
+                        </Typography.Text>
+                      </Col>
+                      <Divider />
+                    </>
+                  ))
+                )}
+              </Row>
+            </Descriptions.Item>
+          </Descriptions>
+          {/* <ListGroup variant='flush'>
             <ListGroup.Item>
               <h2>Shipping</h2>
               <p>
                 <strong>Address: </strong>
-                {cart.shippingAddress.address}, {cart.shippingAddress.city},{' '}
-                {cart.shippingAddress.postalCode},{' '}
-                {cart.shippingAddress.country}
+                {user.shippingAddress && user.shippingAddress.address},{' '}
+                {user.shippingAddress && user.shippingAddress.city},{' '}
+                {user.shippingAddress && user.shippingAddress.district},{' '}
+                {user.shippingAddress && user.shippingAddress.ward}
               </p>
             </ListGroup.Item>
 
@@ -106,11 +192,28 @@ const PlaceOrder = ({ history }) => {
                 </ListGroup>
               )}
             </ListGroup.Item>
-          </ListGroup>
+          </ListGroup> */}
         </Col>
 
-        <Col md={4}>
+        <Col span={8}>
+          <Divider orientation='left'>Order Summary</Divider>
           <Card>
+            <Typography.Title level={4}>
+              Total Price: ${cart.totalPrice}
+            </Typography.Title>
+
+            <Button
+              size='large'
+              type='primary'
+              shape='round'
+              block
+              onClick={placeOrderHandler}
+              disabled={cart.cartItems.length === 0}>
+              Place Order
+            </Button>
+          </Card>
+
+          {/* <Card>
             <ListGroup variant='flush'>
               <ListGroup.Item>
                 <h2>Order Summary</h2>
@@ -148,7 +251,7 @@ const PlaceOrder = ({ history }) => {
                 </Row>
               </ListGroup.Item>
             </ListGroup>
-          </Card>
+          </Card> */}
         </Col>
       </Row>
     </>

@@ -1,9 +1,20 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Row, Col, ListGroup, Image, Form, Button, Card } from 'react-bootstrap'
+//import { Image } from 'react-bootstrap'
 import Message from '../components/Message'
 import { addToCart, removeFromCart } from '../actions/cartActions'
+import {
+  Row,
+  Col,
+  Typography,
+  Divider,
+  Image,
+  Button,
+  InputNumber,
+  Card,
+} from 'antd'
+import { CloseOutlined } from '@ant-design/icons'
 
 const Cart = ({ match, location, history }) => {
   const productId = match.params.id
@@ -11,14 +22,19 @@ const Cart = ({ match, location, history }) => {
 
   const dispatch = useDispatch()
 
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+
   const cart = useSelector((state) => state.cart)
   const { cartItems } = cart
 
-  console.log(cartItems)
-
   useEffect(() => {
-    if (productId) {
-      dispatch(addToCart(productId, qty))
+    if (userInfo) {
+      if (productId) {
+        dispatch(addToCart(productId, qty))
+      }
+    } else if (productId) {
+      history.push(`/login?redirect=/cart/${productId}?qty=${qty}`)
     }
   }, [dispatch, productId, qty])
 
@@ -27,81 +43,84 @@ const Cart = ({ match, location, history }) => {
   }
 
   const checkoutHandler = () => {
-    history.push(`/login?redirect=shipping`)
+    history.push(`/shipping`)
   }
 
   return (
-    <Row>
-      <Col md={8}>
-        <h1>Shopping Cart</h1>
+    <Row gutter={24}>
+      <Col span={16}>
+        <Divider orientation='left'>Shopping Cart</Divider>
         {cartItems.length === 0 ? (
-          <Message>
-            Your cart is empty <Link to='/'>Go back</Link>
-          </Message>
+          <Message message={`Your cart is empty`} />
         ) : (
-          <ListGroup variant='flush'>
-            {cartItems.map((item) => (
-              <ListGroup.Item key={item.product}>
-                <Row>
-                  <Col md={2}>
-                    <Image src={item.image} alt={item.name} fluid rounded />{' '}
+          <>
+            <Row gutter={16} justify='center' align='top'>
+              {cartItems.map((item) => (
+                <>
+                  <Col span={5}>
+                    <Image src={item.image} alt={item.name} width={150} />
                   </Col>
-                  <Col md={3}>
-                    <Link to={`product/${item.product}`}>{item.name}</Link>
+                  <Col span={6}>
+                    <Typography.Text>
+                      <Link to={`/product/${item.slug}`}> {item.name}</Link>
+                    </Typography.Text>
                   </Col>
-                  <Col md={2}>${item.price}</Col>
-                  <Col md={2}>
-                    <Form.Control
-                      as='select'
-                      value={item.qty}
-                      onChange={(e) =>
-                        dispatch(
-                          addToCart(item.product, Number(e.target.value))
-                        )
-                      }>
-                      {[...Array(item.countInStock).keys()].map((x) => (
-                        <option key={x + 1} value={x + 1}>
-                          {x + 1}
-                        </option>
-                      ))}
-                    </Form.Control>
+                  <Col span={3}>
+                    <Typography.Title level={5}>Price</Typography.Title>
+                    <Typography.Text>${item.price}</Typography.Text>
                   </Col>
-                  <Col md={2}>
+                  <Col span={4}>
+                    <Typography.Title level={5}>Quantity</Typography.Title>
+                    <InputNumber
+                      min={1}
+                      max={item.countInStock}
+                      defaultValue={item.qty}
+                      onChange={(value) =>
+                        dispatch(addToCart(item.product, value))
+                      }
+                    />
+                  </Col>
+                  <Col span={4}>
+                    <Typography.Title level={5}>Total</Typography.Title>
+                    <Typography.Text>${item.qty * item.price}</Typography.Text>
+                  </Col>
+                  <Col span={2}>
                     <Button
-                      type='button'
-                      variant='light'
-                      onClick={() => removeFromCartHandler(item.product)}>
-                      <i className='fas fa-trash'></i>
-                    </Button>
+                      type='danger'
+                      shape='circle'
+                      size='small'
+                      icon={<CloseOutlined />}
+                      onClick={() => removeFromCartHandler(item.product)}
+                    />
                   </Col>
-                </Row>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
+                  <Divider />
+                </>
+              ))}
+            </Row>
+          </>
         )}
       </Col>
-      <Col md={4}>
-        <Card>
-          <ListGroup variant='flush'>
-            <ListGroup.Item>
-              <h2>
-                Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)})
-                items
-              </h2>
-              ${cartItems.reduce((acc, item) => acc + item.qty * item.price, 0)}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <Row>
-                <Button
-                  onClick={checkoutHandler}
-                  type='button'
-                  className='btn btn-dark btn btn-lg'
-                  disabled={cartItems.length === 0}>
-                  Process to checkout
-                </Button>
-              </Row>
-            </ListGroup.Item>
-          </ListGroup>
+      <Col span={8}>
+        <Divider orientation='left'>Checkout</Divider>
+        <Card
+          headStyle={{ fontSize: '25px' }}
+          title={`Subtotal (${cartItems.reduce(
+            (acc, item) => acc + item.qty,
+            0
+          )}) items`}>
+          <Typography.Title level={4}>
+            ${cartItems.reduce((acc, item) => acc + item.qty * item.price, 0)}
+          </Typography.Title>
+          <Divider />
+          <Button
+            type='primary'
+            shape='round'
+            size='large'
+            block
+            onClick={checkoutHandler}
+            disabled={cartItems.length === 0}>
+            Process to checkout
+          </Button>
         </Card>
       </Col>
     </Row>

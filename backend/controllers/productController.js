@@ -25,7 +25,7 @@ const getProducts = asyncHandler(async (req, res) => {
   res.json({ products, page, pages: Math.ceil(count / pageSize) })
 })
 
-// @desc    Fetch single product
+// @desc    Get product by id
 // @router  GET /api/products/:id
 // @access  public
 const getProductById = asyncHandler(async (req, res) => {
@@ -39,6 +39,19 @@ const getProductById = asyncHandler(async (req, res) => {
   }
 })
 
+// @desc    Get product by slug
+// @router  GET /api/products/:slug
+// @access  public
+const getProductBySlug = asyncHandler(async (req, res) => {
+  const product = await Product.findOne({ slug: req.params.slug })
+
+  if (product) {
+    res.json(product)
+  } else {
+    res.status(404)
+    throw new Error('Product not found')
+  }
+})
 // @desc    Delete product
 // @router  DELETE /api/products/:id
 // @access  private/admin
@@ -46,7 +59,22 @@ const deleteProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id)
 
   if (product) {
-    await product.remove()
+    await product.delete()
+    res.status(200).json({ message: 'Product deleted' })
+  } else {
+    res.status(404)
+    throw new Error('Product not found')
+  }
+})
+
+// @desc    Force Delete product
+// @router  DELETE /api/products/:id/force
+// @access  private/admin
+const forceDeleteProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findOneWithDeleted({ _id: req.params.id })
+
+  if (product) {
+    await product.deleteOne()
     res.json({ message: 'Product removed' })
   } else {
     res.status(404)
@@ -151,9 +179,11 @@ const getTopProducts = asyncHandler(async (req, res) => {
 export {
   getProducts,
   getProductById,
+  getProductBySlug,
   createProduct,
   updateProduct,
   deleteProduct,
+  forceDeleteProduct,
   createProductReview,
   getTopProducts,
 }

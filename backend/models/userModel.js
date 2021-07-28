@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
+import mongooseDelete from 'mongoose-delete'
 
 const userSchema = mongoose.Schema(
   {
@@ -16,6 +17,25 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    phone: {
+      type: String,
+    },
+    shippingAddress: {
+      address: { type: String, required: true, default: ' ' },
+      city: { type: String, required: true, default: ' ' },
+      district: { type: String, required: true, default: ' ' },
+      ward: { type: String, required: true, default: ' ' },
+    },
+    cartItems: [
+      {
+        qty: { type: Number, required: true },
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: 'Product',
+        },
+      },
+    ],
     isAdmin: {
       type: Boolean,
       required: true,
@@ -26,6 +46,11 @@ const userSchema = mongoose.Schema(
     timestamps: true,
   }
 )
+
+userSchema.plugin(mongooseDelete, {
+  deletedAt: true,
+  overrideMethods: 'all',
+})
 
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password)
