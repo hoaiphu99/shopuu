@@ -7,7 +7,7 @@ import slugify from 'slugify'
 // @router  GET /api/categories
 // @access  public
 const getCategories = asyncHandler(async (req, res) => {
-  const categories = await Category.find({})
+  const categories = await Category.find({}).sort({ createdAt: 'desc' })
 
   res.json(categories)
 })

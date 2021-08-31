@@ -18,6 +18,7 @@ import { CloseOutlined } from '@ant-design/icons'
 
 const Cart = ({ match, location, history }) => {
   const productId = match.params.id
+
   const qty = location.search ? Number(location.search.split('=')[1]) : 1
 
   const dispatch = useDispatch()
@@ -36,7 +37,7 @@ const Cart = ({ match, location, history }) => {
     } else if (productId) {
       history.push(`/login?redirect=/cart/${productId}?qty=${qty}`)
     }
-  }, [dispatch, productId, qty])
+  }, [dispatch, productId, qty, userInfo])
 
   const removeFromCartHandler = (id) => {
     dispatch(removeFromCart(id))

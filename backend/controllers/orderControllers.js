@@ -191,7 +191,9 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
 // @router  GET /api/orders/myorders
 // @access  private
 const getMyOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({ user: req.user._id })
+  const orders = await Order.find({ user: req.user._id }).sort({
+    createdAt: 'desc',
+  })
 
   res.json(orders)
 })
@@ -200,7 +202,9 @@ const getMyOrders = asyncHandler(async (req, res) => {
 // @router  GET /api/orders
 // @access  private/admin
 const getOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({}).populate('user', 'id name')
+  const orders = await Order.find({})
+    .populate('user', 'id name')
+    .sort('-createdAt')
 
   res.json(orders)
 })

@@ -7,7 +7,7 @@ import slugify from 'slugify'
 // @router  GET /api/brands
 // @access  public
 const getBrands = asyncHandler(async (req, res) => {
-  const brands = await Brand.find({})
+  const brands = await Brand.find({}).sort({ createdAt: 'desc' })
 
   res.json(brands)
 })

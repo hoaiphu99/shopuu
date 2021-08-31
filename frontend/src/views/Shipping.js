@@ -130,7 +130,13 @@ const Shipping = ({ history }) => {
                   <Form.Item
                     name='phone'
                     initialValue={user.phone}
-                    label='Số điện thoại'>
+                    label='Số điện thoại'
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Vui lòng nhập số điện thoại!',
+                      },
+                    ]}>
                     <Input style={{ width: '100%' }} />
                   </Form.Item>
 
@@ -138,14 +144,26 @@ const Shipping = ({ history }) => {
                     name='address'
                     initialValue={user.shippingAddress.address}
                     label='Địa chỉ'
-                    tooltip='Địa chỉ để chúng tôi giao hàng cho bạn'>
+                    tooltip='Địa chỉ để chúng tôi giao hàng cho bạn'
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Vui lòng nhập địa chỉ!',
+                      },
+                    ]}>
                     <Input />
                   </Form.Item>
 
                   <Form.Item
                     name='city'
                     initialValue={user.shippingAddress.city}
-                    label='Tỉnh/Thành phố'>
+                    label='Tỉnh/Thành phố'
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Vui lòng chọn Tỉnh/Thành phố!',
+                      },
+                    ]}>
                     <Select placeholder='Chọn Tỉnh/Thành phố'>
                       {provinces &&
                         provinces.map((p) => (
@@ -159,7 +177,13 @@ const Shipping = ({ history }) => {
                   <Form.Item
                     name='district'
                     initialValue={user.shippingAddress.district}
-                    label='Quận/Huyện'>
+                    label='Quận/Huyện'
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Vui lòng chọn quận huyện!',
+                      },
+                    ]}>
                     <Select placeholder='Chọn Quận/Huyện'>
                       {districts &&
                         districts.map((d) => (
@@ -173,7 +197,13 @@ const Shipping = ({ history }) => {
                   <Form.Item
                     name='ward'
                     initialValue={user.shippingAddress.ward}
-                    label='Xã/Phường'>
+                    label='Xã/Phường'
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Vui lòng chọn Xã/Phường!',
+                      },
+                    ]}>
                     <Select placeholder='Chọn Xã/Phường'>
                       {wards &&
                         wards.map((w) => (

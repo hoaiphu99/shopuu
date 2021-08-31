@@ -43,6 +43,7 @@ const Order = ({ match, history }) => {
 
   const desc = ['Rất tệ', 'Tệ', 'Bình thường', 'Tốt', 'Rất tuyệt vời']
   const { confirm } = Modal
+  const [productId, setProductId] = useState('')
   const [rating, setRating] = useState(0)
   const [sdkReady, setSdkReady] = useState(false)
   const [isModalVisible, setIsModalVisible] = useState(false)
@@ -176,14 +177,14 @@ const Order = ({ match, history }) => {
       <Row gutter={16}>
         <Col span={16}>
           <Divider orientation='left'>Đơn hàng: #{order && order._id}</Divider>
-
-          <Button
-            onClick={history.goBack}
-            type='primary'
-            shape='round'
-            style={{ marginBottom: '5px' }}>
-            Quay lại danh sách đơn hàng
-          </Button>
+          <Link to='/profile/orders'>
+            <Button
+              type='primary'
+              shape='round'
+              style={{ marginBottom: '5px' }}>
+              Quay lại danh sách đơn hàng
+            </Button>
+          </Link>
 
           <Descriptions layout='vertical' bordered>
             <Descriptions.Item label='Địa chỉ giao hàng' span={3}>
@@ -275,60 +276,16 @@ const Order = ({ match, history }) => {
                       </Col>
                       {order.isPaid && order.isDelivered && (
                         <Button
-                          onClick={showModal}
+                          onClick={() => {
+                            showModal()
+                            setProductId(item.product._id)
+                          }}
                           type='primary'
                           shape='round'
                           block>
                           Đánh giá sản phẩm
                         </Button>
                       )}
-
-                      <Modal
-                        title='Hãy để lại đánh giá của bạn'
-                        visible={isModalVisible}
-                        onOk={handleOk}
-                        onCancel={handleCancel}>
-                        <>
-                          <span>
-                            <Rate
-                              tooltips={desc}
-                              onChange={(value) => setRating(value)}
-                              value={rating}
-                            />
-                            {rating ? (
-                              <span className='ant-rate-text'>
-                                {desc[rating - 1]}
-                              </span>
-                            ) : (
-                              ''
-                            )}
-                          </span>
-                          <Form
-                            name='basic'
-                            labelCol={{ span: 3 }}
-                            wrapperCol={{ span: 18 }}
-                            onFinish={(values) =>
-                              submitHandler(values, item.product._id)
-                            }>
-                            <Form.Item
-                              name='comment'
-                              rules={[
-                                {
-                                  required: true,
-                                  message: 'Hãy nhập đánh giá!',
-                                },
-                              ]}>
-                              <Input.TextArea />
-                            </Form.Item>
-
-                            <Form.Item wrapperCol={{ span: 18 }}>
-                              <Button type='primary' htmlType='submit'>
-                                Đánh giá
-                              </Button>
-                            </Form.Item>
-                          </Form>{' '}
-                        </>
-                      </Modal>
                       <Divider />
                     </>
                   ))
@@ -339,7 +296,7 @@ const Order = ({ match, history }) => {
         </Col>
 
         <Col span={8}>
-          <Divider orientation='left'>Order Summary</Divider>
+          <Divider orientation='left'>Đơn hàng</Divider>
           <Card>
             <Typography.Title level={4}>
               Tổng giá:{' '}
@@ -403,6 +360,7 @@ const Order = ({ match, history }) => {
             {order.status === 'ACCEPT' &&
               order.paymentMethod === 'PayPal' &&
               userInfo &&
+              userInfo.isAdmin &&
               order.isPaid &&
               !order.isDelivered && (
                 <Button
@@ -414,55 +372,51 @@ const Order = ({ match, history }) => {
                   Xác nhận đã nhận hàng
                 </Button>
               )}
-            {/* {order.status === 'WAIT' ? (
-              <Button
-                size='large'
-                type='danger'
-                shape='round'
-                block
-                onClick={deliverHandler}>
-                Hủy đơn hàng
-              </Button>
-            ) : order.status === 'CANCEL' ? (
-              <Typography.Title level={4}>Đơn hàng đã bị hủy</Typography.Title>
-            ) : (
-              order.status !== 'FINISH' &&
-              !order.isPaid && (
-                <>
-                  {loadingPay && <Loader />}
-                  {!sdkReady && order.paymentMethod === 'PayPal' ? (
-                    <Loader />
-                  ) : order.paymentMethod === 'PayPal' ? (
-                    <PayPalButton
-                      amount={order.totalPrice}
-                      onSuccess={successPaymentHandler}></PayPalButton>
-                  ) : (
-                    <Button
-                      size='large'
-                      type='primary'
-                      shape='round'
-                      block
-                      onClick={deliverHandler}>
-                      Xác nhận đã thanh toán và nhận hàng
-                    </Button>
-                  )}
-                </>
-              )
-            )}
-            {loadingDeliver && <Loader />}
-            {userInfo && order.isPaid && !order.isDelivered && (
-              <Button
-                size='large'
-                type='primary'
-                shape='round'
-                block
-                onClick={deliverHandler}>
-                Xác nhận đã nhận hàng
-              </Button>
-            )} */}
           </Card>
         </Col>
       </Row>
+      <Modal
+        title='Hãy để lại đánh giá của bạn'
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}>
+        <>
+          <span>
+            <Rate
+              tooltips={desc}
+              onChange={(value) => setRating(value)}
+              value={rating}
+            />
+            {rating ? (
+              <span className='ant-rate-text'>{desc[rating - 1]}</span>
+            ) : (
+              ''
+            )}
+          </span>
+          <Form
+            name='basic'
+            labelCol={{ span: 3 }}
+            wrapperCol={{ span: 18 }}
+            onFinish={(values) => submitHandler(values, productId)}>
+            <Form.Item
+              name='comment'
+              rules={[
+                {
+                  required: true,
+                  message: 'Hãy nhập đánh giá!',
+                },
+              ]}>
+              <Input.TextArea />
+            </Form.Item>
+
+            <Form.Item wrapperCol={{ span: 18 }}>
+              <Button type='primary' htmlType='submit'>
+                Đánh giá
+              </Button>
+            </Form.Item>
+          </Form>{' '}
+        </>
+      </Modal>
     </>
   )
 }

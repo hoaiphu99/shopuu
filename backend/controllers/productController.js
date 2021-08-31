@@ -28,6 +28,7 @@ const getProducts = asyncHandler(async (req, res) => {
       ])
       .limit(pageSize)
       .skip(pageSize * (page - 1))
+      .sort({ createdAt: 'desc' })
 
     res.json({
       status: 'success',
@@ -55,6 +56,7 @@ const getProductsByCategory = asyncHandler(async (req, res) => {
         { path: 'brand', select: 'name slug' },
       ])
       .limit(pageSize)
+      .sort({ createdAt: 'desc' })
 
     res.json({
       status: 'success',
@@ -74,10 +76,12 @@ const getProductsByCategory = asyncHandler(async (req, res) => {
 // public
 const getAllProducts = asyncHandler(async (req, res) => {
   try {
-    const products = await Product.find({}).populate([
-      { path: 'category', select: 'name slug' },
-      { path: 'brand', select: 'name slug' },
-    ])
+    const products = await Product.find({})
+      .populate([
+        { path: 'category', select: 'name slug' },
+        { path: 'brand', select: 'name slug' },
+      ])
+      .sort({ createdAt: 'desc' })
     res.json({ status: 'success', data: products, errors: null })
   } catch (error) {
     const errors = customErrorHandler(error, res)

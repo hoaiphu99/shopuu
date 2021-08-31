@@ -118,6 +118,7 @@ const initialState = {
   cart: {
     cartItems: cartItemsFromStorage,
     shippingAddress: {},
+    paymentMethod: localStorage.getItem('paymentMethod'),
   },
   wishlist: {
     wishlistItems: wishlistItemsFromStorage,

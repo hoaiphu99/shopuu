@@ -24,7 +24,7 @@ export const tailFormItemLayout = {
 export const formItemLayoutDetails = {
   labelCol: {
     xs: { span: 16 },
-    sm: { span: 4 },
+    sm: { span: 6 },
   },
   wrapperCol: {
     xs: { span: 24 },
@@ -39,7 +39,7 @@ export const tailFormItemLayoutDetails = {
     },
     sm: {
       span: 16,
-      offset: 4,
+      offset: 6,
     },
   },
 }

@@ -22,16 +22,17 @@ const Login = ({ location, history }) => {
 
   const userLogin = useSelector((state) => state.userLogin)
   const { loading, error, userInfo } = userLogin
-
+  
   const redirect = location.search ? location.search.split('=')[1] : ''
-
+  const qty = location.search ? location.search.split('=')[2] : 1
+  console.log(qty)
   const key = 'login'
 
   useEffect(() => {
     if (userInfo) {
       dispatch(getMyWishlist())
       message.success({ content: 'Đăng nhập thành công!', key, duration: 2 })
-      history.push(redirect)
+      history.push(`${redirect}=${qty}`)
       // setTimeout(() => {
 
       // }, 2000)

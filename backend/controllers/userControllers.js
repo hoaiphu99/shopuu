@@ -24,7 +24,7 @@ const authUser = asyncHandler(async (req, res) => {
     })
   } else {
     res.status(401)
-    throw new Error('Invalid email or password')
+    throw new Error('Email hoặc mật khẩu không đúng')
   }
 })
 
@@ -63,7 +63,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (userExist) {
     res.status(400)
-    throw new Error('User already exists')
+    throw new Error('Email này đã được đăng ký!')
   }
 
   const user = await User.create({
@@ -125,7 +125,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 // @router  GET /api/users
 // @access  private/admin
 const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({})
+  const users = await User.find({}).sort({ createdAt: 'desc' })
 
   res.json(users)
 })

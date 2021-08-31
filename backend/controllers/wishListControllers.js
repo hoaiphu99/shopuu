@@ -16,6 +16,7 @@ const getMyWishList = asyncHandler(async (req, res) => {
         },
       })
       .select('wishListItems -_id')
+      .sort({ createdAt: 'desc' })
     if (wishlist) {
       res.json({
         status: 'success',

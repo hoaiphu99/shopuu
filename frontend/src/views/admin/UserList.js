@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import Moment from 'react-moment'
-import { Link } from 'react-router-dom'
+//import Moment from 'react-moment'
+//import { Link } from 'react-router-dom'
 import {
   message,
   Table,
@@ -13,33 +13,33 @@ import {
   Button,
   Tag,
 } from 'antd'
-import {
-  HighlightOutlined,
-  SmileOutlined,
-  SmileFilled,
-} from '@ant-design/icons'
+// import {
+//   HighlightOutlined,
+//   SmileOutlined,
+//   SmileFilled,
+// } from '@ant-design/icons'
 import Loader from '../../components/Loader'
 import Breadcrumb from '../../components/BreadcrumbComp'
-import UserEdit from './UserEdit'
+//import UserEdit from './UserEdit'
 import {
   listUsers,
   deleteUser,
-  getUserDetails,
-  updateUser,
+  // getUserDetails,
+  // updateUser,
 } from '../../actions/userActions'
 import {
-  USER_CREATE_RESET,
-  USER_UPDATE_RESET,
+  // USER_CREATE_RESET,
+  // USER_UPDATE_RESET,
   USER_DELETE_RESET,
 } from '../../constants/userConstants'
 
 const UserList = ({ history }) => {
-  const { Paragraph } = Typography
-  const { Column } = Table
+  // const { Paragraph } = Typography
+  // const { Column } = Table
 
   const [isAdd, setIsAdd] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
-  const [editingKey, setEditingKey] = useState('')
+  //const [editingKey, setEditingKey] = useState('')
 
   const dispatch = useDispatch()
 
@@ -50,7 +50,7 @@ const UserList = ({ history }) => {
   const { loading, error, users } = userList
 
   const userDetails = useSelector((state) => state.userDetails)
-  const { user } = userDetails
+  //const { user } = userDetails
 
   const userDelete = useSelector((state) => state.userDelete)
   const {
@@ -77,11 +77,11 @@ const UserList = ({ history }) => {
     }
   }, [dispatch, history, users, successDelete])
 
-  const handleUpdate = (record) => {}
+  // const handleUpdate = (record) => {}
 
-  const handleCreate = (values) => {
-    setIsAdd(!isAdd)
-  }
+  // const handleCreate = (values) => {
+  //   setIsAdd(!isAdd)
+  // }
 
   const handleDelete = (id) => {
     dispatch(deleteUser(id))

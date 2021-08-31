@@ -53,7 +53,7 @@ const PlaceOrder = ({ history }) => {
     }
     if (success) {
       dispatch(removeAllFromCart())
-      history.push(`/order/${order._id}`)
+      history.push(`/order-success/${order._id}`)
     }
     // eslint-disable-next-line
   }, [history, success])
@@ -84,7 +84,8 @@ const PlaceOrder = ({ history }) => {
         <Col span={16}>
           <Divider orientation='left'>Thanh toán đơn hàng</Divider>
           <Descriptions layout='vertical' bordered>
-            <Descriptions.Item label='Địa chỉ' span={3}>
+            <Descriptions.Item label='Địa chỉ và người nhận hàng' span={3}>
+              {user && user.name},{' '}
               {user && user.shippingAddress && user.shippingAddress.address},{' '}
               {user && user.shippingAddress && user.shippingAddress.city},{' '}
               {user && user.shippingAddress && user.shippingAddress.district},{' '}
@@ -98,16 +99,16 @@ const PlaceOrder = ({ history }) => {
                 value={cart.itemsPrice}
                 displayType={'text'}
                 thousandSeparator={true}
-              />{' '}
-              VNĐ
+              />
+              <sup>đ</sup>
             </Descriptions.Item>
             <Descriptions.Item label='Phí vận chuyển'>
               <NumberFormat
                 value={cart.shippingPrice}
                 displayType={'text'}
                 thousandSeparator={true}
-              />{' '}
-              VNĐ
+              />
+              <sup>đ</sup>
             </Descriptions.Item>
 
             <Descriptions.Item label='Sản phẩm'>
@@ -160,7 +161,7 @@ const PlaceOrder = ({ history }) => {
         </Col>
 
         <Col span={8}>
-          <Divider orientation='left'>Order Summary</Divider>
+          <Divider orientation='left'>Đơn hàng</Divider>
           <Card>
             <Typography.Title level={4}>
               Tổng tiền:{' '}
@@ -179,7 +180,7 @@ const PlaceOrder = ({ history }) => {
               block
               onClick={placeOrderHandler}
               disabled={cart.cartItems.length === 0}>
-              Xác nhận thanh toán
+              Xác nhận đặt hàng
             </Button>
           </Card>
         </Col>

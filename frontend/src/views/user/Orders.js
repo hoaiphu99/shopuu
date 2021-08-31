@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, {  useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Moment from 'react-moment'
 import NumberFormat from 'react-number-format'
 import { Link } from 'react-router-dom'
-import { message, Table, Tag, Space, Typography, Popconfirm } from 'antd'
-import { getUserDetails, updateUserProfile } from '../../actions/userActions'
+import { message, Table, Tag, } from 'antd'
+//import { getUserDetails, updateUserProfile } from '../../actions/userActions'
 import Loader from '../../components/Loader'
 import { listMyOrder } from '../../actions/orderActions'
 
