@@ -2,7 +2,7 @@ import express from 'express'
 import {
   getSuppliers,
   createSupplier,
-} from '../controllers/SupplierControllers.js'
+} from '../controllers/supplierControllers.js'
 import { protect, admin } from '../middleware/authMiddleware.js'
 
 const router = express.Router()
