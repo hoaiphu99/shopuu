@@ -8,13 +8,13 @@ const users = [
     isAdmin: true,
   },
   {
-    name: 'John Doe',
-    email: 'john@hoaiphu.com',
+    name: 'Minh Thắng',
+    email: 'minhthang@gmail.com',
     password: bcrypt.hashSync('123456', 10),
   },
   {
-    name: 'Jane Doe',
-    email: 'jane@hoaiphu.com',
+    name: 'Đình Tân',
+    email: 'tanvd@gmail.com',
     password: bcrypt.hashSync('123456', 10),
   },
 ]

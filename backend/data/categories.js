@@ -1,7 +1,7 @@
 const categories = [
   {
-    name: 'Mainboard',
-    slug: 'mainboard',
+    name: 'SSD',
+    slug: 'ssd',
   },
   {
     name: 'Bàn phím',
@@ -14,6 +14,10 @@ const categories = [
   {
     name: 'RAM',
     slug: 'ram',
+  },
+  {
+    name: 'Tai nghe',
+    slug: 'tai-nghe',
   },
 ]
 

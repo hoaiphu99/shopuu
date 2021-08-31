@@ -47,6 +47,10 @@ const productSchema = mongoose.Schema(
       type: String,
       required: [true, 'Vui lòng nhập mô tả sản phẩm!'],
     },
+    discount: {
+      type: Number,
+      default: 0,
+    },
     reviews: [reviewSchema],
     rating: {
       type: Number,
