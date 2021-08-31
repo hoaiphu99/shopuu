@@ -1,16 +1,20 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Card, Divider, Typography } from 'antd'
+import { Card, Divider, Typography, Button } from 'antd'
 import Rating from './Rating'
 import NumberFormat from 'react-number-format'
 
-const Product = ({ product }) => {
+const Product = ({ product, history }) => {
+  const addToCartHandler = (id) => {
+    history.push(`/cart/${id}?qty=1`)
+  }
   return (
-    <Link to={`/${product.category.slug}/${product.slug}`}>
-      <Card
-        hoverable
-        style={{ width: '100%' }}
-        cover={<img alt={product.name} src={product.image} />}>
+    <Card
+      className='card-product'
+      hoverable
+      style={{ width: '100%' }}
+      cover={<img alt={product.name} src={product.image} />}>
+      <Link to={`/${product.category.slug}/${product.slug}`}>
         <h1>
           <strong>{product.name}</strong>
         </h1>
@@ -27,8 +31,15 @@ const Product = ({ product }) => {
           value={product.rating}
           text={`${product.numberReviews} đánh giá`}
         />
-      </Card>
-    </Link>
+      </Link>
+      <Button
+        type='primary'
+        block
+        className='btn-add-to-cart'
+        onClick={() => addToCartHandler(product._id)}>
+        Thêm vào giỏ hàng
+      </Button>
+    </Card>
   )
 }
 

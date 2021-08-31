@@ -91,7 +91,7 @@ const Home = ({ match, history, location }) => {
                 <Row gutter={16} align='middle' justify='start'>
                   {products.map((product) => (
                     <Col key={product._id} span={6} className='col__card-item'>
-                      <Product product={product} />
+                      <Product product={product} history={history} />
                     </Col>
                   ))}
                 </Row>
