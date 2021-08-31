@@ -40,8 +40,8 @@ const App = () => {
               <Route path='/placeorder' component={PlaceOrder} exact />
               <Route path='/login' component={Login} exact />
               <Route path='/register' component={Register} exact />
-              <Route path='/profile' component={Profile} exact />
-              <Route path='/admin' component={Admin} exact />
+              <Route path='/profile' component={Profile} />
+              <Route path='/admin' component={Admin} />
               <Route path='/admin/users' component={UserList} exact />
               <Route path='/cart/:id?' component={Cart} exact />
               <Route path='/wishlist/:id?' component={Wishlist} exact />

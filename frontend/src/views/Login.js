@@ -22,7 +22,7 @@ const Login = ({ location, history }) => {
 
   const userLogin = useSelector((state) => state.userLogin)
   const { loading, error, userInfo } = userLogin
-  
+
   const redirect = location.search ? location.search.split('=')[1] : ''
   const qty = location.search ? location.search.split('=')[2] : 1
   console.log(qty)
@@ -91,13 +91,11 @@ const Login = ({ location, history }) => {
               />
             </Form.Item>
             <Form.Item>
-              <Form.Item name='remember' valuePropName='checked' noStyle>
+              {/* <Form.Item name='remember' valuePropName='checked' noStyle>
                 <Checkbox>Nhớ tài khoản</Checkbox>
-              </Form.Item>
+              </Form.Item> */}
 
-              <Link className='login-form-forgot' to='/'>
-                Quên mật khẩu
-              </Link>
+              <Link to='/'>Quên mật khẩu</Link>
             </Form.Item>
 
             <Form.Item>

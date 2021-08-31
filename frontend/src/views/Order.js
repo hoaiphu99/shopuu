@@ -90,6 +90,7 @@ const Order = ({ match, history }) => {
     if (!userInfo) {
       history.push('/login')
     }
+    dispatch(getOrderDetails(orderId))
     const addPayPalScript = async () => {
       const { data: clientId } = await axios.get('/api/config/paypal')
       const script = document.createElement('script')
@@ -127,12 +128,10 @@ const Order = ({ match, history }) => {
       dispatch({ type: PRODUCT_CREATE_REVIEW_RESET })
     }
   }, [
-    dispatch,
     userInfo,
     orderId,
     successPay,
     successDeliver,
-    order,
     successProductReview,
     successStatus,
   ])
