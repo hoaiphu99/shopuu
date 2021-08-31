@@ -147,13 +147,13 @@ const Header = () => {
             )}
           />
         </Col>
-        <Col span={8}>
+        {/* <Col span={8}>
           <Route
             render={({ location }) => (
               <Navbar location={location} brand={true} />
             )}
           />
-        </Col>
+        </Col> */}
       </Row>
     </Layout>
   )
