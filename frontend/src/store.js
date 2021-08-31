@@ -9,8 +9,11 @@ import {
   productDeleteReducer,
   productReviewCreateReducer,
   productTopRatedReducer,
+  productByCategoryReducer,
+  productAllReducer,
 } from './reducers/productReducers'
 import { cartReducer } from './reducers/cartReducers'
+import { wishlistReducer } from './reducers/wishlistReducers'
 import {
   userLoginReducer,
   userRegisterReducer,
@@ -23,6 +26,7 @@ import {
 import {
   orderCreateReducer,
   orderDetailsReducer,
+  orderStatusReducer,
   orderPayReducer,
   orderDeliverReducer,
   orderListMyReducer,
@@ -49,8 +53,11 @@ const reducer = combineReducers({
   productDelete: productDeleteReducer,
   productReviewCreate: productReviewCreateReducer,
   productTopRated: productTopRatedReducer,
+  productByCategory: productByCategoryReducer,
+  productAll: productAllReducer,
 
   cart: cartReducer,
+  wishlist: wishlistReducer,
 
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
@@ -62,6 +69,7 @@ const reducer = combineReducers({
 
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
+  orderStatus: orderStatusReducer,
   orderPay: orderPayReducer,
   orderDeliver: orderDeliverReducer,
   orderListMy: orderListMyReducer,
@@ -94,10 +102,25 @@ const cartItemsFromStorage =
       )
     : []
 
+const wishlistItemsFromStorage =
+  localStorage.getItem('userInfo') &&
+  localStorage.getItem(
+    `wishlistItems@${JSON.parse(localStorage.getItem('userInfo'))._id}`
+  )
+    ? JSON.parse(
+        localStorage.getItem(
+          `wishlistItems@${JSON.parse(localStorage.getItem('userInfo'))._id}`
+        )
+      )
+    : []
+
 const initialState = {
   cart: {
     cartItems: cartItemsFromStorage,
     shippingAddress: {},
+  },
+  wishlist: {
+    wishlistItems: wishlistItemsFromStorage,
   },
   userLogin: { userInfo: userInfoFromStorage },
 }

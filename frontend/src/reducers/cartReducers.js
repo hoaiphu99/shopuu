@@ -18,7 +18,7 @@ export const cartReducer = (
       }
       break
     case CART_MY_RESET:
-      //localStorage.removeItem('cartItems')
+      
       return {
         cartItems: [],
         shippingAddress: {},

@@ -7,6 +7,7 @@ import { Container } from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import Orders from './user/Orders'
+import Order from './Order'
 import CategoryList from './admin/CategoryList'
 import { getUserDetails, updateUserProfile } from '../actions/userActions'
 import { formItemLayout, tailFormItemLayout } from '../constants/formConstants'
@@ -176,13 +177,13 @@ const Profile = ({ location, history }) => {
                 icon={<UserOutlined />}
                 title={user && user.name}>
                 <Menu.Item key='profile'>
-                  <Link to='/profile'>Profile</Link>
+                  <Link to='/profile'>Thông tin cá nhân</Link>
                 </Menu.Item>
                 <Menu.Item key='change-password'>
-                  <Link to='/profile/change-password'>Change Password</Link>
+                  <Link to='/profile/change-password'>Đổi mật khẩu</Link>
                 </Menu.Item>
                 <Menu.Item key='orders'>
-                  <Link to='/profile/orders'>Orders</Link>
+                  <Link to='/profile/orders'>Đơn hàng của tôi</Link>
                 </Menu.Item>
               </SubMenu>
             </Menu>
@@ -202,6 +203,7 @@ const Profile = ({ location, history }) => {
                 minHeight: 280,
               }}>
               <Switch>
+                <Route path='/order/:id' component={Order} />
                 <Route exact path='/profile/orders' component={Orders}></Route>
                 {loadingUpdate &&
                   message.loading({ content: 'Saving...', key, duration: 10 })}

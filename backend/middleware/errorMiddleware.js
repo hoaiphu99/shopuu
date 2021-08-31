@@ -13,4 +13,34 @@ const errorHandler = (err, req, res, next) => {
   })
 }
 
-export { notFound, errorHandler }
+const customErrorHandler = (err, res) => {
+  const statusCode = res.statusCode === 200 ? 400 : res.statusCode
+  let errors = {}
+  if (err) {
+    if (err.code === 11000) {
+      // duplicate error code
+      Object.keys(err.keyValue).forEach((key) => {
+        console.log(key)
+        errors[key] = `${key === 'name' ? 'Tên' : 'Email'} này đã tồn tại!`
+      })
+    }
+    console.log(Object.values(err.errors))
+    // validate errors
+    if (err.errors) {
+      Object.values(err.errors).forEach(({ properties }) => {
+        errors[properties.path] = properties.message
+      })
+    }
+
+    if (
+      errors &&
+      Object.keys(errors).length === 0 &&
+      errors.constructor === Object
+    ) {
+      return { statusCode, message: err.message }
+    }
+    return { statusCode, message: errors }
+  }
+}
+
+export { notFound, errorHandler, customErrorHandler }

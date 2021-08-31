@@ -18,13 +18,13 @@ const protect = asyncHandler(async (req, res, next) => {
     } catch (error) {
       console.error(error)
       res.status(401)
-      throw new Error('Not authorization, token failed')
+      throw new Error('Không có quyền truy cập, token đã hết hạn!')
     }
   }
 
   if (!token) {
     res.status(401)
-    throw new Error('Not authorization, no token')
+    throw new Error('Không có quyền truy cập, không tìm thấy token!')
   }
 })
 
@@ -33,7 +33,7 @@ const admin = (req, res, next) => {
     next()
   } else {
     res.status(401)
-    throw new Error('Not authorization as an admin')
+    throw new Error('Chỉ admin mới có quyền truy cập vào mục này!')
   }
 }
 

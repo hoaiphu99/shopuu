@@ -77,7 +77,7 @@ export const logout = () => async (dispatch) => {
   dispatch({ type: CART_MY_RESET })
 }
 
-export const register = (user) => async (dispatch) => {
+export const register = (user) => async (dispatch, getState) => {
   try {
     dispatch({
       type: USER_REGISTER_REQUEST,
@@ -96,12 +96,13 @@ export const register = (user) => async (dispatch) => {
       payload: data,
     })
 
-    dispatch({
-      type: USER_LOGIN_SUCCESS,
-      payload: data,
-    })
-
-    localStorage.setItem('userInfo', JSON.stringify(data))
+    if (!getState().userLogin || !getState().userLogin.userInfo) {
+      dispatch({
+        type: USER_LOGIN_SUCCESS,
+        payload: data,
+      })
+      localStorage.setItem('userInfo', JSON.stringify(data))
+    }
   } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,

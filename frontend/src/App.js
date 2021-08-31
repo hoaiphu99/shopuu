@@ -7,6 +7,7 @@ import Footer from './components/Footer'
 import Home from './views/Home'
 import Product from './views/Product'
 import Cart from './views/Cart'
+import Wishlist from './views/Wishlist'
 import Login from './views/Login'
 import Register from './views/Register'
 import Profile from './views/Profile'
@@ -31,35 +32,30 @@ const App = () => {
         <Header />
         <main className='py-3'>
           <Container>
-            <Route path='/order/:id' component={Order} />
-            <Route path='/shipping' component={Shipping} />
-            <Route path='/payment' component={Payment} />
-            <Route path='/placeorder' component={PlaceOrder} />
-            <Route path='/login' component={Login} />
-            <Route path='/register' component={Register} />
-            <Route path='/profile' component={Profile} />
-            <Route path='/admin' component={Admin} />
-            <Route path='/product/:slug' component={Product} />
-            <Route path='/cart/:id?' component={Cart} />
-            <Route path='/admin/users' component={UserList} />
-            <Route path='/admin/user/:id/edit' component={UserEdit} />
-            <Route path='/admin/products' component={ProductList} exact />
-            <Route
-              path='/admin/products/:pageNumber'
-              component={ProductList}
-              exact
-            />
-            <Route path='/admin/product/create' component={ProductCreate} />
-            <Route path='/admin/product/:id/edit' component={ProductEdit} />
-            <Route path='/admin/orders' component={OrderList} />
-            <Route path='/search/:keyword' component={Home} exact />
-            <Route path='/page/:pageNumber' component={Home} exact />
-            <Route
-              path='/search/:keyword/page/:pageNumber'
-              component={Home}
-              exact
-            />
-            <Route path='/' component={Home} exact />
+            <Switch>
+              <Route path='/shipping' component={Shipping} />
+              <Route path='/payment' component={Payment} />
+              <Route path='/placeorder' component={PlaceOrder} />
+              <Route path='/login' component={Login} />
+              <Route path='/register' component={Register} />
+              <Route path='/profile' component={Profile} />
+              <Route path='/admin' component={Admin} />
+              <Route path='/admin/users' component={UserList} />
+              <Route path='/cart/:id?' component={Cart} />
+              <Route path='/wishlist/:id?' component={Wishlist} />
+              <Route path='/order/:id' component={Order} />
+              <Route path='/admin/orders' component={OrderList} />
+              <Route path='/search/:keyword' component={Home} exact />
+              <Route path='/page/:pageNumber' component={Home} exact />
+              <Route
+                path='/search/:keyword/page/:pageNumber'
+                component={Home}
+                exact
+              />
+              <Route path='/:cateSlug?' component={Home} exact />
+              <Route path='/:cateSlug/:slug' component={Product} />
+              <Route path='/' component={Home} exact />
+            </Switch>
           </Container>
         </main>
         <Footer />

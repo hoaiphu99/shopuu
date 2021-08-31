@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Moment from 'react-moment'
+import NumberFormat from 'react-number-format'
 import { Link } from 'react-router-dom'
-import { message, Table, Tag, Space } from 'antd'
+import { message, Table, Tag, Space, Typography, Popconfirm } from 'antd'
 import { getUserDetails, updateUserProfile } from '../../actions/userActions'
 import Loader from '../../components/Loader'
 import { listMyOrder } from '../../actions/orderActions'
 
-const Orders = () => {
+const Orders = ({ history }) => {
   const { Column } = Table
 
   const dispatch = useDispatch()
@@ -19,8 +20,12 @@ const Orders = () => {
   const { loading, error, orders } = orderListMy
 
   useEffect(() => {
-    dispatch(listMyOrder())
-  }, [dispatch, userInfo])
+    if (userInfo) {
+      dispatch(listMyOrder())
+    } else {
+      history.push('/login')
+    }
+  }, [dispatch, history, userInfo])
 
   return (
     <>
@@ -37,16 +42,17 @@ const Orders = () => {
           //   rowExpandable: (record) => record._id.toString() !== ' ',
           // }}
           dataSource={orders}
-          pagination={false}
+          pagination={true}
           scroll={{ x: '', y: 400 }}>
           <Column
             title='ID'
             dataIndex='_id'
             key='_id'
-            render={(text) => <a href={`/order/${text}`}>{text}</a>}
+            width='15%'
+            render={(text) => <Link to={`/order/${text}`}>{text}</Link>}
           />
           <Column
-            title='DATE'
+            title='NGÀY ĐẶT'
             dataIndex='createdAt'
             key='createdAt'
             render={(text) => (
@@ -54,28 +60,61 @@ const Orders = () => {
             )}
           />
           <Column
-            title='TOTAL'
+            title='TỔNG GIÁ'
             dataIndex='totalPrice'
             key='totalPrice'
-            render={(text) => <>$ {text}</>}
+            render={(text) => (
+              <>
+                <NumberFormat
+                  value={text}
+                  displayType={'text'}
+                  thousandSeparator={true}
+                />{' '}
+                <sup>đ</sup>
+              </>
+            )}
           />
           <Column
-            title='PAID'
+            title='THANH TOÁN'
             dataIndex='isPaid'
             key='isPaid'
             render={(isPaid) => {
               let color = isPaid ? 'green' : 'red'
-              let msg = isPaid ? 'Paid' : 'Not Paid'
+              let msg = isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'
               return <Tag color={color}>{msg}</Tag>
             }}
           />
           <Column
-            title='DELIVERED'
+            title='NHẬN HÀNG'
             dataIndex='isDelivered'
             key='isDelivered'
             render={(isDelivered) => {
               let color = isDelivered ? 'green' : 'red'
-              let msg = isDelivered ? 'Delivered' : 'Not Delivered'
+              let msg = isDelivered ? 'Đã nhận hàng' : 'Chưa nhận hàng'
+              return <Tag color={color}>{msg}</Tag>
+            }}
+          />
+          <Column
+            title='TRẠNG THÁI'
+            dataIndex='status'
+            key='status'
+            render={(status) => {
+              let color =
+                status === 'CANCEL'
+                  ? 'red'
+                  : status === 'WAIT'
+                  ? 'orange'
+                  : status === 'ACCEPT'
+                  ? 'blue'
+                  : 'green'
+              let msg =
+                status === 'CANCEL'
+                  ? 'Đã hủy'
+                  : status === 'WAIT'
+                  ? 'Chờ xác nhận'
+                  : status === 'ACCEPT'
+                  ? 'Đã xác nhận'
+                  : 'Hoàn thành'
               return <Tag color={color}>{msg}</Tag>
             }}
           />

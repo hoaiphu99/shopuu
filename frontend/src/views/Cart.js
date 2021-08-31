@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-//import { Image } from 'react-bootstrap'
+import NumberFormat from 'react-number-format'
 import Message from '../components/Message'
 import { addToCart, removeFromCart } from '../actions/cartActions'
 import {
@@ -49,9 +49,9 @@ const Cart = ({ match, location, history }) => {
   return (
     <Row gutter={24}>
       <Col span={16}>
-        <Divider orientation='left'>Shopping Cart</Divider>
+        <Divider orientation='left'>Giỏ hàng</Divider>
         {cartItems.length === 0 ? (
-          <Message message={`Your cart is empty`} />
+          <Message message={`Giỏ hàng trống`} />
         ) : (
           <>
             <Row gutter={16} justify='center' align='top'>
@@ -66,11 +66,18 @@ const Cart = ({ match, location, history }) => {
                     </Typography.Text>
                   </Col>
                   <Col span={3}>
-                    <Typography.Title level={5}>Price</Typography.Title>
-                    <Typography.Text>${item.price}</Typography.Text>
+                    <Typography.Title level={5}>Giá</Typography.Title>
+                    <Typography.Text>
+                      <NumberFormat
+                        value={item.price}
+                        displayType={'text'}
+                        thousandSeparator={true}
+                      />
+                      <sup>đ</sup>
+                    </Typography.Text>
                   </Col>
                   <Col span={4}>
-                    <Typography.Title level={5}>Quantity</Typography.Title>
+                    <Typography.Title level={5}>Số lượng</Typography.Title>
                     <InputNumber
                       min={1}
                       max={item.countInStock}
@@ -81,15 +88,30 @@ const Cart = ({ match, location, history }) => {
                     />
                   </Col>
                   <Col span={4}>
-                    <Typography.Title level={5}>Total</Typography.Title>
-                    <Typography.Text>${item.qty * item.price}</Typography.Text>
+                    <Typography.Title level={5}>Tổng cộng</Typography.Title>
+                    <Typography.Text>
+                      <NumberFormat
+                        value={item.qty * item.price}
+                        displayType={'text'}
+                        thousandSeparator={true}
+                      />
+                      <sup>đ</sup>
+                    </Typography.Text>
                   </Col>
                   <Col span={2}>
                     <Button
                       type='danger'
                       shape='circle'
                       size='small'
-                      icon={<CloseOutlined />}
+                      icon={
+                        <CloseOutlined
+                          type='play-circle-o'
+                          style={{
+                            display: 'inline-block',
+                            verticalAlign: 'text-top',
+                          }}
+                        />
+                      }
                       onClick={() => removeFromCartHandler(item.product)}
                     />
                   </Col>
@@ -99,17 +121,35 @@ const Cart = ({ match, location, history }) => {
             </Row>
           </>
         )}
+        <Link to='/'>
+          <Button
+            type='primary'
+            shape='round'
+            size='large'
+            onClick={checkoutHandler}
+            style={{ marginTop: '5px' }}>
+            Tiếp tục mua hàng
+          </Button>
+        </Link>
       </Col>
       <Col span={8}>
-        <Divider orientation='left'>Checkout</Divider>
+        <Divider orientation='left'>Thanh toán</Divider>
         <Card
           headStyle={{ fontSize: '25px' }}
-          title={`Subtotal (${cartItems.reduce(
+          title={`Tổng cộng (${cartItems.reduce(
             (acc, item) => acc + item.qty,
             0
-          )}) items`}>
+          )}) sản phẩm`}>
           <Typography.Title level={4}>
-            ${cartItems.reduce((acc, item) => acc + item.qty * item.price, 0)}
+            <NumberFormat
+              value={cartItems.reduce(
+                (acc, item) => acc + item.qty * item.price,
+                0
+              )}
+              displayType={'text'}
+              thousandSeparator={true}
+            />{' '}
+            VNĐ
           </Typography.Title>
           <Divider />
           <Button
@@ -119,7 +159,7 @@ const Cart = ({ match, location, history }) => {
             block
             onClick={checkoutHandler}
             disabled={cartItems.length === 0}>
-            Process to checkout
+            Tiến hành thanh toán
           </Button>
         </Card>
       </Col>

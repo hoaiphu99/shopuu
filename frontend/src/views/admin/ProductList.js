@@ -1,19 +1,34 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { LinkContainer } from 'react-router-bootstrap'
-import { Table, Button, Row, Col } from 'react-bootstrap'
+import NumberFormat from 'react-number-format'
 import { useDispatch, useSelector } from 'react-redux'
-import Message from '../../components/Message'
+import {
+  message,
+  Table,
+  Space,
+  Typography,
+  Input,
+  Popconfirm,
+  Form,
+  Button,
+  Tag,
+} from 'antd'
+import {
+  HighlightOutlined,
+  SmileOutlined,
+  SmileFilled,
+} from '@ant-design/icons'
 import Loader from '../../components/Loader'
+import Breadcrumb from '../../components/BreadcrumbComp'
 import Paginate from '../../components/Paginate'
-import { listProducts, deleteProduct } from '../../actions/productActions'
+import { listAllProducts, deleteProduct } from '../../actions/productActions'
+import { PRODUCT_DELETE_RESET } from '../../constants/productConstants'
 
 const ProductList = ({ match, history }) => {
-  const pageNumber = match.params.pageNumber || 1
   const dispatch = useDispatch()
 
-  const productList = useSelector((state) => state.productList)
-  const { loading, error, products, pages, page } = productList
+  const productAll = useSelector((state) => state.productAll)
+  const { loading, error, products } = productAll
 
   const productDelete = useSelector((state) => state.productDelete)
   const {
@@ -25,82 +40,143 @@ const ProductList = ({ match, history }) => {
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
+  const key = 'msg'
   useEffect(() => {
-    if (!userInfo.isAdmin) {
-      history.push('/login')
+    if (userInfo && userInfo.isAdmin) {
+      if (!products || products.length <= 0) {
+        dispatch(listAllProducts())
+      } else if (successDelete) {
+        message.success({ content: 'Đã xóa!', key, duration: 2 })
+        dispatch({ type: PRODUCT_DELETE_RESET })
+        dispatch(listAllProducts())
+      }
     } else {
-      dispatch(listProducts('', pageNumber))
+      history.push('/login')
     }
-  }, [dispatch, history, userInfo, successDelete, pageNumber])
+  }, [dispatch, history, successDelete])
+
+  const columns = [
+    {
+      title: 'ID',
+      width: 100,
+      dataIndex: '_id',
+      key: '_id',
+    },
+    {
+      title: 'Tên sản phẩm',
+      width: 100,
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Giá',
+      width: 50,
+      dataIndex: 'price',
+      key: 'price',
+      render: (_, record) => {
+        return (
+          <NumberFormat
+            value={record.price}
+            displayType={'text'}
+            thousandSeparator={true}>
+            {' '}
+            VNĐ{' '}
+          </NumberFormat>
+        )
+      },
+    },
+    {
+      title: 'Danh mục',
+      dataIndex: 'category',
+      key: 'category',
+      render: (_, record) => {
+        return <>{record.category.name}</>
+      },
+      width: 100,
+    },
+    {
+      title: 'Thương hiệu',
+      dataIndex: 'brand',
+      key: 'brand',
+      width: 80,
+      render: (_, record) => {
+        return <>{record.brand.name}</>
+      },
+    },
+    {
+      title: 'SL tồn',
+      dataIndex: 'countInStock',
+      key: 'countInStock',
+      width: 30,
+    },
+    {
+      title: 'Hành động',
+      key: 'action',
+      fixed: 'right',
+      width: 60,
+      render: (_, record) => {
+        return (
+          <Space size='middle'>
+            <Typography.Link onClick={() => edit(record)}>
+              Chi tiết
+            </Typography.Link>
+            <Popconfirm
+              title='Chắc chắn xóa?'
+              onConfirm={() => deleteHandler(record._id)}>
+              <a>Xóa</a>
+            </Popconfirm>
+          </Space>
+        )
+      },
+    },
+  ]
+
+  const edit = (record) => {
+    //console.log(record)
+    history.push(`products/${record._id}`)
+  }
 
   const deleteHandler = (id) => {
-    if (window.confirm('Are you sure?')) {
-      dispatch(deleteProduct(id))
-    }
+    dispatch(deleteProduct(id))
   }
   return (
     <>
-      <Row className='align-items-center'>
-        <Col>
-          <h1>Products</h1>
-        </Col>
-        <Col className='text-right'>
-          <Link to='/admin/product/create'>
-            <Button type='button' className='my-3'>
-              <i className='fas fa-plus'></i> Create Product
-            </Button>
-          </Link>
-        </Col>
-      </Row>
-      {loadingDelete && <Loader />}
-      {errorDelete && <Message variant='danger'>{errorDelete}</Message>}
-      {loading ? (
-        <Loader />
-      ) : error ? (
-        <Message variant='danger'>{error}</Message>
-      ) : (
-        <>
-          <Table striped bordered hover responsive>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>NAME</th>
-                <th>PRICE</th>
-                <th>CATEGORY</th>
-                <th>BRAND</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product) => (
-                <tr key={product._id}>
-                  <td>{product._id}</td>
-                  <td>{product.name}</td>
-                  <td>${product.price}</td>
-                  <td>{product.category}</td>
-                  <td>{product.brand}</td>
-                  <td>
-                    <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                      <Button variant='light' className='btn-sm'>
-                        <i className='fas fa-edit'></i>
-                      </Button>
-                    </LinkContainer>
-                    <Button
-                      variant='danger'
-                      className='btn-sm'
-                      onClick={() => {
-                        deleteHandler(product._id)
-                      }}>
-                      <i className='fas fa-trash'></i>
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-          <Paginate pages={pages} page={page} isAdmin={true} />
-        </>
-      )}
+      <div>
+        <Breadcrumb link1='Admin' link2='Sản phẩm' />
+        <Button
+          type='primary'
+          onClick={() => {
+            history.push('/admin/products/create')
+          }}
+          style={{
+            marginBottom: 16,
+          }}>
+          Thêm mới
+        </Button>
+        {loadingDelete &&
+          message.loading({ content: 'Đang xóa...', key, duration: 10 })}
+        {errorDelete &&
+          message.error({ content: `${errorDelete}`, key, duration: 2 })}
+        {error && message.error({ content: `${error}`, duration: 2 })}
+        {loading ? (
+          <Loader />
+        ) : error ? (
+          message.error()
+        ) : (
+          <>
+            {loading ? (
+              <Loader />
+            ) : (
+              <Table
+                rowKey={(record) => record._id}
+                columns={columns}
+                dataSource={products}
+                pagination={true}
+                scroll={{ x: 1200, y: 400 }}></Table>
+            )}
+          </>
+        )}
+      </div>
     </>
   )
 }

@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react'
-// import {
-//   Row,
-//   Col,
-//   ListGroup,
-//   Image,
-//   Card,
-//   Button,
-//   ListGroupItem,
-// } from 'react-bootstrap'
+import NumberFormat from 'react-number-format'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import CheckoutSteps from '../components/CheckoutSteps'
@@ -83,35 +75,45 @@ const PlaceOrder = ({ history }) => {
   return (
     <>
       <Row>
-        <Col span={12} offset={6}>
+        <Col span={16} offset={4}>
           <CheckoutSteps step1 step2 step3 step4 />
           <Divider />
         </Col>
       </Row>
       <Row gutter={16}>
         <Col span={16}>
-          <Divider orientation='left'>Place Order</Divider>
+          <Divider orientation='left'>Thanh toán đơn hàng</Divider>
           <Descriptions layout='vertical' bordered>
-            <Descriptions.Item label='Address' span={3}>
+            <Descriptions.Item label='Địa chỉ' span={3}>
               {user && user.shippingAddress && user.shippingAddress.address},{' '}
               {user && user.shippingAddress && user.shippingAddress.city},{' '}
               {user && user.shippingAddress && user.shippingAddress.district},{' '}
               {user && user.shippingAddress && user.shippingAddress.ward}
             </Descriptions.Item>
-            <Descriptions.Item label='Payment Method'>
+            <Descriptions.Item label='Phương thức thanh toán'>
               {cart.paymentMethod}
             </Descriptions.Item>
-            <Descriptions.Item label='Items Price'>
-              ${cart.itemsPrice}
+            <Descriptions.Item label='Tổng giá sản phẩm'>
+              <NumberFormat
+                value={cart.itemsPrice}
+                displayType={'text'}
+                thousandSeparator={true}
+              />{' '}
+              VNĐ
             </Descriptions.Item>
-            <Descriptions.Item label='Shipping Price'>
-              ${cart.shippingPrice}
+            <Descriptions.Item label='Phí vận chuyển'>
+              <NumberFormat
+                value={cart.shippingPrice}
+                displayType={'text'}
+                thousandSeparator={true}
+              />{' '}
+              VNĐ
             </Descriptions.Item>
 
-            <Descriptions.Item label='Order Items'>
+            <Descriptions.Item label='Sản phẩm'>
               <Row justify='start' align='top'>
                 {cart.cartItems.length === 0 ? (
-                  <Message message='Your cart is empty' />
+                  <Message message='Không có sản phẩm' />
                 ) : (
                   cart.cartItems.map((item) => (
                     <>
@@ -127,13 +129,25 @@ const PlaceOrder = ({ history }) => {
                         </Typography.Text>
                       </Col>
                       <Col span={3}>
-                        <Typography.Title level={5}>Price</Typography.Title>
-                        <Typography.Text>${item.price}</Typography.Text>
+                        <Typography.Title level={5}>Giá</Typography.Title>
+                        <Typography.Text>
+                          <NumberFormat
+                            value={item.price}
+                            displayType={'text'}
+                            thousandSeparator={true}
+                          />
+                          <sup>đ</sup>
+                        </Typography.Text>
                       </Col>
                       <Col span={4}>
-                        <Typography.Title level={5}>Total</Typography.Title>
+                        <Typography.Title level={5}>Tổng cộng</Typography.Title>
                         <Typography.Text>
-                          ${item.qty * item.price}
+                          <NumberFormat
+                            value={item.qty * item.price}
+                            displayType={'text'}
+                            thousandSeparator={true}
+                          />
+                          <sup>đ</sup>
                         </Typography.Text>
                       </Col>
                       <Divider />
@@ -143,63 +157,19 @@ const PlaceOrder = ({ history }) => {
               </Row>
             </Descriptions.Item>
           </Descriptions>
-          {/* <ListGroup variant='flush'>
-            <ListGroup.Item>
-              <h2>Shipping</h2>
-              <p>
-                <strong>Address: </strong>
-                {user.shippingAddress && user.shippingAddress.address},{' '}
-                {user.shippingAddress && user.shippingAddress.city},{' '}
-                {user.shippingAddress && user.shippingAddress.district},{' '}
-                {user.shippingAddress && user.shippingAddress.ward}
-              </p>
-            </ListGroup.Item>
-
-            <ListGroup.Item>
-              <h2>Payment Method</h2>
-              <strong>Method: </strong>
-              {cart.paymentMethod}
-            </ListGroup.Item>
-
-            <ListGroup.Item>
-              <h2>Order Items</h2>
-              {cart.cartItems.length === 0 ? (
-                <Message>Your cart is empty</Message>
-              ) : (
-                <ListGroup variant='flush'>
-                  {cart.cartItems.map((item, index) => (
-                    <ListGroup.Item key={index}>
-                      <Row>
-                        <Col md={1}>
-                          <Image
-                            src={item.image}
-                            alt={item.name}
-                            fluid
-                            rounded
-                          />
-                        </Col>
-                        <Col>
-                          <Link to={`/product/${item.product}`}>
-                            {item.name}
-                          </Link>
-                        </Col>
-                        <Col md={4}>
-                          {item.qty} x ${item.price} = ${item.qty * item.price}
-                        </Col>
-                      </Row>
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              )}
-            </ListGroup.Item>
-          </ListGroup> */}
         </Col>
 
         <Col span={8}>
           <Divider orientation='left'>Order Summary</Divider>
           <Card>
             <Typography.Title level={4}>
-              Total Price: ${cart.totalPrice}
+              Tổng tiền:{' '}
+              <NumberFormat
+                value={cart.totalPrice}
+                displayType={'text'}
+                thousandSeparator={true}
+              />{' '}
+              VNĐ
             </Typography.Title>
 
             <Button
@@ -209,49 +179,9 @@ const PlaceOrder = ({ history }) => {
               block
               onClick={placeOrderHandler}
               disabled={cart.cartItems.length === 0}>
-              Place Order
+              Xác nhận thanh toán
             </Button>
           </Card>
-
-          {/* <Card>
-            <ListGroup variant='flush'>
-              <ListGroup.Item>
-                <h2>Order Summary</h2>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Items</Col>
-                  <Col>${cart.itemsPrice}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Shipping</Col>
-                  <Col>${cart.shippingPrice}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Total</Col>
-                  <Col>${cart.totalPrice}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                {error && <Message variant='danger'>{error}</Message>}
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Button
-                    type='button'
-                    className='btn btn-dark btn-lg'
-                    disabled={cart.cartItems === 0}
-                    onClick={placeOrderHandler}>
-                    Place Order
-                  </Button>
-                </Row>
-              </ListGroup.Item>
-            </ListGroup>
-          </Card> */}
         </Col>
       </Row>
     </>

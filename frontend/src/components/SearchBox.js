@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Form, Button } from 'react-bootstrap'
+import { Input } from 'antd'
 
 const SearchBox = ({ history }) => {
   const [keyword, setKeyword] = useState('')
+  const { Search } = Input
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -13,18 +14,20 @@ const SearchBox = ({ history }) => {
     }
   }
 
+  const onSearch = (value) => {
+    if (value.trim()) {
+      history.push(`/search/${value}`)
+    } else {
+      history.push('/')
+    }
+  }
+
   return (
-    <Form onSubmit={submitHandler} className='d-flex'>
-      <Form.Control
-        type='text'
-        name='q'
-        placeholder='Search...'
-        className='mr-sm-2 ml-sm-5'
-        onChange={(e) => setKeyword(e.target.value)}></Form.Control>
-      <Button type='submit' className='btn btn-secondary my-2 my-sm-0 m-2'>
-        Search
-      </Button>
-    </Form>
+    <Search
+      placeholder='Nhập từ khóa cần tìm'
+      onSearch={onSearch}
+      enterButton
+    />
   )
 }
 

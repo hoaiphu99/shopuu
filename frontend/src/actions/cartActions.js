@@ -12,16 +12,17 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
   const { data } = await axios.get(`/api/products/${id}`)
 
   if (data) {
+    const { data: product } = data
     dispatch({
       type: CART_ADD_ITEM,
       payload: {
-        product: data._id,
-        name: data.name,
-        image: data.image,
-        price: data.price,
-        countInStock: data.countInStock,
+        product: product._id,
+        name: product.name,
+        image: product.image,
+        price: product.price,
+        countInStock: product.countInStock,
         qty,
-        slug: data.slug,
+        slug: product.slug,
       },
     })
 
@@ -64,20 +65,16 @@ export const removeFromCart = (id) => async (dispatch, getState) => {
   )
 }
 
-export const removeAllFromCart = (id) => async (dispatch, getState) => {
+export const removeAllFromCart = () => async (dispatch, getState) => {
   const {
     userLogin: { userInfo },
   } = getState()
 
-  const config = {
-    headers: {
-      Authorization: `Bearer ${userInfo.token}`,
-    },
-  }
-
-  await axios.put(`/api/cart/remove-all-item-cart`, {}, config)
-
   dispatch({ type: CART_MY_RESET })
+  localStorage.setItem(
+    `cartItems@${userInfo._id}`,
+    JSON.stringify(getState().cart.cartItems)
+  )
 }
 export const saveShippingAddress = (data) => async (dispatch) => {
   dispatch({

@@ -22,18 +22,24 @@ import {
   PRODUCT_TOP_REQUEST,
   PRODUCT_TOP_SUCCESS,
   PRODUCT_TOP_FAIL,
+  PRODUCT_BY_CATEGORY_REQUEST,
+  PRODUCT_BY_CATEGORY_SUCCESS,
+  PRODUCT_BY_CATEGORY_FAIL,
+  PRODUCT_ALL_REQUEST,
+  PRODUCT_ALL_SUCCESS,
+  PRODUCT_ALL_FAIL,
 } from '../constants/productConstants'
 
 export const listProducts =
-  (keyword = '', pageNumber = '') =>
+  (keyword = '', pageNumber = '', category = '', brand = '') =>
   async (dispatch) => {
     try {
       dispatch({ type: PRODUCT_LIST_REQUEST })
 
       const { data } = await axios.get(
-        `/api/products?keyword=${keyword}&page=${pageNumber}`
+        `/api/products?category=${category}&brand=${brand}&keyword=${keyword}&page=${pageNumber}`
       )
-
+      console.log(data)
       dispatch({
         type: PRODUCT_LIST_SUCCESS,
         payload: data,
@@ -48,6 +54,27 @@ export const listProducts =
       })
     }
   }
+
+export const listAllProducts = () => async (dispatch) => {
+  try {
+    dispatch({ type: PRODUCT_ALL_REQUEST })
+
+    const { data } = await axios.get(`/api/products/all`)
+
+    dispatch({
+      type: PRODUCT_ALL_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_ALL_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
 
 export const listTopProducts = () => async (dispatch) => {
   try {
@@ -70,11 +97,36 @@ export const listTopProducts = () => async (dispatch) => {
   }
 }
 
-export const detailsProduct = (slug) => async (dispatch) => {
+export const listProductsByCategory = (slug) => async (dispatch) => {
+  try {
+    dispatch({ type: PRODUCT_BY_CATEGORY_REQUEST })
+
+    const { data } = await axios.get(`/api/products/category/${slug}`)
+
+    dispatch({
+      type: PRODUCT_BY_CATEGORY_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_BY_CATEGORY_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+export const detailsProduct = (slug, type) => async (dispatch) => {
+  let path = `/api/products/${slug}/get`
+  if (type === 'id') {
+    path = `/api/products/${slug}`
+  }
   try {
     dispatch({ type: PRODUCT_DETAILS_REQUEST })
 
-    const { data } = await axios.get(`/api/products/${slug}/get`)
+    const { data } = await axios.get(path)
     dispatch({
       type: PRODUCT_DETAILS_SUCCESS,
       payload: data,

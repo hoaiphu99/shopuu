@@ -9,7 +9,7 @@ const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body
 
   const user = await User.findOne({ email: email }).populate({
-    path: 'cartItems',
+    path: 'wishListItems',
     populate: { path: 'product', select: 'name image slug price countInStock' },
   })
 
@@ -19,6 +19,7 @@ const authUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      wishListItems: user.wishListItems,
       token: generateToken(user._id),
     })
   } else {
@@ -56,7 +57,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @router  GET /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, phone, shippingAddress } = req.body
+  const { name, email, password, isAdmin, phone, shippingAddress } = req.body
 
   const userExist = await User.findOne({ email })
 
@@ -69,6 +70,7 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     email,
     password,
+    isAdmin,
     phone,
     shippingAddress,
   })
@@ -166,7 +168,9 @@ const updateUser = asyncHandler(async (req, res) => {
   if (user) {
     user.name = req.body.name || user.name
     user.email = req.body.email || user.email
-    user.isAdmin = req.body.isAdmin
+    user.isAdmin = req.body.isAdmin || user.isAdmin
+    user.phone = req.body.phone || user.phone
+    user.shippingAddress = req.body.shippingAddress || user.shippingAddress
 
     const updateUser = await user.save()
 
@@ -175,6 +179,8 @@ const updateUser = asyncHandler(async (req, res) => {
       name: updateUser.name,
       email: updateUser.email,
       isAdmin: updateUser.isAdmin,
+      phone: updateUser.phone,
+      shippingAddress: updateUser.shippingAddress,
     })
   } else {
     res.status(404)

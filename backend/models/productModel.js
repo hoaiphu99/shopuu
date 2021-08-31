@@ -27,25 +27,25 @@ const productSchema = mongoose.Schema(
     },
     name: {
       type: String,
-      required: true,
+      required: [true, 'Vui lòng nhập tên sản phẩm!'],
     },
     image: {
       type: String,
-      required: true,
+      required: [true, 'Chưa chọn hình ảnh!'],
     },
     brand: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
+      required: [true, 'Chưa chọn thương hiệu!'],
       ref: 'Brand',
     },
     category: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
+      required: [true, 'Chưa chọn danh mục!'],
       ref: 'Category',
     },
     description: {
       type: String,
-      required: true,
+      required: [true, 'Vui lòng nhập mô tả sản phẩm!'],
     },
     reviews: [reviewSchema],
     rating: {

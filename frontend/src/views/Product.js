@@ -2,11 +2,18 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Image } from 'react-bootstrap'
+import NumberFormat from 'react-number-format'
 import Rating from '../components/Rating'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import Meta from '../components/Meta'
-import { detailsProduct, createProductReview } from '../actions/productActions'
+import {
+  listProductsByCategory,
+  detailsProduct,
+  createProductReview,
+} from '../actions/productActions'
+import { listCategories } from '../actions/categoryActions'
+import { addToWishlist, removeFromWishlist } from '../actions/wishlistActions'
 import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants'
 import {
   message,
@@ -29,14 +36,18 @@ import {
   SwapLeftOutlined,
   ShoppingCartOutlined,
   CaretRightOutlined,
+  HeartTwoTone,
+  HeartFilled,
 } from '@ant-design/icons'
 
 const Product = ({ history, match }) => {
   const { Title, Text } = Typography
   const { Panel } = Collapse
   const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful']
+  let cate = { _id: '', name: '', slug: '' }
 
   const productSlug = match.params.slug
+  const cateSlug = match.params.cateSlug
 
   const [qty, setQty] = useState(1)
   const [rating, setRating] = useState(0)
@@ -46,8 +57,18 @@ const Product = ({ history, match }) => {
   const productDetails = useSelector((state) => state.productDetails)
   const { loading, error, product } = productDetails
 
+  const productByCategory = useSelector((state) => state.productByCategory)
+  const {
+    loading: loadingProductByCategory,
+    error: errorProductByCategory,
+    products: products,
+  } = productByCategory
+
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
+
+  const wishlist = useSelector((state) => state.wishlist)
+  const { wishlistItems } = wishlist
 
   const productReviewCreate = useSelector((state) => state.productReviewCreate)
   const {
@@ -61,11 +82,20 @@ const Product = ({ history, match }) => {
       setRating(0)
       dispatch({ type: PRODUCT_CREATE_REVIEW_RESET })
     }
+    dispatch(listProductsByCategory(cateSlug))
     dispatch(detailsProduct(productSlug))
   }, [dispatch, match, successProductReview])
 
   const addToCartHandler = () => {
     history.push(`/cart/${product._id}?qty=${qty}`)
+  }
+
+  const addToWishListHandler = (id) => {
+    dispatch(addToWishlist(id))
+  }
+
+  const removeFromWishlistHandler = (id) => {
+    dispatch(removeFromWishlist(id))
   }
 
   const submitHandler = (values) => {
@@ -79,8 +109,17 @@ const Product = ({ history, match }) => {
   return (
     <>
       <Link to='/'>
-        <Button type='primary' shape='round' icon={<SwapLeftOutlined />}>
-          Go back
+        <Button
+          onClick={history.goBack}
+          type='primary'
+          shape='round'
+          icon={
+            <SwapLeftOutlined
+              type='play-circle-o'
+              style={{ display: 'inline-block', verticalAlign: 'middle' }}
+            />
+          }>
+          Quay lại
         </Button>
       </Link>
       <Divider />
@@ -89,281 +128,192 @@ const Product = ({ history, match }) => {
       ) : error ? (
         <Message message={error} type='error' />
       ) : (
-        <>
-          <Row gutter={16}>
-            <Col className='gutter-row' span={8}>
-              <Image src={product.image} alt={product.name} fluid></Image>
-            </Col>
-            <Col className='gutter-row' span={8}>
-              <Card
-                title={product.name}
-                bordered={false}
-                headStyle={{ fontSize: '20px' }}>
-                <Rating
-                  value={product.rating}
-                  text={`${product.numberReviews} reviews`}
-                />
-                <Divider />
-                <Title level={4}>Price: ${product.price}</Title>
-                <Divider />
-                <Space direction='vertical'>
-                  <Text>
-                    {product.countInStock > 0 ? (
-                      <Alert banner message='In Stock' type='success' />
-                    ) : (
-                      <Alert banner message='Out of Stock' type='error' />
-                    )}
-                  </Text>
-                  <Text>
-                    <Space>
-                      <strong>Quantity:</strong>
-                      <InputNumber
-                        onChange={(value) => setQty(value)}
-                        min={1}
-                        max={product.countInStock}
-                        defaultValue={1}
-                      />
-                    </Space>
-                  </Text>
-
-                  <Button
-                    onClick={addToCartHandler}
-                    type='primary'
-                    block
-                    shape='round'
-                    size='large'
-                    icon={<ShoppingCartOutlined />}>
-                    ADD TO CART
-                  </Button>
-                </Space>
-              </Card>
-            </Col>
-            <Col className='gutter-row' span={8}>
-              <Divider>Related Products</Divider>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={16}>
-              <Collapse
-                bordered={false}
-                defaultActiveKey={['1']}
-                expandIcon={({ isActive }) => (
-                  <CaretRightOutlined rotate={isActive ? 90 : 0} />
-                )}
-                className='site-collapse-custom-collapse'>
-                <Panel
-                  header='DESCRIPTION'
-                  key='1'
-                  className='site-collapse-custom-panel'>
-                  <p>{product.description}</p>
-                </Panel>
-              </Collapse>
-            </Col>
-            <Col span={16}>
-              <Divider orientation='left'>Reviews</Divider>
-              {loadingProductReview && <Loader />}
-              {errorProductReview &&
-                message.error({
-                  content: `${errorProductReview}`,
-                  duration: 2,
-                })}
-              {userInfo ? (
-                <>
-                  <span>
-                    <Rate
-                      tooltips={desc}
-                      onChange={(value) => setRating(value)}
-                      value={rating}
-                    />
-                    {rating ? (
-                      <span className='ant-rate-text'>{desc[rating - 1]}</span>
-                    ) : (
-                      ''
-                    )}
-                  </span>
-                  <Form
-                    name='basic'
-                    labelCol={{ span: 3 }}
-                    wrapperCol={{ span: 18 }}
-                    onFinish={submitHandler}>
-                    <Form.Item
-                      label='Comment'
-                      name='comment'
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please input your review!',
-                        },
-                      ]}>
-                      <Input.TextArea />
-                    </Form.Item>
-
-                    <Form.Item wrapperCol={{ offset: 3, span: 18 }}>
-                      <Button type='primary' htmlType='submit'>
-                        Submit
-                      </Button>
-                    </Form.Item>
-                  </Form>{' '}
-                </>
-              ) : (
-                <Message message='Please login to reviews' type='error' />
-              )}
-              {product.reviews.length === 0 && (
-                <Message message='No reviews' type='info' />
-              )}
-              {product.reviews.map((review) => (
-                <Comment
-                  key={review._id}
-                  author={<strong>{review.name}</strong>}
-                  content={<p>{review.comment}</p>}
-                  datetime={<span>{review.createdAt.substring(0, 10)}</span>}
-                />
-              ))}
-            </Col>
-          </Row>
-          {/* <Row>
-            <Col md={6}>
-              <Image src={product.image} alt={product.name} fluid></Image>
-            </Col>
-            <Col md={3}>
-              <ListGroup variant='flush'>
-                <ListGroup.Item>
-                  <h3>{product.name}</h3>
-                </ListGroup.Item>
-                <ListGroup.Item>
+        product && (
+          <>
+            <Row gutter={16}>
+              <Col className='gutter-row' span={8}>
+                <Image src={product.image} alt={product.name} fluid></Image>
+              </Col>
+              <Col className='gutter-row' span={8}>
+                <Card
+                  title={product.name}
+                  bordered={false}
+                  headStyle={{ fontSize: '20px' }}>
                   <Rating
                     value={product.rating}
-                    text={`${product.numberReviews} reviews`}
+                    text={`${product.numberReviews} đánh giá`}
                   />
-                </ListGroup.Item>
-                <ListGroup.Item>Price: ${product.price}</ListGroup.Item>
-                <ListGroup.Item>
-                  Description: ${product.description}
-                </ListGroup.Item>
-              </ListGroup>
-            </Col>
-            <Col md={3}>
-              <Card>
-                <ListGroup variant='flush'>
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Price:</Col>
-                      <Col>
-                        <strong>${product.price}</strong>
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Status:</Col>
-                      <Col>
-                        <strong>
-                          {product.countInStock > 0
-                            ? 'In Stock'
-                            : 'Out of Stock'}
-                        </strong>
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
+                  <Divider />
+                  <Title level={4}>
+                    Giá:{' '}
+                    <NumberFormat
+                      value={product.price}
+                      displayType={'text'}
+                      thousandSeparator={true}
+                    />{' '}
+                    VNĐ
+                  </Title>
+                  <Divider />
+                  <Space direction='vertical'>
+                    <Text>
+                      {product.countInStock > 0 ? (
+                        <Alert banner message='Còn hàng' type='success' />
+                      ) : (
+                        <Alert banner message='Hết hàng' type='error' />
+                      )}
+                    </Text>
+                    <Text>
+                      <Space>
+                        <strong>Số lượng:</strong>
+                        <InputNumber
+                          onChange={(value) => setQty(value)}
+                          min={product.countInStock === 0 ? 0 : 1}
+                          max={product.countInStock}
+                          defaultValue={product.countInStock === 0 ? 0 : 1}
+                        />
+                      </Space>
+                    </Text>
 
-                  {product.countInStock > 0 && (
-                    <ListGroup.Item>
-                      <Row>
-                        <Col>Quantity</Col>
-                        <Col>
-                          <Form.Control
-                            as='select'
-                            value={qty}
-                            onChange={(e) => setQty(e.target.value)}>
-                            {[...Array(product.countInStock).keys()].map(
-                              (x) => (
-                                <option key={x + 1} value={x + 1}>
-                                  {x + 1}
-                                </option>
-                              )
-                            )}
-                          </Form.Control>
-                        </Col>
-                      </Row>
-                    </ListGroup.Item>
+                    <Row>
+                      <Space>
+                        <Button
+                          onClick={addToCartHandler}
+                          type='primary'
+                          disabled={product.countInStock === 0}
+                          shape='round'
+                          size='large'
+                          icon={
+                            <ShoppingCartOutlined
+                              type='play-circle-o'
+                              style={{
+                                display: 'inline-block',
+                                verticalAlign: 'text-top',
+                              }}
+                            />
+                          }>
+                          Thêm vào giỏ hàng
+                        </Button>
+                        {wishlistItems &&
+                        wishlistItems.find(
+                          (item) => product._id === item.product._id
+                        ) ? (
+                          <HeartFilled
+                            type='play-circle-o'
+                            style={{
+                              display: 'inline-block',
+                              verticalAlign: 'middle',
+                              fontSize: '30px',
+                              cursor: 'pointer',
+                              color: '#eb2f96',
+                            }}
+                            onClick={() =>
+                              removeFromWishlistHandler(product._id)
+                            }
+                          />
+                        ) : (
+                          <HeartTwoTone
+                            twoToneColor='#eb2f96'
+                            type='play-circle-o'
+                            style={{
+                              display: 'inline-block',
+                              verticalAlign: 'middle',
+                              fontSize: '30px',
+                              cursor: 'pointer',
+                            }}
+                            onClick={() => {
+                              addToWishListHandler(product._id)
+                            }}
+                          />
+                        )}
+                      </Space>
+                    </Row>
+                  </Space>
+                </Card>
+              </Col>
+              <Col className='gutter-row' span={8}>
+                <Divider>Các sản phẩm liên quan</Divider>
+                {loadingProductByCategory && <Loader />}
+                {products && (
+                  <Space direction='vertical' align='end'>
+                    {products
+                      .filter((i) => i._id !== product._id)
+                      .map((i) => (
+                        <Link to={`/${i.category.slug}/${i.slug}`}>
+                          <Card
+                            hoverable
+                            style={{ width: '50%', left: '25%' }}
+                            cover={<img alt={i.name} src={i.image} />}>
+                            <h1>
+                              <strong>{product.name}</strong>
+                            </h1>
+                            <Typography.Title level={5}>
+                              <NumberFormat
+                                value={product.price}
+                                displayType={'text'}
+                                thousandSeparator={true}
+                              />{' '}
+                              VNĐ
+                            </Typography.Title>
+                          </Card>
+                        </Link>
+                      ))}
+                  </Space>
+                )}
+              </Col>
+            </Row>
+            <Row>
+              <Col span={16}>
+                <Collapse
+                  bordered={false}
+                  defaultActiveKey={['1']}
+                  expandIcon={({ isActive }) => (
+                    <CaretRightOutlined
+                      type='play-circle-o'
+                      style={{
+                        display: 'inline-block',
+                        verticalAlign: 'middle',
+                      }}
+                      rotate={isActive ? 90 : 0}
+                    />
                   )}
+                  className='site-collapse-custom-collapse'>
+                  <Panel
+                    header='MÔ TẢ'
+                    key='1'
+                    className='site-collapse-custom-panel'>
+                    <p>{product.description}</p>
+                  </Panel>
+                </Collapse>
+              </Col>
+              <Col span={16}>
+                <Divider orientation='left'>Đánh giá</Divider>
+                {loadingProductReview && <Loader />}
+                {errorProductReview &&
+                  message.error({
+                    content: `${errorProductReview}`,
+                    duration: 2,
+                  })}
 
-                  <ListGroup.Item>
-                    <Row>
-                      <Button
-                        onClick={addToCartHandler}
-                        className='btn btn-dark btn btn-lg'
-                        type='button'
-                        disabled={product.countInStock === 0}>
-                        Add To Cart
-                      </Button>
-                    </Row>
-                  </ListGroup.Item>
-                </ListGroup>
-              </Card>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
-              <h2>Reviews</h2>
-              {product.reviews.length === 0 && (
-                <Message variant='primary'>No reviews</Message>
-              )}
-              <ListGroup variant='flush'>
+                {product.reviews.length === 0 && (
+                  <Message message='Không có đánh giá nào' type='info' />
+                )}
                 {product.reviews.map((review) => (
-                  <ListGroup.Item key={review._id}>
-                    <strong>{review.name}</strong>
+                  <>
+                    <Comment
+                      key={review._id}
+                      author={<strong>{review.name}</strong>}
+                      content={<p>{review.comment}</p>}
+                      datetime={
+                        <span>{review.createdAt.substring(0, 10)}</span>
+                      }
+                    />
                     <Rating value={review.rating} />
-                    <p>{review.createdAt.substring(0, 10)}</p>
-                    <p>{review.comment}</p>
-                  </ListGroup.Item>
+                  </>
                 ))}
-                <ListGroup.Item>
-                  <h2>Place a review</h2>
-                  {loadingProductReview && <Loader />}
-                  {errorProductReview && (
-                    <Message variant='danger'>{errorProductReview}</Message>
-                  )}
-                  {userInfo ? (
-                    <Form onSubmit={submitHandler}>
-                      <Form.Group controlId='rating'>
-                        <Form.Label>Rating</Form.Label>
-                        <Form.Control
-                          as='select'
-                          value={rating}
-                          onChange={(e) => setRating(e.target.value)}>
-                          <option value=''>---Select---</option>
-                          <option value='1'>1 - Poor</option>
-                          <option value='2'>2 - Fair</option>
-                          <option value='3'>3 - Good-</option>
-                          <option value='4'>4 - Very good</option>
-                          <option value='5'>5 - Excellent</option>
-                        </Form.Control>
-                      </Form.Group>
-                      <Form.Group controlId='comment'>
-                        <Form.Label>Comment</Form.Label>
-                        <Form.Control
-                          as='textarea'
-                          row='3'
-                          value={comment}
-                          onChange={(e) =>
-                            setComment(e.target.value)
-                          }></Form.Control>
-                      </Form.Group>
-                      <Button type='submit' variant='btn btn-dark'>
-                        Submit
-                      </Button>
-                    </Form>
-                  ) : (
-                    <Message>
-                      Please <Link to='/login'>sign in</Link> to review
-                    </Message>
-                  )}
-                </ListGroup.Item>
-              </ListGroup>
-            </Col>
-          </Row> */}
-        </>
+              </Col>
+            </Row>
+          </>
+        )
       )}
     </>
   )

@@ -6,7 +6,7 @@ const brandSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, 'Vui lòng nhập tên thương hiệu!'],
     },
     description: {
       type: String,

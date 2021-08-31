@@ -31,7 +31,7 @@ const Payment = ({ history }) => {
   return (
     <>
       <Row>
-        <Col span={12} offset={6}>
+        <Col span={16} offset={4}>
           <CheckoutSteps step1 step2 step3 />
           <Divider />
         </Col>

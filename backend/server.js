@@ -4,7 +4,11 @@ import dotenv from 'dotenv'
 import colors from 'colors'
 import morgan from 'morgan'
 import connectDB from './config/db.js'
-import { notFound, errorHandler } from './middleware/errorMiddleware.js'
+import {
+  notFound,
+  errorHandler,
+  customErrorHandler,
+} from './middleware/errorMiddleware.js'
 import route from './routes/index.js'
 
 dotenv.config()

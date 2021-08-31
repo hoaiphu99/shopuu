@@ -31,7 +31,7 @@ const createCategory = asyncHandler(async (req, res) => {
   if (category) {
     res.status(201).json(category)
   } else {
-    res.status(400)
+    res.status(404)
     throw new Error('Category not found')
   }
 })

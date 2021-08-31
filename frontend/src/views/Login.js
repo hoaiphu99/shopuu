@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../actions/userActions'
+import { getMyWishlist } from '../actions/wishlistActions'
 import {
   Row,
   Col,
@@ -28,7 +29,8 @@ const Login = ({ location, history }) => {
 
   useEffect(() => {
     if (userInfo) {
-      message.success({ content: 'Login success!', key, duration: 2 })
+      dispatch(getMyWishlist())
+      message.success({ content: 'Đăng nhập thành công!', key, duration: 2 })
       history.push(redirect)
       // setTimeout(() => {
 
@@ -44,12 +46,13 @@ const Login = ({ location, history }) => {
   return (
     <>
       <Row justify='center'>
-        <Col span={3}>
-          <Title>Login</Title>
+        <Col span={4}>
+          <Title>Đăng nhập</Title>
         </Col>
       </Row>
       <Row justify='center'>
-        {loading && message.loading({ content: 'Login...', key, duration: 10 })}
+        {loading &&
+          message.loading({ content: 'Đang đăng nhập...', key, duration: 10 })}
         {error && message.error({ content: `${error}`, key, duration: 2 })}
         <Col span={6}>
           <Form
@@ -64,7 +67,7 @@ const Login = ({ location, history }) => {
               rules={[
                 {
                   required: true,
-                  message: 'Please input your Email!',
+                  message: 'Vui lòng nhập Email!',
                 },
               ]}>
               <Input
@@ -77,22 +80,22 @@ const Login = ({ location, history }) => {
               rules={[
                 {
                   required: true,
-                  message: 'Please input your Password!',
+                  message: 'Vui lòng nhập mật khẩu!',
                 },
               ]}>
               <Input
                 prefix={<LockOutlined className='site-form-item-icon' />}
                 type='password'
-                placeholder='Password'
+                placeholder='Mật khẩu'
               />
             </Form.Item>
             <Form.Item>
               <Form.Item name='remember' valuePropName='checked' noStyle>
-                <Checkbox>Remember me</Checkbox>
+                <Checkbox>Nhớ tài khoản</Checkbox>
               </Form.Item>
 
               <Link className='login-form-forgot' to='/'>
-                Forgot password
+                Quên mật khẩu
               </Link>
             </Form.Item>
 
@@ -101,12 +104,12 @@ const Login = ({ location, history }) => {
                 type='primary'
                 htmlType='submit'
                 className='login-form-button'>
-                Log in
+                Đăng nhập
               </Button>
-              Or{' '}
+              Hoặc{' '}
               <Link
                 to={redirect ? `/register?redirect=${redirect}` : '/register'}>
-                register now!
+                đăng ký ngay!
               </Link>
             </Form.Item>
           </Form>

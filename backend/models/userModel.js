@@ -1,21 +1,25 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 import mongooseDelete from 'mongoose-delete'
+import validator from 'validator'
 
 const userSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, 'Vui lòng nhập tên!'],
     },
     email: {
       type: String,
-      required: true,
+      required: [true, 'Vui lòng nhập email!'],
       unique: true,
+      lowercase: true,
+      validate: [validator.isEmail, 'Email không hợp lệ'],
     },
     password: {
       type: String,
-      required: true,
+      required: [true, 'Vui lòng nhập mật khẩu!'],
+      minlength: [6, 'Mật khẩu phải từ 6 ký tự trở lên!'],
     },
     phone: {
       type: String,
@@ -26,9 +30,8 @@ const userSchema = mongoose.Schema(
       district: { type: String, required: true, default: ' ' },
       ward: { type: String, required: true, default: ' ' },
     },
-    cartItems: [
+    wishListItems: [
       {
-        qty: { type: Number, required: true },
         product: {
           type: mongoose.Schema.Types.ObjectId,
           required: true,

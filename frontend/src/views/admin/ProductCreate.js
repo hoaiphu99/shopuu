@@ -1,160 +1,242 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
-import { Form, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import Message from '../../components/Message'
+import Breadcrumb from '../../components/BreadcrumbComp'
 import Loader from '../../components/Loader'
-import FormContainer from '../../components/FormContainer'
 import { createProduct } from '../../actions/productActions'
 import { PRODUCT_CREATE_RESET } from '../../constants/productConstants'
+import {
+  formItemLayoutDetails,
+  tailFormItemLayoutDetails,
+} from '../../constants/formConstants'
+import {
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  Button,
+  message,
+  Upload,
+} from 'antd'
+import {
+  UploadOutlined,
+} from '@ant-design/icons'
+import { listCategories } from '../../actions/categoryActions'
+import { listBrands } from '../../actions/brandActions'
 
 const ProductCreate = ({ history }) => {
-  const [name, setName] = useState('')
-  const [price, setPrice] = useState(0)
   const [image, setImage] = useState('')
-  const [brand, setBrand] = useState('')
-  const [category, setCategory] = useState('')
-  const [countInStock, setCountInStock] = useState(0)
-  const [description, setDescription] = useState('')
   const [uploading, setUploading] = useState(false)
+  const [cateSelect, setCateSelect] = useState([])
+  const [brandSelect, setBrandSelect] = useState([])
+
+  const [form] = Form.useForm()
 
   const dispatch = useDispatch()
 
   const productCreate = useSelector((state) => state.productCreate)
   const { loading, error, success } = productCreate
 
+  const categoryList = useSelector((state) => state.categoryList)
+  const { loading: loadingCate, categories } = categoryList
+
+  const brandList = useSelector((state) => state.brandList)
+  const { loading: loadingBrand, brands } = brandList
+
+  const key = 'create'
+
   useEffect(() => {
+    if (
+      !categories ||
+      !brands ||
+      categories.length === 0 ||
+      brands.length === 0
+    ) {
+      dispatch(listCategories())
+      dispatch(listBrands())
+    } else {
+      setCateSelect(categories)
+      setBrandSelect(brands)
+    }
     if (success) {
+      message.success({ content: 'Đã thêm!', key, duration: 2 })
       dispatch({ type: PRODUCT_CREATE_RESET })
       history.push('/admin/products')
     }
-  }, [dispatch, success])
+  }, [dispatch, history, success, loadingBrand])
 
-  const submitHandler = (e) => {
-    e.preventDefault()
-    dispatch(
-      createProduct({
-        name,
-        price,
-        image,
-        brand,
-        category,
-        countInStock,
-        description,
-      })
-    )
+  const submitHandler = (values) => {
+    const data = {
+      name: values.name,
+      price: values.price,
+      image: image,
+      brand: values.brand,
+      category: values.category,
+      countInStock: values.countInStock,
+      description: values.description ? values.description : ' ',
+    }
+    console.log(data)
+    dispatch(createProduct(data))
   }
 
-  const uploadFileHandler = async (e) => {
-    const file = e.target.files[0]
+  const uploadFileHandler = async (file) => {
+    console.log(file)
+    //const uploadFile = file.file
     const formData = new FormData()
-    formData.append('image', file)
+    formData.set('image', file, `${file.lastModified}-${file.name}`)
     setUploading(true)
-
     try {
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       }
-
       const { data } = await axios.post('/api/upload', formData, config)
-      setImage(data)
+      setImage(data.fileLocation)
       setUploading(false)
+      console.log(data)
     } catch (error) {
       console.log(error)
       setUploading(false)
     }
   }
 
+  const normFile = (e) => {
+    console.log('Upload event:', e)
+    if (Array.isArray(e)) {
+      return e
+    }
+    if (!e.file.status || e.file.status !== 'removed') {
+      uploadFileHandler(e.file)
+    }
+    return e && e.fileList
+  }
+
   return (
     <>
-      <Link to='/admin/products' className='btn btn-light my-3'>
-        Go back
-      </Link>
-      <FormContainer>
-        <h1>Create Product</h1>
-        {loading && <Loader />}
-        {error && <Message variant='danger'>{error}</Message>}
-        <Form onSubmit={submitHandler}>
-          <Form.Group controlId='name'>
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type='text'
-              placeholder='Enter name'
-              value={name}
-              onChange={(e) => setName(e.target.value)}></Form.Control>
-          </Form.Group>
+      <Breadcrumb link1='Admin' link2='Sản phẩm' link3='Thêm mới' />
+      <Button
+        type='primary'
+        onClick={() => history.push('/admin/products')}
+        style={{
+          marginBottom: 16,
+        }}>
+        Trở về
+      </Button>
+      {loading &&
+        message.loading({ content: 'Đang thêm...', key, duration: 10 })}
+      {error && message.error({ content: `${error}`, key, duration: 2 })}
+      <Form
+        // onValuesChange={onValuesChange}
+        {...formItemLayoutDetails}
+        form={form}
+        name='create'
+        onFinish={submitHandler}
+        scrollToFirstError>
+        <Form.Item
+          name='name'
+          label='Tên sản phẩm'
+          rules={[
+            {
+              required: true,
+              message: 'Vui lòng nhập tên sản phẩm',
+            },
+          ]}>
+          <Input />
+        </Form.Item>
 
-          <Form.Group controlId='price'>
-            <Form.Label className='mt-4'>Price</Form.Label>
-            <Form.Control
-              type='number'
-              placeholder='0'
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}></Form.Control>
-          </Form.Group>
+        <Form.Item name='description' label='Mô tả'>
+          <Input.TextArea />
+        </Form.Item>
 
-          <Form.Group controlId='image'>
-            <Form.Label className='mt-4'>Image</Form.Label>
-            <Form.Control
-              type='text'
-              placeholder='Enter Image url'
-              value={image}
-              onChange={(e) => setImage(e.target.value)}></Form.Control>
-            <Form.File
-              id='image-file'
-              label='Choose File'
-              custom
-              onChange={uploadFileHandler}></Form.File>
+        <Form.Item
+          name='price'
+          label='Giá'
+          rules={[
+            {
+              required: true,
+              message: 'Vui lòng nhập giá!',
+            },
+          ]}>
+          <InputNumber />
+        </Form.Item>
+
+        <Form.Item
+          name='countInStock'
+          label='Số lượng tồn'
+          rules={[
+            {
+              required: true,
+              message: 'Vui lòng nhập số lượng tồn',
+            },
+          ]}>
+          <InputNumber />
+        </Form.Item>
+
+        <Form.Item
+          name='brand'
+          label='Thương hiệu'
+          rules={[
+            {
+              required: true,
+              message: 'Vui lòng chọn thương hiệu',
+            },
+          ]}>
+          <Select placeholder='Chọn thương hiệu'>
+            {!loadingBrand &&
+              brandSelect.map((b) => (
+                <Select.Option key={b._id} value={b._id}>
+                  {b.name}
+                </Select.Option>
+              ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          name='category'
+          label='Danh mục'
+          rules={[
+            {
+              required: true,
+              message: 'Vui lòng chọn danh mục',
+            },
+          ]}>
+          <Select placeholder='Chọn danh mục'>
+            {cateSelect.map((c) => (
+              <Select.Option key={c._id} value={c._id}>
+                {c.name}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          name='upload'
+          label='Hình ảnh'
+          rules={[
+            {
+              required: true,
+              message: 'Vui lòng chọn ảnh',
+            },
+          ]}
+          valuePropName='fileList'
+          getValueFromEvent={normFile}>
+          <Upload
+            name='logo'
+            beforeUpload={() => false}
+            // action={uploadFileHandler}
+            listType='picture'>
+            <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
             {uploading && <Loader />}
-          </Form.Group>
+          </Upload>
+        </Form.Item>
 
-          <Form.Group controlId='brand'>
-            <Form.Label className='mt-4'>Brand</Form.Label>
-            <Form.Control
-              type='text'
-              placeholder='Enter Brand'
-              value={brand}
-              onChange={(e) => setBrand(e.target.value)}></Form.Control>
-          </Form.Group>
-
-          <Form.Group controlId='countInStock'>
-            <Form.Label className='mt-4'>Count In Stock</Form.Label>
-            <Form.Control
-              type='number'
-              placeholder='Enter Count In Stock'
-              value={countInStock}
-              onChange={(e) => setCountInStock(e.target.value)}></Form.Control>
-          </Form.Group>
-
-          <Form.Group controlId='category'>
-            <Form.Label className='mt-4'>Category</Form.Label>
-            <Form.Control
-              type='text'
-              placeholder='Enter Category'
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}></Form.Control>
-          </Form.Group>
-
-          <Form.Group controlId='description'>
-            <Form.Label className='mt-4'>Description</Form.Label>
-            <Form.Control
-              type='text'
-              placeholder='Enter Description'
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}></Form.Control>
-          </Form.Group>
-
-          <Button
-            type='submit'
-            variant='primary'
-            className='btn btn-success mt-2'>
-            Create
+        <Form.Item {...tailFormItemLayoutDetails}>
+          <Button type='primary' htmlType='submit'>
+            Thêm mới
           </Button>
-        </Form>
-      </FormContainer>
+        </Form.Item>
+      </Form>
     </>
   )
 }

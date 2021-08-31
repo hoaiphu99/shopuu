@@ -2,6 +2,7 @@ import express from 'express'
 import {
   addOrderItems,
   getOrderById,
+  updateOrderStatus,
   updateOrderToPaid,
   updateOrderToDelivered,
   getMyOrders,
@@ -16,6 +17,7 @@ router.get('/', protect, admin, getOrders)
 router.get('/myorders', protect, getMyOrders)
 router.get('/:id', protect, getOrderById)
 router.put('/:id/pay', protect, updateOrderToPaid)
+router.put('/:id/status', protect, updateOrderStatus)
 router.put('/:id/deliver', protect, admin, updateOrderToDelivered)
 
 export default router

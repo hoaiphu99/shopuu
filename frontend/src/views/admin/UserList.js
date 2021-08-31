@@ -20,7 +20,13 @@ import {
 } from '@ant-design/icons'
 import Loader from '../../components/Loader'
 import Breadcrumb from '../../components/BreadcrumbComp'
-import { listUsers, deleteUser } from '../../actions/userActions'
+import UserEdit from './UserEdit'
+import {
+  listUsers,
+  deleteUser,
+  getUserDetails,
+  updateUser,
+} from '../../actions/userActions'
 import {
   USER_CREATE_RESET,
   USER_UPDATE_RESET,
@@ -32,6 +38,8 @@ const UserList = ({ history }) => {
   const { Column } = Table
 
   const [isAdd, setIsAdd] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
+  const [editingKey, setEditingKey] = useState('')
 
   const dispatch = useDispatch()
 
@@ -40,6 +48,9 @@ const UserList = ({ history }) => {
 
   const userList = useSelector((state) => state.userList)
   const { loading, error, users } = userList
+
+  const userDetails = useSelector((state) => state.userDetails)
+  const { user } = userDetails
 
   const userDelete = useSelector((state) => state.userDelete)
   const {
@@ -57,7 +68,7 @@ const UserList = ({ history }) => {
       if (!users || users.length <= 0) {
         dispatch(listUsers())
       } else if (successDelete) {
-        message.success({ content: 'Deleted!', key, duration: 2 })
+        message.success({ content: 'Đã xóa!', key, duration: 2 })
         dispatch({ type: USER_DELETE_RESET })
         dispatch(listUsers())
       }
@@ -120,7 +131,9 @@ const UserList = ({ history }) => {
       render: (_, record) => {
         return (
           <Space size='middle'>
-            <Typography.Link>Chi tiết</Typography.Link>
+            <Typography.Link onClick={() => edit(record)}>
+              Chi tiết
+            </Typography.Link>
             <Popconfirm
               title='Chắc chắn xóa?'
               onConfirm={() => handleDelete(record._id)}>
@@ -132,57 +145,39 @@ const UserList = ({ history }) => {
     },
   ]
 
+  const edit = (record) => {
+    //console.log(record)
+    history.push(`users/${record._id}`)
+  }
+
   return (
     <>
       <div>
         <Breadcrumb link1='Admin' link2='Người dùng' />
         <Button
           type='primary'
-          onClick={() => setIsAdd(!isAdd)}
+          onClick={() => {
+            history.push('/admin/users/create')
+          }}
           style={{
             marginBottom: 16,
           }}>
-          {!isAdd ? 'Thêm mới' : 'Hủy'}
+          {isEdit ? 'Trở về' : !isAdd ? 'Thêm mới' : 'Hủy'}
         </Button>
         {loadingDelete &&
-          message.loading({ content: 'Deleting...', key, duration: 10 })}
+          message.loading({ content: 'Đang xóa...', key, duration: 10 })}
         {errorDelete &&
           message.error({ content: `${errorDelete}`, key, duration: 2 })}
         {error && message.error({ content: `${error}`, duration: 2 })}
         {loading ? (
           <Loader />
-        ) : !isAdd ? (
+        ) : (
           <Table
             rowKey={(record) => record._id}
             columns={columns}
             dataSource={users}
             pagination={true}
             scroll={{ x: 1200, y: 400 }}></Table>
-        ) : (
-          <>
-            <Form
-              name='basic'
-              labelCol={{ span: 4 }}
-              wrapperCol={{ span: 16 }}
-              onFinish={handleCreate}>
-              <Form.Item
-                label='Tên'
-                name='name'
-                rules={[{ required: true, message: 'Vui lòng nhậ tên!' }]}>
-                <Input />
-              </Form.Item>
-
-              <Form.Item label='Mô tả' name='description'>
-                <Input.TextArea row={3} showCount maxLength={100} />
-              </Form.Item>
-
-              <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
-                <Button type='primary' htmlType='submit'>
-                  Thêm
-                </Button>
-              </Form.Item>
-            </Form>
-          </>
         )}
       </div>
     </>

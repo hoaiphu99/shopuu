@@ -4,7 +4,10 @@ import orderRoutes from './orderRoutes.js'
 import uploadRoutes from './uploadRoutes.js'
 import categoryRoutes from './categoryRoutes.js'
 import brandRoutes from './brandRoutes.js'
-import cartRoutes from './cartRoutes.js'
+import wishListRoutes from './wishListRoutes.js'
+import supplierRoutes from './supplierRoutes.js'
+import orderSupplierRoutes from './orderSupplierRoutes.js'
+import importRoutes from './importRoutes.js'
 
 const route = (app) => {
   app.use('/api/products', productRoutes)
@@ -13,7 +16,10 @@ const route = (app) => {
   app.use('/api/upload', uploadRoutes)
   app.use('/api/categories', categoryRoutes)
   app.use('/api/brands', brandRoutes)
-  app.use('/api/cart', cartRoutes)
+  app.use('/api/wishlist', wishListRoutes)
+  app.use('/api/suppliers', supplierRoutes)
+  app.use('/api/order-suppliers', orderSupplierRoutes)
+  app.use('/api/imports', importRoutes)
 }
 
 export default route
