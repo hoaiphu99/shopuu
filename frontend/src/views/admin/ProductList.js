@@ -26,7 +26,7 @@ import { PRODUCT_DELETE_RESET } from '../../constants/productConstants'
 
 const ProductList = ({ match, history }) => {
   const dispatch = useDispatch()
-
+  console.log(history)
   const productAll = useSelector((state) => state.productAll)
   const { loading, error, products } = productAll
 
@@ -43,9 +43,11 @@ const ProductList = ({ match, history }) => {
   const key = 'msg'
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
-      if (!products || products.length <= 0) {
-        dispatch(listAllProducts())
-      } else if (successDelete) {
+      dispatch(listAllProducts())
+      // if (!products || products.length <= 0) {
+      //   //dispatch(listAllProducts())
+      // } else
+      if (successDelete) {
         message.success({ content: 'Đã xóa!', key, duration: 2 })
         dispatch({ type: PRODUCT_DELETE_RESET })
         dispatch(listAllProducts())

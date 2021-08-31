@@ -137,24 +137,29 @@ const Product = ({ history, match }) => {
                     <Image src={product.image} alt={product.name} fluid></Image>
                   </Col>
                   <Col className='gutter-row' span={12}>
-                    <Card
-                      title={product.name}
-                      bordered={false}
-                      headStyle={{ fontSize: '20px' }}>
+                    <Card bordered={false} headStyle={{ fontSize: '20px' }}>
+                      <Title level={4}>{product.name}</Title>
                       <Rating
                         value={product.rating}
                         text={`${product.numberReviews} đánh giá`}
                       />
                       <Divider />
-                      <Title level={4}>
-                        Giá:{' '}
-                        <NumberFormat
-                          value={product.price}
-                          displayType={'text'}
-                          thousandSeparator={true}
-                        />{' '}
-                        VNĐ
-                      </Title>
+                      <Space align='center'>
+                        <Title level={4}>
+                          Giá:{' '}
+                          <NumberFormat
+                            value={product.price}
+                            displayType={'text'}
+                            thousandSeparator={true}
+                          />
+                          <sup>đ</sup>
+                        </Title>
+                        {product.discount !== 0 && (
+                          <Text delete>
+                            1000<sup>đ</sup>
+                          </Text>
+                        )}
+                      </Space>
                       <Divider />
                       <Space direction='vertical'>
                         <Text>
