@@ -64,7 +64,7 @@ const Header = () => {
           <Col span={6}>
             <div className='logo'>
               <Typography.Title level={3}>
-                <Link to='/'>Shoppu</Link>
+                <Link to='/'>Shopuu</Link>
               </Typography.Title>
             </div>
           </Col>
