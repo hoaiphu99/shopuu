@@ -120,8 +120,8 @@ const PlaceOrder = ({ history }) => {
                     <>
                       <Col span={6}>
                         <Image
-                          src={item.images[0].imageLink}
-                          alt={item.images[0].imageName}
+                          src={item.image}
+                          alt={item.name}
                           width={150}
                         />
                       </Col>

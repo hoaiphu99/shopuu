@@ -236,8 +236,8 @@ const Order = ({ match, history }) => {
                     <>
                       <Col span={6}>
                         <Image
-                          src={item.product.images[0].imageLink}
-                          alt={item.product.images[0].imageName}
+                          src={item.image}
+                          alt={item.name}
                           width={150}
                         />
                       </Col>

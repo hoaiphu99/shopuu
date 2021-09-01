@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import Product from '../models/productModel.js'
+import Order from '../models/orderModel.js'
 import Category from '../models/categoryModel.js'
 import { customErrorHandler } from '../middleware/errorMiddleware.js'
 
@@ -312,6 +313,28 @@ const getTopProducts = asyncHandler(async (req, res) => {
     const products = await Product.find({})
       .populate([
         { path: 'category', select: 'name slug' },
+        { path: 'brand', select: 'name slug' },
+      ])
+      .sort({ rating: -1 })
+      .limit(3)
+
+    res.json({ status: 'success', data: products, errors: null })
+  } catch (error) {
+    const errors = customErrorHandler(error, res)
+    res
+      .status(errors.statusCode)
+      .json({ status: 'fail', data: null, errors: errors.message })
+  }
+})
+
+// Get top rated products
+// [GET] /api/products/topbuy
+// public
+const getTopBuyProducts = asyncHandler(async (req, res) => {
+  try {
+    const products = await Order.find({})
+      .populate([
+        { path: 'cartItems', select: 'name slug' },
         { path: 'brand', select: 'name slug' },
       ])
       .sort({ rating: -1 })
