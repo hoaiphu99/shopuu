@@ -43,6 +43,7 @@ const ProductEdit = ({ match, history }) => {
   const [category, setCategory] = useState({})
   const [countInStock, setCountInStock] = useState(0)
   const [description, setDescription] = useState('')
+  const [discount, setDiscount] = useState(0)
   const [uploading, setUploading] = useState(false)
 
   const dispatch = useDispatch()
@@ -95,6 +96,7 @@ const ProductEdit = ({ match, history }) => {
         })
         setName(product.name)
         setPrice(product.price)
+        setDiscount(product.discount)
         setImages(product.images)
         setFileList(fileList)
         setBrand(product.brand)
@@ -153,10 +155,12 @@ const ProductEdit = ({ match, history }) => {
   }
 
   const submitHandler = (values) => {
+    console.log(values)
     const data = {
       _id: productId,
       name: values.name,
       price: values.price,
+      discount: values.discount,
       images: images,
       brand: values.brand === brand.name ? brand._id : values.brand,
       category:
@@ -205,7 +209,7 @@ const ProductEdit = ({ match, history }) => {
       ) : (
         name && (
           <Form
-            // onValuesChange={onValuesChange}
+            onValuesChange={(values) => console.log(values)}
             {...formItemLayoutDetails}
             form={form}
             name='create'
@@ -233,7 +237,7 @@ const ProductEdit = ({ match, history }) => {
 
             <Form.Item
               name='price'
-              label='Giá'
+              label='Giá (VNĐ)'
               initialValue={price}
               rules={[
                 {
@@ -241,7 +245,14 @@ const ProductEdit = ({ match, history }) => {
                   message: 'Vui lòng nhập giá!',
                 },
               ]}>
-              <InputNumber />
+              <InputNumber min='0' />
+            </Form.Item>
+
+            <Form.Item
+              name='discount'
+              label='Giảm giá (%)'
+              initialValue={discount}>
+              <InputNumber min='0' />
             </Form.Item>
 
             <Form.Item
@@ -254,7 +265,7 @@ const ProductEdit = ({ match, history }) => {
                   message: 'Vui lòng nhập số lượng tồn',
                 },
               ]}>
-              <InputNumber />
+              <InputNumber min='0' />
             </Form.Item>
 
             <Form.Item

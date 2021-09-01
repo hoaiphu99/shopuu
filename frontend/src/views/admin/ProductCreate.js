@@ -183,14 +183,18 @@ const ProductCreate = ({ history }) => {
 
         <Form.Item
           name='price'
-          label='Giá'
+          label='Giá (VNĐ)'
           rules={[
             {
               required: true,
               message: 'Vui lòng nhập giá!',
             },
           ]}>
-          <InputNumber />
+          <InputNumber min='0' />
+        </Form.Item>
+
+        <Form.Item name='discount' label='Giảm giá (%)'>
+          <InputNumber min='0' />
         </Form.Item>
 
         <Form.Item
@@ -202,7 +206,7 @@ const ProductCreate = ({ history }) => {
               message: 'Vui lòng nhập số lượng tồn',
             },
           ]}>
-          <InputNumber />
+          <InputNumber min='0' />
         </Form.Item>
 
         <Form.Item

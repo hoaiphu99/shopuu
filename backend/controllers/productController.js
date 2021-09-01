@@ -213,19 +213,29 @@ const createProduct = asyncHandler(async (req, res) => {
 // private/admin
 const updateProduct = asyncHandler(async (req, res) => {
   try {
-    const { name, price, description, images, brand, category, countInStock } =
-      req.body
+    const {
+      name,
+      price,
+      discount,
+      description,
+      images,
+      brand,
+      category,
+      countInStock,
+    } = req.body
 
     const product = await Product.findById(req.params.id)
 
     if (product) {
       product.name = name || product.name
       product.price = price || product.price
+      product.discount = discount === 0 ? 0 : discount || product.discount
       product.description = description || product.description
       product.images = images || product.images
       product.brand = brand || product.brand
       product.category = category || product.category
-      product.countInStock = countInStock || product.countInStock
+      product.countInStock =
+        countInStock === 0 ? 0 : countInStock || product.countInStock
 
       const updateProduct = await product.save()
       res

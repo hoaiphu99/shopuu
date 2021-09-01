@@ -28,7 +28,6 @@ export const getMyWishlist = () => async (dispatch, getState) => {
     `wishlistItems@${userInfo._id}`,
     JSON.stringify(getState().wishlist.wishlistItems)
   )
-  console.log('------------lay item')
 }
 
 export const addToWishlist = (id) => async (dispatch, getState) => {
@@ -57,11 +56,10 @@ export const addToWishlist = (id) => async (dispatch, getState) => {
     `wishlistItems@${userInfo._id}`,
     JSON.stringify(getState().wishlist.wishlistItems)
   )
-  console.log('------------add item')
 }
 
 export const removeFromWishlist = (id) => async (dispatch, getState) => {
-  console.log('---cai lon me dm ')
+
   const {
     userLogin: { userInfo },
   } = getState()

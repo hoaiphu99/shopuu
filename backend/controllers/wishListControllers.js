@@ -12,7 +12,7 @@ const getMyWishList = asyncHandler(async (req, res) => {
         path: 'wishListItems',
         populate: {
           path: 'product',
-          select: 'name image slug price countInStock',
+          select: 'name images slug price countInStock',
         },
       })
       .select('wishListItems -_id')
@@ -67,7 +67,7 @@ const addItemToWishList = asyncHandler(async (req, res) => {
             _id: product._id,
             name: product.name,
             price: product.price,
-            image: product.image,
+            images: product.images,
             countInStock: product.countInStock,
             slug: product.slug,
           },

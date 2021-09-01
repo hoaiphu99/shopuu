@@ -149,11 +149,13 @@ const Product = ({ history, match }) => {
                         text={`${product.numberReviews} đánh giá`}
                       />
                       <Divider />
-                      <Space align='center'>
+                      <Space align='baseline'>
                         <Title level={4}>
                           Giá:{' '}
                           <NumberFormat
-                            value={product.price}
+                            value={
+                              product.price * ((100 - product.discount) / 100)
+                            }
                             displayType={'text'}
                             thousandSeparator={true}
                           />
@@ -161,7 +163,12 @@ const Product = ({ history, match }) => {
                         </Title>
                         {product.discount !== 0 && (
                           <Text delete>
-                            1000<sup>đ</sup>
+                            <NumberFormat
+                              value={product.price}
+                              displayType={'text'}
+                              thousandSeparator={true}
+                            />
+                            <sup>đ</sup>
                           </Text>
                         )}
                       </Space>

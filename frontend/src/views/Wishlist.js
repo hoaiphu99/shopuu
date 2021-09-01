@@ -50,8 +50,14 @@ const WishList = ({ match, location, history }) => {
                   <>
                     <Col span={5}>
                       <Image
-                        src={product.image}
-                        alt={product.name}
+                        src={
+                          product.images &&
+                          product.images[0].imageLink
+                        }
+                        alt={
+                          product.images &&
+                          product.images[0].imageName
+                        }
                         width={150}
                       />
                     </Col>
