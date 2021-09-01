@@ -189,7 +189,7 @@ const createProduct = asyncHandler(async (req, res) => {
       user: req.user._id,
       name: req.body.name,
       price: req.body.price,
-      image: req.body.image,
+      images: req.body.images,
       brand: req.body.brand,
       category: req.body.category,
       countInStock: req.body.countInStock,
@@ -201,10 +201,10 @@ const createProduct = asyncHandler(async (req, res) => {
       .status(201)
       .json({ status: 'success', data: createProduct, errors: null })
   } catch (error) {
-    const errors = customErrorHandler(error, res)
-    res
-      .status(errors.statusCode)
-      .json({ status: 'fail', data: null, errors: errors.message })
+    // const errors = customErrorHandler(error, res)
+    res.status(400)
+    throw new Error(error)
+    // .json({ status: 'fail', data: null, errors: errors.message })
   }
 })
 

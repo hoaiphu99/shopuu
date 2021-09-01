@@ -134,7 +134,14 @@ const Product = ({ history, match }) => {
               <Col className='gutter-row' span={16}>
                 <Row>
                   <Col className='gutter-row' span={12}>
-                    <Image src={product.image} alt={product.name} fluid></Image>
+                    <Image
+                      src={
+                        product && product.images && product.images[0].imageLink
+                      }
+                      alt={
+                        product && product.images && product.images[0].imageName
+                      }
+                      fluid></Image>
                   </Col>
                   <Col className='gutter-row' span={12}>
                     <Card bordered={false} headStyle={{ fontSize: '20px' }}>
@@ -302,7 +309,12 @@ const Product = ({ history, match }) => {
                           <Card
                             hoverable
                             style={{ width: '50%', left: '25%' }}
-                            cover={<img alt={i.name} src={i.image} />}>
+                            cover={
+                              <img
+                                alt={i.images[0].imageName}
+                                src={i.images[0].imageLink}
+                              />
+                            }>
                             <h1>
                               <strong>{i.name}</strong>
                             </h1>

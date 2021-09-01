@@ -119,7 +119,11 @@ const PlaceOrder = ({ history }) => {
                   cart.cartItems.map((item) => (
                     <>
                       <Col span={6}>
-                        <Image src={item.image} alt={item.name} width={150} />
+                        <Image
+                          src={item.images[0].imageLink}
+                          alt={item.images[0].imageName}
+                          width={150}
+                        />
                       </Col>
                       <Col span={8}>
                         <Typography.Text>

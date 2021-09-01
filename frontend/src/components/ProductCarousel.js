@@ -47,7 +47,10 @@ const ProductCarousel = () => {
                 </Typography.Title>
               </Col>
               <Col span={8}>
-                <img src={product.image} alt={product.name} />
+                <img
+                  src={product.images[0].imageLink}
+                  alt={product.images[0].imageName}
+                />
               </Col>
             </Row>
           </Link>

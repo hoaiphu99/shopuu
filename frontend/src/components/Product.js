@@ -13,7 +13,12 @@ const Product = ({ product, history }) => {
       className='card-product'
       hoverable
       style={{ width: '100%' }}
-      cover={<img alt={product.name} src={product.image} />}>
+      cover={
+        <img
+          alt={product.images[0].imageName}
+          src={product.images[0].imageLink}
+        />
+      }>
       <Link to={`/${product.category.slug}/${product.slug}`}>
         <h1>
           <strong>{product.name}</strong>

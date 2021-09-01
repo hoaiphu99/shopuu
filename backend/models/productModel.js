@@ -29,10 +29,12 @@ const productSchema = mongoose.Schema(
       type: String,
       required: [true, 'Vui lòng nhập tên sản phẩm!'],
     },
-    image: {
-      type: String,
-      required: [true, 'Chưa chọn hình ảnh!'],
-    },
+    images: [
+      {
+        imageName: { type: String },
+        imageLink: { type: String, required: [true, 'Chưa chọn hình ảnh!'] },
+      },
+    ],
     brand: {
       type: mongoose.Schema.Types.ObjectId,
       required: [true, 'Chưa chọn thương hiệu!'],
