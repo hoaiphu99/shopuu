@@ -18,19 +18,19 @@ import {
   Select,
   Button,
   InputNumber,
-  Checkbox,
   message,
-  Typography,
-  Layout,
-  Divider,
-  Menu,
   Upload,
+  Modal,
 } from 'antd'
-import { UploadOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 
 const ProductEdit = ({ match, history }) => {
   const productId = match.params.id
-
+  const [images, setImages] = useState([])
+  const [previewVisible, setPreviewVisible] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
+  const [previewTitle, setPreviewTitle] = useState('')
+  const [fileList, setFileList] = useState([])
   const [cateSelect, setCateSelect] = useState([])
   const [brandSelect, setBrandSelect] = useState([])
 
@@ -38,7 +38,7 @@ const ProductEdit = ({ match, history }) => {
 
   const [name, setName] = useState('')
   const [price, setPrice] = useState(0)
-  const [image, setImage] = useState('')
+
   const [brand, setBrand] = useState({})
   const [category, setCategory] = useState({})
   const [countInStock, setCountInStock] = useState(0)
@@ -85,9 +85,18 @@ const ProductEdit = ({ match, history }) => {
           setBrandSelect(brands)
         }
       } else {
+        const fileList = product.images.map((image, index) => {
+          return {
+            uid: index,
+            name: image.imageName,
+            status: 'done',
+            url: image.imageLink,
+          }
+        })
         setName(product.name)
         setPrice(product.price)
-        setImage(product.image)
+        setImages(product.images)
+        setFileList(fileList)
         setBrand(product.brand)
         setCategory(product.category)
         setCountInStock(product.countInStock)
@@ -96,12 +105,59 @@ const ProductEdit = ({ match, history }) => {
     }
   }, [dispatch, history, productId, product, successUpdate, loadingBrand])
 
+  const handleCancel = () => setPreviewVisible(false)
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj)
+    }
+    setPreviewImage(file.url || file.preview)
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf('/') + 1)
+    )
+    setPreviewVisible(true)
+  }
+
+  const handleChange = ({ fileList }) => {
+    setFileList(fileList)
+  }
+
+  const customRequest = async ({
+    file,
+    headers,
+    onSuccess,
+    onProgress,
+    onError,
+  }) => {
+    const formData = new FormData()
+    formData.set('image', file, `${file.name}`)
+    setUploading(true)
+    onProgress({ percent: 50 })
+    try {
+      const config = {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }
+      const { data } = await axios.post('/api/upload', formData, config)
+      const newImage = {
+        imageName: data.fileName,
+        imageLink: data.fileLocation,
+      }
+      setImages((prevImages) => [...prevImages, newImage])
+      setUploading(false)
+      onSuccess('ok')
+    } catch (error) {
+      console.log(error)
+      setUploading(false)
+      onError(error)
+    }
+  }
+
   const submitHandler = (values) => {
     const data = {
       _id: productId,
       name: values.name,
       price: values.price,
-      image: image,
+      images: images,
       brand: values.brand === brand.name ? brand._id : values.brand,
       category:
         values.category === category.name ? category._id : values.category,
@@ -112,34 +168,19 @@ const ProductEdit = ({ match, history }) => {
     dispatch(updateProduct(data))
   }
 
-  const uploadFileHandler = async (file) => {
-    const formData = new FormData()
-    formData.set('image', file, `${file.lastModified}-${file.name}`)
-    setUploading(true)
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-      const { data } = await axios.post('/api/upload', formData, config)
-      setImage(data.fileLocation)
-      setUploading(false)
-      console.log(data)
-    } catch (error) {
-      console.log(error)
-      setUploading(false)
-    }
-  }
-
   const normFile = (e) => {
     console.log('Upload event:', e)
     if (Array.isArray(e)) {
       return e
     }
-    if (!e.file.status || e.file.status !== 'removed') {
-      uploadFileHandler(e.file)
+    if (e.file && e.fileList && e.file.status === 'removed') {
+      const changeImage = images.filter(
+        (image) => image.imageName !== e.file.name
+      )
+      setImages(changeImage)
+      console.log('==change', changeImage)
     }
+
     return e && e.fileList
   }
 
@@ -257,21 +298,22 @@ const ProductEdit = ({ match, history }) => {
             <Form.Item
               name='upload'
               label='Hình ảnh'
-              // rules={[
-              //   {
-              //     required: true,
-              //     message: 'Vui lòng chọn ảnh',
-              //   },
-              // ]}
+              initialValue={fileList}
               valuePropName='fileList'
               getValueFromEvent={normFile}>
               <Upload
                 name='logo'
-                beforeUpload={() => false}
-                // action={uploadFileHandler}
-                listType='picture'>
-                <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
-                {uploading && <Loader />}
+                customRequest={customRequest}
+                listType='picture-card'
+                fileList={fileList}
+                onPreview={handlePreview}
+                onChange={handleChange}>
+                {fileList.length >= 5 ? null : (
+                  <div>
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>Tải ảnh lên</div>
+                  </div>
+                )}
               </Upload>
             </Form.Item>
 
@@ -283,8 +325,25 @@ const ProductEdit = ({ match, history }) => {
           </Form>
         )
       )}
+
+      <Modal
+        visible={previewVisible}
+        title={previewTitle}
+        footer={null}
+        onCancel={handleCancel}>
+        <img alt='example' style={{ width: '100%' }} src={previewImage} />
+      </Modal>
     </>
   )
+}
+
+const getBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = (error) => reject(error)
+  })
 }
 
 export default ProductEdit

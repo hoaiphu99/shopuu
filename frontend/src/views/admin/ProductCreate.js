@@ -83,7 +83,6 @@ const ProductCreate = ({ history }) => {
 
   const handleChange = ({ fileList }) => {
     setFileList(fileList)
-    console.log(fileList)
   }
 
   const customRequest = async ({
@@ -134,6 +133,13 @@ const ProductCreate = ({ history }) => {
     console.log('Upload event:', e)
     if (Array.isArray(e)) {
       return e
+    }
+    if (e.file && e.fileList && e.file.status === 'removed') {
+      const changeImage = images.filter(
+        (image) => image.imageName !== e.file.name
+      )
+      setImages(changeImage)
+      console.log('==change', changeImage)
     }
     return e && e.fileList
   }
@@ -257,7 +263,7 @@ const ProductCreate = ({ history }) => {
             {fileList.length >= 8 ? null : (
               <div>
                 <PlusOutlined />
-                <div style={{ marginTop: 8 }}>Upload</div>
+                <div style={{ marginTop: 8 }}>Tải ảnh lên</div>
               </div>
             )}
           </Upload>

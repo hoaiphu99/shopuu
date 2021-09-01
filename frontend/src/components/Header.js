@@ -140,7 +140,7 @@ const Header = () => {
         </Row>
       </header>
       <Row justify='center'>
-        <Col span={8}>
+        <Col span={18}>
           <Route
             render={({ location }) => (
               <Navbar location={location} category={true} />

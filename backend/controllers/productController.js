@@ -213,7 +213,7 @@ const createProduct = asyncHandler(async (req, res) => {
 // private/admin
 const updateProduct = asyncHandler(async (req, res) => {
   try {
-    const { name, price, description, image, brand, category, countInStock } =
+    const { name, price, description, images, brand, category, countInStock } =
       req.body
 
     const product = await Product.findById(req.params.id)
@@ -222,7 +222,7 @@ const updateProduct = asyncHandler(async (req, res) => {
       product.name = name || product.name
       product.price = price || product.price
       product.description = description || product.description
-      product.image = image || product.image
+      product.images = images || product.images
       product.brand = brand || product.brand
       product.category = category || product.category
       product.countInStock = countInStock || product.countInStock

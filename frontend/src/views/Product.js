@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Image } from 'react-bootstrap'
+//import { Image } from 'react-bootstrap'
 import NumberFormat from 'react-number-format'
 import Rating from '../components/Rating'
 import Message from '../components/Message'
@@ -28,9 +28,7 @@ import {
   Alert,
   Collapse,
   Comment,
-  Form,
-  Input,
-  Rate,
+  Image,
 } from 'antd'
 import {
   SwapLeftOutlined,
@@ -45,6 +43,8 @@ const Product = ({ history, match }) => {
   const { Panel } = Collapse
   const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful']
   let cate = { _id: '', name: '', slug: '' }
+
+  const [imageThumb, setImageThumb] = useState('')
 
   const productSlug = match.params.slug
   const cateSlug = match.params.cateSlug
@@ -78,13 +78,13 @@ const Product = ({ history, match }) => {
   } = productReviewCreate
 
   useEffect(() => {
-    if (successProductReview) {
-      setRating(0)
-      dispatch({ type: PRODUCT_CREATE_REVIEW_RESET })
+    if (!product || product.slug !== productSlug) {
+      dispatch(listProductsByCategory(cateSlug))
+      dispatch(detailsProduct(productSlug))
+    } else if (product.images) {
+      setImageThumb(product.images[0].imageLink)
     }
-    dispatch(listProductsByCategory(cateSlug))
-    dispatch(detailsProduct(productSlug))
-  }, [dispatch, match, successProductReview])
+  }, [dispatch, match, product, productSlug])
 
   const addToCartHandler = () => {
     history.push(`/cart/${product._id}?qty=${qty}`)
@@ -135,9 +135,7 @@ const Product = ({ history, match }) => {
                 <Row>
                   <Col className='gutter-row' span={12}>
                     <Image
-                      src={
-                        product && product.images && product.images[0].imageLink
-                      }
+                      src={imageThumb}
                       alt={
                         product && product.images && product.images[0].imageName
                       }
@@ -243,6 +241,28 @@ const Product = ({ history, match }) => {
                         </Row>
                       </Space>
                     </Card>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={12}>
+                    <div
+                      style={{
+                        border: '1px solid #E2E8F0',
+                        borderRadius: '10px',
+                        margin: '5px',
+                      }}>
+                      <Image.PreviewGroup>
+                        {product.images &&
+                          product.images.map((image) => (
+                            <Image
+                              onMouseOver={() => setImageThumb(image.imageLink)}
+                              preview={true}
+                              width={80}
+                              src={image.imageLink}
+                            />
+                          ))}
+                      </Image.PreviewGroup>
+                    </div>
                   </Col>
                 </Row>
                 <Row>
