@@ -1,9 +1,13 @@
 import asyncHandler from 'express-async-handler'
+import moment from 'moment'
+//import format from 'date-format'
+//import dateFormat from 'dateformat '
+import { format } from 'fecha'
 import Product from '../models/productModel.js'
 import Order from '../models/orderModel.js'
 import Category from '../models/categoryModel.js'
 import { customErrorHandler } from '../middleware/errorMiddleware.js'
-
+moment().format()
 // Fetch all product with page
 // [GET] /api/products
 // public
@@ -331,16 +335,47 @@ const getTopProducts = asyncHandler(async (req, res) => {
 // [GET] /api/products/topbuy
 // public
 const getTopBuyProducts = asyncHandler(async (req, res) => {
+  const dateNow = moment().format('YYYY-MM-DD')
+  const dateStartOfWeek = moment().subtract(7, 'days').format('YYYY-MM-DD')
+  console.log('Date: ', dateNow, dateStartOfWeek)
   try {
-    const products = await Order.find({})
+    const products = await Order.find({
+      createdAt: {
+        $gte: dateStartOfWeek,
+        $lte: dateNow,
+      },
+    })
       .populate([
-        { path: 'cartItems', select: 'name slug' },
-        { path: 'brand', select: 'name slug' },
+        {
+          path: 'orderItems',
+          populate: {
+            path: 'product',
+            select: 'name image price slug',
+          },
+        },
       ])
-      .sort({ rating: -1 })
-      .limit(3)
+      .select('orderItems createdAt')
 
-    res.json({ status: 'success', data: products, errors: null })
+    let data = []
+    for (let i = 0; i < 7; i++) {
+      const date = moment().subtract(i, 'days').format('DD-MM-YYYY')
+      const numBuy = products.reduce((acc, item) => {
+        if (format(item.createdAt, 'DD-MM-YYYY') === date) {
+          const sum = item.orderItems.reduce((a, i) => {
+            return a + i.qty
+          }, 0)
+          return acc + sum
+        } else return acc
+      }, 0)
+      data.push({
+        date,
+        total: numBuy,
+      })
+    }
+
+    console.log(data)
+
+    res.json({ status: 'success', data, errors: null })
   } catch (error) {
     const errors = customErrorHandler(error, res)
     res
@@ -361,4 +396,5 @@ export {
   forceDeleteProduct,
   createProductReview,
   getTopProducts,
+  getTopBuyProducts,
 }
