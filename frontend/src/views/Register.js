@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  formItemLayout,
-  tailFormItemLayout,
-  formItemLayoutDetails,
-} from '../constants/formConstants'
-
+import { formItemLayout, tailFormItemLayout } from '../constants/formConstants'
 import { register } from '../actions/userActions'
 import { USER_REGISTER_RESET } from '../constants/userConstants'
 import {
@@ -16,7 +10,6 @@ import {
   Select,
   Row,
   Col,
-  Checkbox,
   Button,
   Typography,
   message,

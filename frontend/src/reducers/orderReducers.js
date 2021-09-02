@@ -32,14 +32,14 @@ export const orderCreateReducer = (state = {}, action) => {
   switch (action.type) {
     case ORDER_CREATE_REQUEST:
       return { loading: true }
-      break
+
     case ORDER_CREATE_SUCCESS:
       return {
         loading: false,
         success: true,
         order: action.payload.data,
       }
-      break
+
     case ORDER_CREATE_FAIL:
       return {
         loading: false,
@@ -49,11 +49,9 @@ export const orderCreateReducer = (state = {}, action) => {
       return {
         loading: false,
       }
-      break
 
     default:
       return state
-      break
   }
 }
 
@@ -64,26 +62,24 @@ export const orderDetailsReducer = (
   switch (action.type) {
     case ORDER_DETAILS_REQUEST:
       return { ...state, loading: true }
-      break
+
     case ORDER_DETAILS_SUCCESS:
       return {
         loading: false,
         order: action.payload,
       }
-      break
+
     case ORDER_DETAILS_FAIL:
       return {
         loading: false,
         error: action.payload,
       }
-      break
+
     case ORDER_DETAILS_RESET:
       return {}
-      break
 
     default:
       return state
-      break
   }
 }
 
@@ -91,13 +87,13 @@ export const orderStatusReducer = (state = {}, action) => {
   switch (action.type) {
     case ORDER_STATUS_REQUEST:
       return { loading: true }
-      break
+
     case ORDER_STATUS_SUCCESS:
       return {
         loading: false,
         success: true,
       }
-      break
+
     case ORDER_STATUS_FAIL:
       return {
         loading: false,
@@ -105,11 +101,9 @@ export const orderStatusReducer = (state = {}, action) => {
       }
     case ORDER_STATUS_RESET:
       return {}
-      break
 
     default:
       return state
-      break
   }
 }
 
@@ -117,13 +111,13 @@ export const orderPayReducer = (state = {}, action) => {
   switch (action.type) {
     case ORDER_PAY_REQUEST:
       return { loading: true }
-      break
+
     case ORDER_PAY_SUCCESS:
       return {
         loading: false,
         success: true,
       }
-      break
+
     case ORDER_PAY_FAIL:
       return {
         loading: false,
@@ -131,11 +125,9 @@ export const orderPayReducer = (state = {}, action) => {
       }
     case ORDER_PAY_RESET:
       return {}
-      break
 
     default:
       return state
-      break
   }
 }
 
@@ -143,13 +135,13 @@ export const orderDeliverReducer = (state = {}, action) => {
   switch (action.type) {
     case ORDER_DELIVER_REQUEST:
       return { loading: true }
-      break
+
     case ORDER_DELIVER_SUCCESS:
       return {
         loading: false,
         success: true,
       }
-      break
+
     case ORDER_DELIVER_FAIL:
       return {
         loading: false,
@@ -157,11 +149,9 @@ export const orderDeliverReducer = (state = {}, action) => {
       }
     case ORDER_DELIVER_RESET:
       return {}
-      break
 
     default:
       return state
-      break
   }
 }
 
@@ -169,13 +159,13 @@ export const orderListMyReducer = (state = { orders: [] }, action) => {
   switch (action.type) {
     case ORDER_LIST_MY_REQUEST:
       return { loading: true }
-      break
+
     case ORDER_LIST_MY_SUCCESS:
       return {
         loading: false,
         orders: action.payload,
       }
-      break
+
     case ORDER_LIST_MY_FAIL:
       return {
         loading: false,
@@ -188,7 +178,6 @@ export const orderListMyReducer = (state = { orders: [] }, action) => {
 
     default:
       return state
-      break
   }
 }
 
@@ -196,13 +185,13 @@ export const orderListReducer = (state = { orders: [] }, action) => {
   switch (action.type) {
     case ORDER_LIST_REQUEST:
       return { loading: true }
-      break
+
     case ORDER_LIST_SUCCESS:
       return {
         loading: false,
         orders: action.payload,
       }
-      break
+
     case ORDER_LIST_FAIL:
       return {
         loading: false,
@@ -211,6 +200,5 @@ export const orderListReducer = (state = { orders: [] }, action) => {
 
     default:
       return state
-      break
   }
 }

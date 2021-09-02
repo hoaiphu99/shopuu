@@ -16,14 +16,13 @@ export const cartReducer = (
       return {
         cartItems: action.payload,
       }
-      break
+
     case CART_MY_RESET:
-      
       return {
         cartItems: [],
         shippingAddress: {},
       }
-      break
+
     case CART_ADD_ITEM:
       const item = action.payload
 
@@ -39,27 +38,26 @@ export const cartReducer = (
       } else {
         return { ...state, cartItems: [...state.cartItems, item] }
       }
-      break
+
     case CART_REMOVE_ITEM:
       return {
         ...state,
         cartItems: state.cartItems.filter((i) => i.product !== action.payload),
       }
-      break
+
     case CART_SAVE_SHIPPING_ADDRESS:
       return {
         ...state,
         shippingAddress: action.payload,
       }
-      break
+
     case CART_SAVE_PAYMENT_METHOD:
       return {
         ...state,
         paymentMethod: action.payload,
       }
-      break
+
     default:
       return state
-      break
   }
 }

@@ -6,10 +6,7 @@ import NumberFormat from 'react-number-format'
 import Message from '../../components/Message'
 import Loader from '../../components/Loader'
 import { listOrder, statusOrder } from '../../actions/orderActions'
-import {
-  ORDER_DETAILS_RESET,
-  ORDER_STATUS_RESET,
-} from '../../constants/orderConstants'
+import { ORDER_STATUS_RESET } from '../../constants/orderConstants'
 import {
   message,
   Table,
@@ -19,7 +16,6 @@ import {
   Popconfirm,
   notification,
 } from 'antd'
-import { CloseCircleTwoTone, CheckCircleTwoTone } from '@ant-design/icons'
 
 const OrderList = ({ history }) => {
   const { Column } = Table
@@ -62,15 +58,9 @@ const OrderList = ({ history }) => {
       ) : (
         <Table
           rowKey={(record) => record._id}
-          // expandable={{
-          //   expandedRowRender: (record) => (
-          //     <p style={{ margin: 0 }}>{record._id}</p>
-          //   ),
-          //   rowExpandable: (record) => record._id.toString() !== ' ',
-          // }}
           dataSource={orders}
           pagination={true}
-          scroll={{ x: '', y: 400 }}>
+          scroll={{ x: 1200, y: 400 }}>
           <Column
             title='ID'
             dataIndex='_id'
@@ -133,7 +123,13 @@ const OrderList = ({ history }) => {
                   ? 'orange'
                   : status === 'ACCEPT'
                   ? 'blue'
-                  : 'green'
+                  : // : status === 'DELIVERY'
+                    // ? 'cyan'
+                    // : status === 'DELIVERED'
+                    // ? 'geekblue'
+                    // : status === 'FAIL'
+                    // ? 'red'
+                    'green'
               let msg =
                 status === 'CANCEL'
                   ? 'Đã hủy'
@@ -141,11 +137,19 @@ const OrderList = ({ history }) => {
                   ? 'Chờ xác nhận'
                   : status === 'ACCEPT'
                   ? 'Đã xác nhận'
-                  : 'Hoàn thành'
+                  : // : status === 'DELIVERY'
+                    // ? 'Đang giao hàng'
+                    // : status === 'DELIVERED'
+                    // ? 'Giao hàng thành công'
+                    // : status === 'FAIL'
+                    // ? 'Giao hàng thất bại'
+                    'Hoàn thành'
               return <Tag color={color}>{msg}</Tag>
             }}
           />
           <Column
+            fixed='right'
+            width='100'
             title='HÀNH ĐỘNG'
             dataIndex='action'
             key='action'
@@ -161,6 +165,34 @@ const OrderList = ({ history }) => {
                       Xác nhận
                     </Typography.Link>
                   )}
+                  {/* {record.status === 'ACCEPT' && (
+                    <Typography.Link
+                      onClick={() => {
+                        orderStatusHandler(record._id, 'DELIVERY')
+                        setStatus('success')
+                      }}>
+                      Giao hàng
+                    </Typography.Link>
+                  )}
+                  {record.status === 'DELIVERY' && (
+                    <>
+                      <Typography.Link
+                        onClick={() => {
+                          orderStatusHandler(record._id, 'DELIVERY')
+                          setStatus('success')
+                        }}>
+                        Đã giao hàng
+                      </Typography.Link>
+                      <Popconfirm
+                        title='Hủy đơn hàng?'
+                        onConfirm={() => {
+                          orderStatusHandler(record._id, 'FAIL')
+                          setStatus('error')
+                        }}>
+                        <a>Giao hàng thất bại</a>
+                      </Popconfirm>
+                    </>
+                  )} */}
                   {record.status !== 'CANCEL' && record.status !== 'FINISH' && (
                     <Popconfirm
                       title='Chắc chắn hủy?'
@@ -171,6 +203,12 @@ const OrderList = ({ history }) => {
                       <a>Hủy</a>
                     </Popconfirm>
                   )}
+                  <Typography.Link
+                    onClick={() => {
+                      history.push(`/admin/order/${record._id}`)
+                    }}>
+                    Chi tiết
+                  </Typography.Link>
                 </Space>
               )
             }}></Column>

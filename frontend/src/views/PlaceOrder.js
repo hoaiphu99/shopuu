@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import NumberFormat from 'react-number-format'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -12,7 +12,6 @@ import {
   Col,
   Descriptions,
   Card,
-  Badge,
   Button,
   message,
   Divider,
@@ -119,11 +118,7 @@ const PlaceOrder = ({ history }) => {
                   cart.cartItems.map((item) => (
                     <>
                       <Col span={6}>
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          width={150}
-                        />
+                        <Image src={item.image} alt={item.name} width={150} />
                       </Col>
                       <Col span={8}>
                         <Typography.Text>

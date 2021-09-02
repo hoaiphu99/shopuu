@@ -5,7 +5,6 @@ import {
   WISHLIST_ADD_ITEM,
   WISHLIST_REMOVE_ITEM,
 } from '../constants/wishlistConstants'
-import ReactSession from 'react-client-session'
 
 export const getMyWishlist = () => async (dispatch, getState) => {
   const {

@@ -149,7 +149,7 @@ export const productTopRatedReducer = (state = { products: [] }, action) => {
 export const productTopBuyReducer = (state = { dataTopBuy: [] }, action) => {
   switch (action.type) {
     case PRODUCT_TOP_BUY_REQUEST:
-      return { loading: true, dataTopBuy: [] }
+      return { loading: true }
     case PRODUCT_TOP_BUY_SUCCESS:
       return { loading: false, dataTopBuy: action.payload.data }
     case PRODUCT_TOP_BUY_FAIL:

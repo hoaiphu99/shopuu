@@ -45,7 +45,7 @@ const Admin = ({ location, history }) => {
     // <Container>
     <Layout>
       {/* <Router> */}
-      <Sider width={200} className='site-layout-background'>
+      <Sider width={250} className='site-layout-background'>
         <Menu
           mode='inline'
           defaultSelectedKeys={['adminDashboard']}
@@ -77,14 +77,14 @@ const Admin = ({ location, history }) => {
                 </Menu.Item>
               </SubMenu>
 
-              <SubMenu
+              {/* <SubMenu
                 key='adminStorage'
                 icon={<BankOutlined />}
                 title='Kho hàng'>
                 <Menu.Item key='storage'>
                   <Link to='/admin/import'>Nhập hàng</Link>
                 </Menu.Item>
-              </SubMenu>
+              </SubMenu> */}
             </>
           )}
         </Menu>

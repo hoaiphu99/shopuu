@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Menu, Divider } from 'antd'
+import { Menu } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { listCategories } from '../actions/categoryActions'
 import { listBrands } from '../actions/brandActions'
@@ -26,7 +26,7 @@ const Navbar = ({ location, category, brand }) => {
       dispatch(listCategories())
       dispatch(listBrands())
     }
-  }, [])
+  }, [dispatch])
 
   return (
     <navbar className='header'>

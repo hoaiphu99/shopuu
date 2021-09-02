@@ -1,9 +1,9 @@
-import React, {  useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Moment from 'react-moment'
 import NumberFormat from 'react-number-format'
 import { Link } from 'react-router-dom'
-import { message, Table, Tag, } from 'antd'
+import { message, Table, Tag, Space, Typography } from 'antd'
 //import { getUserDetails, updateUserProfile } from '../../actions/userActions'
 import Loader from '../../components/Loader'
 import { listMyOrder } from '../../actions/orderActions'
@@ -106,7 +106,13 @@ const Orders = ({ history }) => {
                   ? 'orange'
                   : status === 'ACCEPT'
                   ? 'blue'
-                  : 'green'
+                  : // : status === 'DELIVERY'
+                    // ? 'cyan'
+                    // : status === 'DELIVERED'
+                    // ? 'geekblue'
+                    // : status === 'FAIL'
+                    // ? 'red'
+                    'green'
               let msg =
                 status === 'CANCEL'
                   ? 'Đã hủy'
@@ -114,10 +120,33 @@ const Orders = ({ history }) => {
                   ? 'Chờ xác nhận'
                   : status === 'ACCEPT'
                   ? 'Đã xác nhận'
-                  : 'Hoàn thành'
+                  : // : status === 'DELIVERY'
+                    // ? 'Đang giao hàng'
+                    // : status === 'DELIVERED'
+                    // ? 'Giao hàng thành công'
+                    // : status === 'FAIL'
+                    // ? 'Giao hàng thất bại'
+                    'Hoàn thành'
               return <Tag color={color}>{msg}</Tag>
             }}
           />
+          <Column
+            width='50'
+            title='HÀNH ĐỘNG'
+            dataIndex='action'
+            key='action'
+            render={(_, record) => {
+              return (
+                <Space size='middle'>
+                  <Typography.Link
+                    onClick={() => {
+                      history.push(`/order/${record._id}`)
+                    }}>
+                    Chi tiết
+                  </Typography.Link>
+                </Space>
+              )
+            }}></Column>
         </Table>
       )}
     </>

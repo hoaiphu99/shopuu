@@ -37,6 +37,11 @@ const orderSchema = mongoose.Schema(
       enum: OrderStatus,
       default: OrderStatus.WAIT,
     },
+    itemsPrice: {
+      type: Number,
+      required: true,
+      default: 0.0,
+    },
     shippingPrice: {
       type: Number,
       required: true,

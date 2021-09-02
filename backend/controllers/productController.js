@@ -335,8 +335,8 @@ const getTopProducts = asyncHandler(async (req, res) => {
 // [GET] /api/products/topbuy
 // public
 const getTopBuyProducts = asyncHandler(async (req, res) => {
-  const dateNow = moment().format('YYYY-MM-DD')
-  const dateStartOfWeek = moment().subtract(7, 'days').format('YYYY-MM-DD')
+  const dateNow = moment().utc()
+  const dateStartOfWeek = moment().subtract(7, 'days').utc()
   console.log('Date: ', dateNow, dateStartOfWeek)
   try {
     const products = await Order.find({
@@ -355,7 +355,7 @@ const getTopBuyProducts = asyncHandler(async (req, res) => {
         },
       ])
       .select('orderItems createdAt')
-
+    console.log(products)
     let data = []
     for (let i = 0; i < 7; i++) {
       const date = moment().subtract(i, 'days').format('DD-MM-YYYY')

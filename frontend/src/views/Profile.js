@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-//import { Form, Button, Row, Col, Table } from 'react-bootstrap'
 import axios from 'axios'
 import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -7,32 +6,22 @@ import { Container } from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import Orders from './user/Orders'
+import ChangePassword from './user/ChangePassword'
 import Order from './Order'
-import CategoryList from './admin/CategoryList'
 import { getUserDetails, updateUserProfile } from '../actions/userActions'
 import { formItemLayout, tailFormItemLayout } from '../constants/formConstants'
 import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants'
 import {
-  Row,
-  Col,
   Form,
   Input,
   Select,
   Button,
-  Checkbox,
   message,
-  Typography,
   Layout,
-  Divider,
   Menu,
-  Breadcrumb,
   Descriptions,
 } from 'antd'
-import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-} from '@ant-design/icons'
+import { UserOutlined } from '@ant-design/icons'
 
 const Profile = ({ location, history }) => {
   const [name, setName] = useState('')
@@ -52,7 +41,7 @@ const Profile = ({ location, history }) => {
   const [form] = Form.useForm()
   const { Option } = Select
 
-  const [path, setPath] = useState('/')
+  //const [path, setPath] = useState('/')
 
   const { SubMenu } = Menu
   const { Content, Sider } = Layout
@@ -89,7 +78,7 @@ const Profile = ({ location, history }) => {
       } else if (success) {
         dispatch(getUserDetails('profile'))
         userInfo.name = user.name
-        message.success({ content: 'Saved!', key, duration: 2 })
+        message.success({ content: 'Đã cập nhật!', key, duration: 2 })
         dispatch({ type: USER_UPDATE_PROFILE_RESET })
       } else {
         setName(user.name)
@@ -153,9 +142,9 @@ const Profile = ({ location, history }) => {
       phone: values.phone,
       shippingAddress: {
         address: values.address,
-        city: city.province_name,
-        district: district.district_name,
-        ward: ward.ward_name,
+        city: (city && city.province_name) || values.city,
+        district: (district && district.district_name) || values.district,
+        ward: (ward && ward.ward_name) || values.ward,
       },
     }
     dispatch(updateUserProfile(data))
@@ -204,9 +193,14 @@ const Profile = ({ location, history }) => {
               }}>
               <Switch>
                 <Route path='/order/:id' component={Order} />
+                <Route exact path='/profile/change-password' component={ChangePassword}></Route>
                 <Route exact path='/profile/orders' component={Orders}></Route>
                 {loadingUpdate &&
-                  message.loading({ content: 'Saving...', key, duration: 10 })}
+                  message.loading({
+                    content: 'Đang lưu lại...',
+                    key,
+                    duration: 10,
+                  })}
                 {errorUpdate &&
                   message.error({ content: `${error}`, key, duration: 2 })}
                 {error && message.error({ content: `${error}`, duration: 2 })}
@@ -214,16 +208,20 @@ const Profile = ({ location, history }) => {
                   <Loader />
                 ) : !isEdit ? (
                   <Descriptions
-                    title='User Info'
+                    title='Thông tin cá nhân'
                     extra={
                       <Button type='primary' onClick={() => setIsEdit(!isEdit)}>
-                        Edit
+                        Chỉnh sửa
                       </Button>
                     }>
-                    <Descriptions.Item label='Name'>{name}</Descriptions.Item>
+                    <Descriptions.Item label='Họ & Tên'>
+                      {name}
+                    </Descriptions.Item>
                     <Descriptions.Item label='Email'>{email}</Descriptions.Item>
-                    <Descriptions.Item label='Phone'>{phone}</Descriptions.Item>
-                    <Descriptions.Item label='Address'>
+                    <Descriptions.Item label='Số điện thoại'>
+                      {phone}
+                    </Descriptions.Item>
+                    <Descriptions.Item label='Địa chỉ'>
                       {`${address}, ${ward}, ${district}, ${city}`}
                     </Descriptions.Item>
                   </Descriptions>
@@ -239,29 +237,29 @@ const Profile = ({ location, history }) => {
                       <Form.Item
                         name='email'
                         initialValue={email}
-                        label='E-mail'
+                        label='Email'
                         rules={[
                           {
                             type: 'email',
-                            message: 'The input is not valid E-mail!',
+                            message: 'E-mail không hợp lệ!',
                           },
                           {
                             required: true,
                             message: 'Please input your E-mail!',
                           },
                         ]}>
-                        <Input />
+                        <Input disabled />
                       </Form.Item>
 
                       <Form.Item
                         name='name'
                         initialValue={name}
-                        label='Name'
-                        tooltip='What do you want others to call you?'
+                        label='Họ & Tên'
+                        tooltip='Chúng tôi có thể gọi bạn là?'
                         rules={[
                           {
                             required: true,
-                            message: 'Please input your name!',
+                            message: 'Vui lòng nhập họ tên!',
                             whitespace: true,
                           },
                         ]}>
@@ -271,20 +269,23 @@ const Profile = ({ location, history }) => {
                       <Form.Item
                         name='phone'
                         initialValue={phone}
-                        label='Phone Number'>
+                        label='Số điện thoại'>
                         <Input style={{ width: '100%' }} />
                       </Form.Item>
 
                       <Form.Item
                         name='address'
                         initialValue={address}
-                        label='Address'
-                        tooltip='Your address for delivery orders'>
+                        label='Địa chỉ'
+                        tooltip='Địa chỉ để chúng tôi có thể giao hàng cho bạn'>
                         <Input />
                       </Form.Item>
 
-                      <Form.Item name='city' initialValue={city} label='City'>
-                        <Select placeholder='select your city'>
+                      <Form.Item
+                        name='city'
+                        initialValue={city}
+                        label='Tỉnh/Thành phố'>
+                        <Select placeholder='Chọn Tỉnh/Thành phố'>
                           {provinces &&
                             provinces.map((p) => (
                               <Option key={p.province_id} value={p.province_id}>
@@ -297,8 +298,8 @@ const Profile = ({ location, history }) => {
                       <Form.Item
                         name='district'
                         initialValue={district}
-                        label='District'>
-                        <Select placeholder='select your district'>
+                        label='Quận/Huyện'>
+                        <Select placeholder='Chọn Quận/Huyện'>
                           {districts &&
                             districts.map((d) => (
                               <Option key={d.district_id} value={d.district_id}>
@@ -308,8 +309,11 @@ const Profile = ({ location, history }) => {
                         </Select>
                       </Form.Item>
 
-                      <Form.Item name='ward' initialValue={ward} label='Ward'>
-                        <Select placeholder='select your ward'>
+                      <Form.Item
+                        name='ward'
+                        initialValue={ward}
+                        label='Xã/Phường'>
+                        <Select placeholder='Chọn Xã/Phường'>
                           {wards &&
                             wards.map((w) => (
                               <Option key={w.ward_id} value={w.ward_id}>
@@ -321,7 +325,7 @@ const Profile = ({ location, history }) => {
 
                       <Form.Item {...tailFormItemLayout}>
                         <Button type='primary' htmlType='submit'>
-                          Save
+                          Lưu lại
                         </Button>
                       </Form.Item>
                     </Form>

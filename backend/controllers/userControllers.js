@@ -188,6 +188,37 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 })
 
+// @desc    Change password
+// @router  PUT /api/users/change-password
+// @access  Private
+const changePassword = asyncHandler(async (req, res) => {
+  const { password, newPassword } = req.body
+  try {
+    const user = await User.findById(req.user._id)
+
+    if (user) {
+      if (await user.matchPassword(password)) {
+        user.password = newPassword
+        await user.save()
+
+        res.status(200).json({
+          status: 'success',
+          message: 'Đổi mật khẩu thành công!',
+          error: null,
+        })
+      }
+      res.status(400)
+      throw new Error('Mật khẩu cũ không đúng!')
+    } else {
+      res.status(404)
+      throw new Error('Không tìm thấy người dùng này!')
+    }
+  } catch (error) {
+    res.status(400)
+    throw new Error(`${error}`)
+  }
+})
+
 export {
   authUser,
   getUserProfile,
@@ -197,4 +228,5 @@ export {
   deleteUser,
   getUserById,
   updateUser,
+  changePassword,
 }

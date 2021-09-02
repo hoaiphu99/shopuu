@@ -31,6 +31,8 @@ const addOrderItems = asyncHandler(async (req, res) => {
         itemsPrice,
         shippingPrice,
         totalPrice,
+        status:
+          paymentMethod === 'PayPal' ? OrderStatus.ACCEPT : OrderStatus.WAIT,
       })
 
       const createOrder = await order.save()
@@ -97,6 +99,30 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
             throw new Error('Đơn hàng này đã được xác nhận hoặc đã hoàn thành!')
           }
           break
+        // case OrderStatus.DELIVERY:
+        //   if (order.status === OrderStatus.ACCEPT) {
+        //     order.status = OrderStatus.DELIVERY
+        //   } else {
+        //     res.status(400)
+        //     throw new Error('Đơn hàng này đang giao!')
+        //   }
+        //   break
+        // case OrderStatus.DELIVERED:
+        //   if (order.status === OrderStatus.DELIVERY) {
+        //     order.status = OrderStatus.DELIVERED
+        //   } else {
+        //     res.status(400)
+        //     throw new Error('Đơn hàng này chưa được giao!')
+        //   }
+        //   break
+        // case OrderStatus.FAIL:
+        //   if (order.status === OrderStatus.DELIVERY) {
+        //     order.status = OrderStatus.FAIL
+        //   } else {
+        //     res.status(400)
+        //     throw new Error('Đơn hàng này chưa được giao!')
+        //   }
+        //   break
         case OrderStatus.CANCEL:
           if (
             order.status === OrderStatus.WAIT ||
@@ -124,7 +150,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
             order.status = OrderStatus.FINISH
           } else {
             res.status(400)
-            throw new Error('Đơn hàng này chưa xác nhận hoặc đã bị hủy!')
+            throw new Error('Đơn hàng này chưa được giao hoặc đã bị hủy!')
           }
           break
         default:

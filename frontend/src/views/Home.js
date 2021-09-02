@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, {  useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Route } from 'react-router-dom'
-import { Container } from 'react-bootstrap'
 import Product from '../components/Product'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
@@ -30,10 +29,10 @@ const Home = ({ match, history, location }) => {
   const { loading, error, products, pages, page: currentPage } = productList
 
   const categoryList = useSelector((state) => state.categoryList)
-  const { loading: loadingCate, categories } = categoryList
+  const {  categories } = categoryList
 
   const brandList = useSelector((state) => state.brandList)
-  const { loading: loadingBrand, brands } = brandList
+  const {  brands } = brandList
 
   useEffect(() => {
     if (

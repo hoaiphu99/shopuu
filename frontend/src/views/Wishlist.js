@@ -12,7 +12,7 @@ import { Row, Col, Typography, Divider, Image, Button, Tag } from 'antd'
 import { CloseOutlined } from '@ant-design/icons'
 
 const WishList = ({ match, location, history }) => {
-  const productId = match.params.id
+  //const productId = match.params.id
 
   const dispatch = useDispatch()
 
@@ -50,14 +50,8 @@ const WishList = ({ match, location, history }) => {
                   <>
                     <Col span={5}>
                       <Image
-                        src={
-                          product.images &&
-                          product.images[0].imageLink
-                        }
-                        alt={
-                          product.images &&
-                          product.images[0].imageName
-                        }
+                        src={product.images && product.images[0].imageLink}
+                        alt={product.images && product.images[0].imageName}
                         width={150}
                       />
                     </Col>

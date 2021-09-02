@@ -12,7 +12,6 @@ import {
   Col,
   Descriptions,
   Card,
-  Badge,
   Button,
   message,
   Divider,
@@ -42,7 +41,7 @@ const Order = ({ match, history }) => {
   const orderId = match.params.id
 
   const desc = ['Rất tệ', 'Tệ', 'Bình thường', 'Tốt', 'Rất tuyệt vời']
-  const { confirm } = Modal
+  //const { confirm } = Modal
   const [productId, setProductId] = useState('')
   const [rating, setRating] = useState(0)
   const [sdkReady, setSdkReady] = useState(false)
@@ -61,7 +60,11 @@ const Order = ({ match, history }) => {
   const { order, loading, error } = orderDetails
 
   const orderStatus = useSelector((state) => state.orderStatus)
-  const { loading: loadingStatus, success: successStatus } = orderStatus
+  const {
+    loading: loadingStatus,
+    success: successStatus,
+    error: errorStatus,
+  } = orderStatus
 
   const orderPay = useSelector((state) => state.orderPay)
   const { loading: loadingPay, success: successPay } = orderPay
@@ -76,15 +79,15 @@ const Order = ({ match, history }) => {
     success: successProductReview,
   } = productReviewCreate
 
-  if (!loading) {
-    // Calculate price
-    order.itemsPrice = addDecimals(
-      order.orderItems.reduce(
-        (acc, item) => acc + item.product.price * item.qty,
-        0
-      )
-    )
-  }
+  // if (!loading) {
+  //   // Calculate price
+  //   order.itemsPrice = addDecimals(
+  //     order.orderItems.reduce(
+  //       (acc, item) => acc + item.product.price * item.qty,
+  //       0
+  //     )
+  //   )
+  // }
   const key = 'msg'
   useEffect(() => {
     if (!userInfo) {
@@ -176,14 +179,14 @@ const Order = ({ match, history }) => {
       <Row gutter={16}>
         <Col span={16}>
           <Divider orientation='left'>Đơn hàng: #{order && order._id}</Divider>
-          <Link to='/profile/orders'>
-            <Button
-              type='primary'
-              shape='round'
-              style={{ marginBottom: '5px' }}>
-              Quay lại danh sách đơn hàng
-            </Button>
-          </Link>
+
+          <Button
+            onClick={() => history.goBack()}
+            type='primary'
+            shape='round'
+            style={{ marginBottom: '5px' }}>
+            Quay lại
+          </Button>
 
           <Descriptions layout='vertical' bordered>
             <Descriptions.Item label='Địa chỉ giao hàng' span={3}>
@@ -195,9 +198,9 @@ const Order = ({ match, history }) => {
             <Descriptions.Item label='Phương thức thanh toán'>
               {order.paymentMethod}
             </Descriptions.Item>
-            <Descriptions.Item label='Giá đơn hàng'>
+            <Descriptions.Item label='Tổng giá sản phẩm'>
               <NumberFormat
-                value={order.totalPrice}
+                value={order.itemsPrice}
                 displayType={'text'}
                 thousandSeparator={true}
               />{' '}
@@ -235,11 +238,7 @@ const Order = ({ match, history }) => {
                   order.orderItems.map((item) => (
                     <>
                       <Col span={6}>
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          width={150}
-                        />
+                        <Image src={item.image} alt={item.name} width={150} />
                       </Col>
                       <Col span={8}>
                         <Typography.Text>
@@ -342,6 +341,7 @@ const Order = ({ match, history }) => {
               !order.isPaid && (
                 <>
                   {loadingStatus && <Loader />}
+                  {errorStatus && message.error({ content: `${errorStatus}` })}
                   <Button
                     size='large'
                     type='primary'

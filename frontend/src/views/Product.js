@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-//import { Image } from 'react-bootstrap'
 import NumberFormat from 'react-number-format'
 import Rating from '../components/Rating'
 import Message from '../components/Message'
@@ -14,7 +13,6 @@ import {
 } from '../actions/productActions'
 import { listCategories } from '../actions/categoryActions'
 import { addToWishlist, removeFromWishlist } from '../actions/wishlistActions'
-import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants'
 import {
   message,
   Row,
@@ -41,7 +39,7 @@ import {
 const Product = ({ history, match }) => {
   const { Title, Text } = Typography
   const { Panel } = Collapse
-  const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful']
+  //const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful']
   let cate = { _id: '', name: '', slug: '' }
 
   const [imageThumb, setImageThumb] = useState('')
@@ -50,7 +48,7 @@ const Product = ({ history, match }) => {
   const cateSlug = match.params.cateSlug
 
   const [qty, setQty] = useState(1)
-  const [rating, setRating] = useState(0)
+  //const [rating, setRating] = useState(0)
 
   const dispatch = useDispatch()
 
@@ -58,11 +56,8 @@ const Product = ({ history, match }) => {
   const { loading, error, product } = productDetails
 
   const productByCategory = useSelector((state) => state.productByCategory)
-  const {
-    loading: loadingProductByCategory,
-    error: errorProductByCategory,
-    products: products,
-  } = productByCategory
+  const { loading: loadingProductByCategory, products: products } =
+    productByCategory
 
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
@@ -70,12 +65,12 @@ const Product = ({ history, match }) => {
   const wishlist = useSelector((state) => state.wishlist)
   const { wishlistItems } = wishlist
 
-  const productReviewCreate = useSelector((state) => state.productReviewCreate)
-  const {
-    loading: loadingProductReview,
-    error: errorProductReview,
-    success: successProductReview,
-  } = productReviewCreate
+  // const productReviewCreate = useSelector((state) => state.productReviewCreate)
+  // const {
+  //   loading: loadingProductReview,
+  //   error: errorProductReview,
+  //   success: successProductReview,
+  // } = productReviewCreate
 
   useEffect(() => {
     if (!product || product.slug !== productSlug) {
@@ -98,13 +93,13 @@ const Product = ({ history, match }) => {
     dispatch(removeFromWishlist(id))
   }
 
-  const submitHandler = (values) => {
-    const data = {
-      rating,
-      comment: values.comment,
-    }
-    dispatch(createProductReview(product._id, data))
-  }
+  // const submitHandler = (values) => {
+  //   const data = {
+  //     rating,
+  //     comment: values.comment,
+  //   }
+  //   dispatch(createProductReview(product._id, data))
+  // }
 
   return (
     <>
@@ -298,12 +293,12 @@ const Product = ({ history, match }) => {
                   </Col>
                   <Col span={24}>
                     <Divider orientation='left'>Đánh giá</Divider>
-                    {loadingProductReview && <Loader />}
+                    {/* {loadingProductReview && <Loader />}
                     {errorProductReview &&
                       message.error({
                         content: `${errorProductReview}`,
                         duration: 2,
-                      })}
+                      })} */}
 
                     {product.reviews.length === 0 && (
                       <Message message='Không có đánh giá nào' type='info' />

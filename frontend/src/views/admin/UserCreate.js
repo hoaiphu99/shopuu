@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react'
-//import { Form, Button, Row, Col, Table } from 'react-bootstrap'
 import axios from 'axios'
-import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Container } from 'react-bootstrap'
 import Message from '../../components/Message'
 import Loader from '../../components/Loader'
 import Breadcrumb from '../../components/BreadcrumbComp'
@@ -14,25 +11,15 @@ import {
 } from '../../constants/formConstants'
 import { USER_REGISTER_RESET } from '../../constants/userConstants'
 import {
-  Row,
-  Col,
   Form,
   Input,
   Select,
   Button,
   Checkbox,
   message,
-  Typography,
   Layout,
-  Divider,
   Menu,
-  Descriptions,
 } from 'antd'
-import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-} from '@ant-design/icons'
 
 const UserCreate = ({ history }) => {
   const [provinces, setProvinces] = useState([])
@@ -42,8 +29,8 @@ const UserCreate = ({ history }) => {
   const [form] = Form.useForm()
   const { Option } = Select
 
-  const { SubMenu } = Menu
-  const { Content, Sider } = Layout
+  // const { SubMenu } = Menu
+  // const { Content, Sider } = Layout
 
   const dispatch = useDispatch()
 

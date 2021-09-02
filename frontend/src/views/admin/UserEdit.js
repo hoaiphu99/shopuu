@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react'
-//import { Form, Button, Row, Col, Table } from 'react-bootstrap'
 import axios from 'axios'
-//import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import Message from '../../components/Message'
 import Loader from '../../components/Loader'
 import Breadcrumb from '../../components/BreadcrumbComp'
 import { getUserDetails, updateUser } from '../../actions/userActions'
@@ -13,25 +10,15 @@ import {
 } from '../../constants/formConstants'
 import { USER_UPDATE_RESET } from '../../constants/userConstants'
 import {
-  Row,
-  Col,
   Form,
   Input,
   Select,
   Button,
   Checkbox,
   message,
-  Typography,
   Layout,
-  Divider,
   Menu,
-  Descriptions,
 } from 'antd'
-import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-} from '@ant-design/icons'
 
 const UserEdit = ({ match, history }) => {
   const userId = match.params.id
@@ -52,8 +39,8 @@ const UserEdit = ({ match, history }) => {
   const [form] = Form.useForm()
   const { Option } = Select
 
-  const { SubMenu } = Menu
-  const { Content, Sider } = Layout
+  // const { SubMenu } = Menu
+  // const { Content, Sider } = Layout
 
   const dispatch = useDispatch()
 

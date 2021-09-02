@@ -19,7 +19,7 @@ import {
   Upload,
   Modal,
 } from 'antd'
-import { UploadOutlined, PlusOutlined } from '@ant-design/icons'
+import {  PlusOutlined } from '@ant-design/icons'
 import { listCategories } from '../../actions/categoryActions'
 import { listBrands } from '../../actions/brandActions'
 

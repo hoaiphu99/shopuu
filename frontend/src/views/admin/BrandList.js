@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Moment from 'react-moment'
-import { Link } from 'react-router-dom'
 import {
   message,
   Table,
@@ -12,11 +11,6 @@ import {
   Form,
   Button,
 } from 'antd'
-import {
-  HighlightOutlined,
-  SmileOutlined,
-  SmileFilled,
-} from '@ant-design/icons'
 import Loader from '../../components/Loader'
 import Breadcrumb from '../../components/BreadcrumbComp'
 import {
@@ -32,8 +26,8 @@ import {
 } from '../../constants/brandConstants'
 
 const BrandList = ({ history }) => {
-  const { Paragraph } = Typography
-  const { Column } = Table
+  //const { Paragraph } = Typography
+  //const { Column } = Table
 
   const [isAdd, setIsAdd] = useState(false)
 
@@ -70,7 +64,7 @@ const BrandList = ({ history }) => {
   const key = 'msg'
 
   const [form] = Form.useForm()
-  const [data, setData] = useState(brands)
+  //const [data, setData] = useState(brands)
   const [editingKey, setEditingKey] = useState('')
 
   const isEditing = (record) => record._id === editingKey

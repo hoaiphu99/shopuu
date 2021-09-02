@@ -1,24 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Moment from 'react-moment'
-import { Link } from 'react-router-dom'
 import {
   message,
   Table,
-  Tag,
   Space,
   Typography,
   Input,
-  InputNumber,
   Popconfirm,
   Form,
   Button,
 } from 'antd'
-import {
-  HighlightOutlined,
-  SmileOutlined,
-  SmileFilled,
-} from '@ant-design/icons'
 import Loader from '../../components/Loader'
 import Breadcrumb from '../../components/BreadcrumbComp'
 import {
@@ -34,8 +26,8 @@ import {
 } from '../../constants/categoryConstants'
 
 const CategoryList = ({ history }) => {
-  const { Paragraph } = Typography
-  const { Column } = Table
+  // const { Paragraph } = Typography
+  // const { Column } = Table
 
   const [isAdd, setIsAdd] = useState(false)
 
@@ -72,7 +64,7 @@ const CategoryList = ({ history }) => {
   const key = 'msg'
 
   const [form] = Form.useForm()
-  const [data, setData] = useState(categories)
+  // const [data, setData] = useState(categories)
   const [editingKey, setEditingKey] = useState('')
 
   const isEditing = (record) => record._id === editingKey

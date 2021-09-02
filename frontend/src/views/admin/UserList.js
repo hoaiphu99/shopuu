@@ -7,31 +7,15 @@ import {
   Table,
   Space,
   Typography,
-  Input,
   Popconfirm,
   Form,
   Button,
   Tag,
 } from 'antd'
-// import {
-//   HighlightOutlined,
-//   SmileOutlined,
-//   SmileFilled,
-// } from '@ant-design/icons'
 import Loader from '../../components/Loader'
 import Breadcrumb from '../../components/BreadcrumbComp'
-//import UserEdit from './UserEdit'
-import {
-  listUsers,
-  deleteUser,
-  // getUserDetails,
-  // updateUser,
-} from '../../actions/userActions'
-import {
-  // USER_CREATE_RESET,
-  // USER_UPDATE_RESET,
-  USER_DELETE_RESET,
-} from '../../constants/userConstants'
+import { listUsers, deleteUser } from '../../actions/userActions'
+import { USER_DELETE_RESET } from '../../constants/userConstants'
 
 const UserList = ({ history }) => {
   // const { Paragraph } = Typography
@@ -61,7 +45,7 @@ const UserList = ({ history }) => {
 
   const key = 'msg'
 
-  const [form] = Form.useForm()
+  // const [form] = Form.useForm()
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {

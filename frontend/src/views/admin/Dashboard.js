@@ -17,8 +17,9 @@ const Dashboard = ({ history }) => {
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
-      dispatch(topBuyProducts())
-      if (dataTopBuy) {
+      if (!dataTopBuy || dataTopBuy.length <= 0) {
+        dispatch(topBuyProducts())
+      } else {
         const dateBuy = dataTopBuy.map((item) => {
           return item.date
         })
@@ -26,14 +27,13 @@ const Dashboard = ({ history }) => {
         const totalBuy = dataTopBuy.map((item) => {
           return item.total
         })
-
         setDate(dateBuy.reverse())
         setTotal(totalBuy.reverse())
       }
     } else {
       history.push('/login')
     }
-  }, [dispatch])
+  }, [dispatch, dataTopBuy])
 
   const chartOptions = {
     title: {

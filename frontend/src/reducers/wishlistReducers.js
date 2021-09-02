@@ -11,12 +11,12 @@ export const wishlistReducer = (state = { wishlistItems: [] }, action) => {
       return {
         wishlistItems: action.payload.data,
       }
-      break
+
     case WISHLIST_REMOVE_ALL_ITEM:
       return {
         wishlistItems: [],
       }
-      break
+
     case WISHLIST_ADD_ITEM:
       const item = action.payload.data
       const existItem = state.wishlistItems.find(
@@ -37,7 +37,6 @@ export const wishlistReducer = (state = { wishlistItems: [] }, action) => {
         }
       }
 
-      break
     case WISHLIST_REMOVE_ITEM:
       return {
         ...state,
@@ -45,9 +44,8 @@ export const wishlistReducer = (state = { wishlistItems: [] }, action) => {
           (i) => i.product._id !== action.payload
         ),
       }
-      break
+
     default:
       return state
-      break
   }
 }

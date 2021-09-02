@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import NumberFormat from 'react-number-format'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -7,20 +6,11 @@ import {
   Table,
   Space,
   Typography,
-  Input,
   Popconfirm,
-  Form,
   Button,
-  Tag,
 } from 'antd'
-import {
-  HighlightOutlined,
-  SmileOutlined,
-  SmileFilled,
-} from '@ant-design/icons'
 import Loader from '../../components/Loader'
 import Breadcrumb from '../../components/BreadcrumbComp'
-import Paginate from '../../components/Paginate'
 import { listAllProducts, deleteProduct } from '../../actions/productActions'
 import { PRODUCT_DELETE_RESET } from '../../constants/productConstants'
 

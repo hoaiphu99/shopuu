@@ -20,16 +20,15 @@ export const brandListReducer = (state = { brands: [] }, action) => {
   switch (action.type) {
     case BRAND_LIST_REQUEST:
       return { loading: true }
-      break
+
     case BRAND_LIST_SUCCESS:
       return { loading: false, brands: action.payload }
-      break
+
     case BRAND_LIST_FAIL:
       return { loading: false, error: action.payload }
-      break
+
     default:
       return state
-      break
   }
 }
 
@@ -37,19 +36,18 @@ export const brandCreateReducer = (state = {}, action) => {
   switch (action.type) {
     case BRAND_CREATE_REQUEST:
       return { loading: true }
-      break
+
     case BRAND_CREATE_SUCCESS:
       return { loading: false, success: true, brand: action.payload }
-      break
+
     case BRAND_CREATE_FAIL:
       return { loading: false, error: action.payload }
-      break
+
     case BRAND_CREATE_RESET:
       return {}
-      break
+
     default:
       return state
-      break
   }
 }
 
@@ -57,19 +55,18 @@ export const brandUpdateReducer = (state = { brand: {} }, action) => {
   switch (action.type) {
     case BRAND_UPDATE_REQUEST:
       return { loading: true }
-      break
+
     case BRAND_UPDATE_SUCCESS:
       return { loading: false, success: true, brand: action.payload }
-      break
+
     case BRAND_UPDATE_FAIL:
       return { loading: false, error: action.payload }
-      break
+
     case BRAND_UPDATE_RESET:
       return { brand: {} }
-      break
+
     default:
       return state
-      break
   }
 }
 
@@ -77,18 +74,17 @@ export const brandDeleteReducer = (state = {}, action) => {
   switch (action.type) {
     case BRAND_DELETE_REQUEST:
       return { loading: true }
-      break
+
     case BRAND_DELETE_SUCCESS:
       return { loading: false, success: true }
-      break
+
     case BRAND_DELETE_FAIL:
       return { loading: false, error: action.payload }
-      break
+
     case BRAND_DELETE_RESET:
       return {}
-      break
+
     default:
       return state
-      break
   }
 }

@@ -1,7 +1,6 @@
 import React from 'react'
 import { Route, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Container } from 'react-bootstrap'
 import {
   Layout,
   Menu,
@@ -11,7 +10,6 @@ import {
   Typography,
   Space,
   Badge,
-  Divider,
 } from 'antd'
 import {
   LoginOutlined,
@@ -24,7 +22,7 @@ import SearchBox from '../components/SearchBox'
 import Navbar from '../components/Navbar'
 
 const Header = () => {
-  const { Header } = Layout
+  //const { Header } = Layout
 
   const dispatch = useDispatch()
 
@@ -52,7 +50,9 @@ const Header = () => {
         </Menu.Item>
       )}
       <Menu.Item>
-        <a onClick={logoutHandler}>Đăng xuất</a>
+        <a href='#' onClick={logoutHandler}>
+          Đăng xuất
+        </a>
       </Menu.Item>
     </Menu>
   )
@@ -104,6 +104,7 @@ const Header = () => {
               {userInfo ? (
                 <Dropdown overlay={menu}>
                   <a
+                    href='#'
                     style={{ fontSize: '15px' }}
                     className='ant-dropdown-link'
                     onClick={(e) => e.preventDefault()}>
