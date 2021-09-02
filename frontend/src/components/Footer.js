@@ -1,7 +1,7 @@
 import React from 'react'
 import { Row, Col, Divider, Typography } from 'antd'
 import { HeartFilled } from '@ant-design/icons'
-//import { Container, Row, Col } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 const Footer = () => {
   const { Title } = Typography
@@ -13,27 +13,39 @@ const Footer = () => {
           <Title level={4} style={{ color: '#fff' }}>
             Shoppu
           </Title>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt cilisis.
-          </p>
+          <p>Shop bán phụ kiện và linh kiện máy tính mới linh tinh.</p>
         </Col>
         <Col span={4}>
           <Title level={4} style={{ color: '#fff' }}>
-            Shoppu
+            THANH TOÁN
           </Title>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt cilisis.
+            <img
+              src='/images/paypal.jpg'
+              width='50%'
+              style={{ margin: '5px' }}
+            />
+            <img src='/images/cod.jpg' width='50%' style={{ margin: '5px' }} />
           </p>
+          <p></p>
         </Col>
         <Col span={4}>
           <Title level={4} style={{ color: '#fff' }}>
-            Shoppu
+            LIÊN KẾT NHANH
           </Title>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt cilisis.
+            <Link to='/'>Trang chủ</Link>
+          </p>
+          <p>
+            <Link to='#'>About</Link>
+          </p>
+          <p>
+            <Link to='#'>Liên hệ</Link>
+          </p>
+          <p>
+            <a href='https://hoaiphu.xyz' target='_blank'>
+              Hoaiphu Blog
+            </a>
           </p>
         </Col>
         <Col span={6}>
@@ -64,7 +76,7 @@ const Footer = () => {
               verticalAlign: 'middle',
             }}
           />{' '}
-          by Shoppu
+          by <Link to='/'>Shoppu</Link>
         </Title>
       </Row>
     </footer>
