@@ -13,39 +13,39 @@ const TimelineComp = ({
       {created && (
         <Timeline.Item
           label={<Moment format='DD/MM/YYYY hh:mm:ss'>{created}</Moment>}>
-          Created
+          Đã tạo đơn hàng
         </Timeline.Item>
       )}
       {statusName === 'ACCEPT' && (
         <Timeline.Item
           label={<Moment format='DD/MM/YYYY hh:mm:ss'>{date}</Moment>}>
-          Order Accepted
+          Đã xác nhận
         </Timeline.Item>
       )}
       {statusName === 'CANCEL' && (
         <Timeline.Item
           color='red'
           label={<Moment format='DD/MM/YYYY hh:mm:ss'>{date}</Moment>}>
-          Order canceled
+          Bị hủy
         </Timeline.Item>
       )}
       {paid && (
         <Timeline.Item
           label={<Moment format='DD/MM/YYYY hh:mm:ss'>{paid}</Moment>}>
-          Paid
+          Đã thanh toán
         </Timeline.Item>
       )}
       {delivered && (
         <Timeline.Item
           label={<Moment format='DD/MM/YYYY hh:mm:ss'>{delivered}</Moment>}>
-          Delivered
+          Đã giao hàng
         </Timeline.Item>
       )}
       {statusName === 'FINISH' && (
         <Timeline.Item
           color='green'
           label={<Moment format='DD/MM/YYYY hh:mm:ss'>{date}</Moment>}>
-          Order finish
+          Đã hoàn thành
         </Timeline.Item>
       )}
     </Timeline>

@@ -41,7 +41,7 @@ const Payment = ({ history }) => {
               onChange={(e) => setPaymentMethod(e.target.value)}
               value={paymentMethod}>
               <Space direction='vertical'>
-                <Radio value='COD'>Ship COD</Radio>
+                <Radio value='COD'>Thanh toán khi nhận hàng (COD)</Radio>
                 <Radio value='PayPal'>PayPal</Radio>
               </Space>
             </Radio.Group>
@@ -50,7 +50,7 @@ const Payment = ({ history }) => {
         <Row>
           <Col span={12} offset={10}>
             <Button type='primary' onClick={submitHandler}>
-              Continue
+              Tiếp tục
             </Button>
           </Col>
         </Row>

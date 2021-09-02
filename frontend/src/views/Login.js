@@ -1,17 +1,9 @@
-import React, {  useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../actions/userActions'
 import { getMyWishlist } from '../actions/wishlistActions'
-import {
-  Row,
-  Col,
-  Form,
-  Input,
-  Button,
-  message,
-  Typography,
-} from 'antd'
+import { Row, Col, Form, Input, Button, message, Typography } from 'antd'
 import { MailOutlined, LockOutlined } from '@ant-design/icons'
 
 const Login = ({ location, history }) => {
@@ -65,6 +57,11 @@ const Login = ({ location, history }) => {
             <Form.Item
               name='email'
               rules={[
+                {
+                  type: 'email',
+                  message: 'Email không hợp lệ!',
+                },
+
                 {
                   required: true,
                   message: 'Vui lòng nhập Email!',

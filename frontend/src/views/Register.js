@@ -131,11 +131,11 @@ const Register = ({ location, history }) => {
               rules={[
                 {
                   type: 'email',
-                  message: 'E-mail không hợp lệ!',
+                  message: 'Email không hợp lệ!',
                 },
                 {
                   required: true,
-                  message: 'Vui lòng nhập E-mail!',
+                  message: 'Vui lòng nhập Email!',
                 },
               ]}>
               <Input />
