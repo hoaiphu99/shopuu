@@ -31,6 +31,9 @@ import {
   PRODUCT_ALL_REQUEST,
   PRODUCT_ALL_SUCCESS,
   PRODUCT_ALL_FAIL,
+  PRODUCT_BEST_SELLER_REQUEST,
+  PRODUCT_BEST_SELLER_SUCCESS,
+  PRODUCT_BEST_SELLER_FAIL,
 } from '../constants/productConstants'
 
 export const listProducts =
@@ -124,6 +127,38 @@ export const topBuyProducts = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: PRODUCT_TOP_BUY_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+export const bestSellerProducts = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PRODUCT_BEST_SELLER_REQUEST })
+
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+
+    const { data } = await axios.get(`/api/products/best-seller`, config)
+
+    dispatch({
+      type: PRODUCT_BEST_SELLER_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_BEST_SELLER_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

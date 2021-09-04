@@ -12,6 +12,7 @@ import {
   createProductReview,
   getTopProducts,
   getTopBuyProducts,
+  productBestSeller,
 } from '../controllers/productController.js'
 import { protect, admin } from '../middleware/authMiddleware.js'
 
@@ -21,6 +22,7 @@ router.get('/', getProducts)
 router.get('/all', getAllProducts)
 router.get('/top', getTopProducts)
 router.get('/topbuy', protect, admin, getTopBuyProducts)
+router.get('/best-seller', protect, admin, productBestSeller)
 router.get('/category/:slug', getProductsByCategory)
 router.post('/', protect, admin, createProduct)
 router.get('/:id', getProductById)

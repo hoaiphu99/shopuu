@@ -12,6 +12,7 @@ import {
   productByCategoryReducer,
   productAllReducer,
   productTopBuyReducer,
+  productBestSellerReducer,
 } from './reducers/productReducers'
 import { cartReducer } from './reducers/cartReducers'
 import { wishlistReducer } from './reducers/wishlistReducers'
@@ -58,6 +59,7 @@ const reducer = combineReducers({
   productByCategory: productByCategoryReducer,
   productAll: productAllReducer,
   productTopBuy: productTopBuyReducer,
+  productBestSeller: productBestSellerReducer,
 
   cart: cartReducer,
   wishlist: wishlistReducer,

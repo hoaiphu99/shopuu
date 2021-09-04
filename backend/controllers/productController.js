@@ -375,12 +375,57 @@ const getTopBuyProducts = asyncHandler(async (req, res) => {
 
     console.log(data)
 
-    res.json({ status: 'success', data, errors: null })
+    // const product = await Order.aggregate([
+    //   // {
+    //   //   $match: { createdAt: { $gte: dateStartOfWeek, $lte: dateNow } },
+    //   // },
+    //   {
+    //     $group: {
+    //       _id: '$createdAt',
+    //       name: { $first: '$orderItems.name' },
+    //       buy: { $sum: '$orderItems.qty' },
+    //     },
+    //   },
+    //   // {
+    //   //   $project: {
+    //   //     _id: 0,
+    //   //     name: 1,
+    //   //   },
+    //   // },
+    //   // { $unwind: { path: '$name' } },
+    //   { $limit: 10 },
+    // ])
+
+    res.json({ status: 'success', data: data, errors: null })
   } catch (error) {
     const errors = customErrorHandler(error, res)
     res
       .status(errors.statusCode)
       .json({ status: 'fail', data: null, errors: errors.message })
+  }
+})
+
+const productBestSeller = asyncHandler(async (req, res, next) => {
+  try {
+    const bestSeller = await Order.aggregate([
+      {
+        $unwind: { path: '$orderItems' },
+      },
+      {
+        $group: {
+          _id: '$orderItems.product',
+          name: { $first: '$orderItems.name' },
+          totalSell: { $sum: '$orderItems.qty' },
+        },
+      },
+      { $sort: { totalSell: -1 } },
+      { $limit: 10 },
+    ])
+
+    res.status(200).json({ status: 'success', data: bestSeller, error: null })
+  } catch (error) {
+    res.status(400)
+    throw new Error(`${error}`)
   }
 })
 
@@ -397,4 +442,5 @@ export {
   createProductReview,
   getTopProducts,
   getTopBuyProducts,
+  productBestSeller,
 }
