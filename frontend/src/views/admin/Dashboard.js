@@ -32,7 +32,7 @@ const Dashboard = ({ history }) => {
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       if (chart === '1') {
-        if (!dataTopBuy || dataTopBuy.length <= 0) {
+        if (!dataTopBuy) {
           dispatch(topBuyProducts())
         } else {
           const dateBuy = dataTopBuy.map((item) => {
@@ -47,14 +47,13 @@ const Dashboard = ({ history }) => {
         }
       }
       if (chart === '2') {
-        if (!dataBestSeller || dataBestSeller.length <= 0) {
+        if (!dataBestSeller) {
           dispatch(bestSellerProducts())
         } else {
           const data = dataBestSeller.map((item) => {
             const { totalSell: y, ...name } = item
             return { y, ...name }
           })
-          console.log(data)
           setDataToPieChart(data)
         }
       }
@@ -136,7 +135,7 @@ const Dashboard = ({ history }) => {
         ''
       )}
       {chart === '2' ? (
-        loading ? (
+        loadingBestSeller ? (
           <Loader />
         ) : (
           <ProductHighCharts chartOptions={ColumnChartOption} />

@@ -149,7 +149,7 @@ export const productTopRatedReducer = (state = { products: [] }, action) => {
   }
 }
 
-export const productTopBuyReducer = (state = { dataTopBuy: [] }, action) => {
+export const productTopBuyReducer = (state = {}, action) => {
   switch (action.type) {
     case PRODUCT_TOP_BUY_REQUEST:
       return { loading: true }
@@ -162,10 +162,7 @@ export const productTopBuyReducer = (state = { dataTopBuy: [] }, action) => {
   }
 }
 
-export const productBestSellerReducer = (
-  state = { dataBestSeller: [] },
-  action
-) => {
+export const productBestSellerReducer = (state = {}, action) => {
   switch (action.type) {
     case PRODUCT_BEST_SELLER_REQUEST:
       return { loading: true }
