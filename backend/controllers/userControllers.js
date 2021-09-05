@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 import generateToken from '../utils/generateToken.js'
 
+const maxAge = 3 * 24 * 60 * 60
 // @desc    Auth user & get token
 // @router  POST /api/users/login
 // @access  public
@@ -14,13 +15,14 @@ const authUser = asyncHandler(async (req, res) => {
   })
 
   if (user && (await user.matchPassword(password))) {
+    const token = generateToken(user._id)
     res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
       wishListItems: user.wishListItems,
-      token: generateToken(user._id),
+      token: token,
     })
   } else {
     res.status(401)

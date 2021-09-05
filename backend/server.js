@@ -1,5 +1,7 @@
 import path from 'path'
 import express from 'express'
+import cookieParser from 'cookie-parser'
+import session from 'express-session'
 import dotenv from 'dotenv'
 import colors from 'colors'
 import morgan from 'morgan'
@@ -22,6 +24,18 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.json())
+app.use(cookieParser())
+app.use(
+  session({
+    key: 'userId',
+    secret: 'hoaiphulam',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      expires: 60 * 60 * 24,
+    },
+  })
+)
 
 // Routes init
 route(app)

@@ -8,7 +8,7 @@ import { MailOutlined, LockOutlined } from '@ant-design/icons'
 
 const Login = ({ location, history }) => {
   const { Title } = Typography
-
+  console.log(location)
   const dispatch = useDispatch()
 
   const userLogin = useSelector((state) => state.userLogin)
@@ -23,7 +23,9 @@ const Login = ({ location, history }) => {
     if (userInfo) {
       dispatch(getMyWishlist())
       message.success({ content: 'Đăng nhập thành công!', key, duration: 2 })
-      history.push(`${redirect}=${qty}`)
+      if (redirect) {
+        history.push(`${redirect}=${qty}`)
+      } else history.push(`${redirect}`)
       // setTimeout(() => {
 
       // }, 2000)

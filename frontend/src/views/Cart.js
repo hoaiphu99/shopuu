@@ -134,7 +134,7 @@ const Cart = ({ match, location, history }) => {
         </Link>
       </Col>
       <Col span={8}>
-        <Divider orientation='left'>Thanh toán</Divider>
+        <Divider orientation='left'>Tóm tắt đơn hàng</Divider>
         <Card
           headStyle={{ fontSize: '25px' }}
           title={`Tổng cộng (${cartItems.reduce(

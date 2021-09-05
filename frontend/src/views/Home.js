@@ -1,4 +1,4 @@
-import React, {  useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Route } from 'react-router-dom'
 import Product from '../components/Product'
@@ -14,7 +14,7 @@ import { Layout, Row, Col, Divider, Button } from 'antd'
 import { SwapLeftOutlined } from '@ant-design/icons'
 
 const Home = ({ match, history, location }) => {
-  console.log(location)
+  
   const { Content } = Layout
 
   const keyword = match.params.keyword
@@ -29,10 +29,10 @@ const Home = ({ match, history, location }) => {
   const { loading, error, products, pages, page: currentPage } = productList
 
   const categoryList = useSelector((state) => state.categoryList)
-  const {  categories } = categoryList
+  const { categories } = categoryList
 
   const brandList = useSelector((state) => state.brandList)
-  const {  brands } = brandList
+  const { brands } = brandList
 
   useEffect(() => {
     if (
