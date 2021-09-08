@@ -25,6 +25,7 @@ import {
 import {
   getOrderSupplierDetails,
   statusOrderSupplier,
+  listOrderSuppliers,
 } from '../../actions/orderSupplierActions'
 import {
   ORDER_SUPPLIER_DETAILS_RESET,
@@ -67,6 +68,7 @@ const OrderSupplierDetails = ({ match, history }) => {
       dispatch({ type: ORDER_SUPPLIER_DETAILS_RESET })
       dispatch({ type: ORDER_SUPPLIER_STATUS_RESET })
       dispatch(getOrderSupplierDetails(orderSupplierId))
+      dispatch(listOrderSuppliers())
     }
   }, [userInfo, orderSupplierId, successStatus])
 

@@ -10,6 +10,7 @@ import {
   Select,
   Typography,
   message,
+  notification,
 } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { listAllProducts } from '../../actions/productActions'
@@ -88,7 +89,18 @@ const OrderSupplierCreate = ({ history }) => {
     }
   }, [dispatch, history, products, prevSelectItem, supplierSelect, success])
 
+  const openNotificationWithIcon = (type) => {
+    notification[type]({
+      message: 'Chưa chọn sản phẩm',
+      description: 'Hãy chọn ít nhất 1 sản phẩm trước khi lập phiếu đặt!',
+    })
+  }
+
   const onFinish = (values) => {
+    if (!values.orderItems || values.orderItems.length <= 0) {
+      openNotificationWithIcon('warning')
+      return
+    }
     const data = {
       ...values,
       totalPrice: values.orderItems.reduce((acc, cur) => {
@@ -197,7 +209,7 @@ const OrderSupplierCreate = ({ history }) => {
                       name={[field.name, 'price']}
                       fieldKey={[field.fieldKey, 'price']}
                       rules={[{ required: true, message: 'Chưa nhập giá !' }]}>
-                      <InputNumber min='0' style={{ width: 150 }} />
+                      <InputNumber min={1} style={{ width: 150 }} />
                     </Form.Item>
                     <Form.Item
                       // labelCol={{ span: 4 }}
@@ -209,7 +221,7 @@ const OrderSupplierCreate = ({ history }) => {
                       rules={[
                         { required: true, message: 'Chưa nhập số lượng!' },
                       ]}>
-                      <InputNumber min='0' style={{ width: 150 }} />
+                      <InputNumber min={1} style={{ width: 150 }} />
                     </Form.Item>
                     <MinusCircleOutlined onClick={() => remove(field.name)} />
                   </Space>

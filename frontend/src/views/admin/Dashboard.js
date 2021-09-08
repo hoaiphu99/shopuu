@@ -8,7 +8,11 @@ import {
   topBuyProducts,
   bestSellerProducts,
 } from '../../actions/productActions'
-import { getTotalOrders } from '../../actions/statisticActions'
+import {
+  getTotalOrders,
+  getTotalOrdersWait,
+  getTotalUser,
+} from '../../actions/statisticActions'
 
 const Dashboard = ({ history }) => {
   const { Option } = Select
@@ -22,8 +26,16 @@ const Dashboard = ({ history }) => {
   const productBestSeller = useSelector((state) => state.productBestSeller)
   const { loading: loadingBestSeller, dataBestSeller } = productBestSeller
 
-  const statistic = useSelector((state) => state.statistic)
-  const { totalOrders, totalOrdersWait, sales } = statistic
+  const statisticTotalOrder = useSelector((state) => state.statisticTotalOrder)
+  const { totalOrders } = statisticTotalOrder
+
+  const statisticTotalUser = useSelector((state) => state.statisticTotalUser)
+  const { totalUsers } = statisticTotalUser
+
+  const statisticTotalOrderWait = useSelector(
+    (state) => state.statisticTotalOrderWait
+  )
+  const { totalOrdersWait } = statisticTotalOrderWait
 
   const [date, setDate] = useState([])
   const [total, setTotal] = useState([])
@@ -37,6 +49,12 @@ const Dashboard = ({ history }) => {
     if (userInfo && userInfo.isAdmin) {
       if (!totalOrders) {
         dispatch(getTotalOrders())
+      }
+      if (!totalOrdersWait) {
+        dispatch(getTotalOrdersWait())
+      }
+      if (!totalUsers) {
+        dispatch(getTotalUser())
       }
       if (chart === '1') {
         if (!dataTopBuy) {
@@ -67,7 +85,15 @@ const Dashboard = ({ history }) => {
     } else {
       history.push('/login')
     }
-  }, [dispatch, dataTopBuy, dataBestSeller, chart, totalOrders])
+  }, [
+    dispatch,
+    dataTopBuy,
+    dataBestSeller,
+    chart,
+    totalOrders,
+    totalOrdersWait,
+    totalUsers,
+  ])
 
   const handleChange = (value) => {
     setChart(value)
@@ -124,7 +150,11 @@ const Dashboard = ({ history }) => {
 
   return (
     <>
-      <DashboardStatistic totalOrders={totalOrders} />
+      <DashboardStatistic
+        totalOrders={totalOrders}
+        totalOrdersWait={totalOrdersWait}
+        totalUsers={totalUsers}
+      />
       <Typography.Title level={5} style={{ margin: '10px 0' }}>
         Thống kê
       </Typography.Title>

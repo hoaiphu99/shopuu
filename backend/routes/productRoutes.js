@@ -13,6 +13,7 @@ import {
   getTopProducts,
   getTopBuyProducts,
   productBestSeller,
+  updateDiscountProduct,
 } from '../controllers/productController.js'
 import { protect, admin } from '../middleware/authMiddleware.js'
 
@@ -27,6 +28,7 @@ router.get('/category/:slug', getProductsByCategory)
 router.post('/', protect, admin, createProduct)
 router.get('/:id', getProductById)
 router.get('/:slug/get', getProductBySlug)
+router.put('/discount-update', protect, admin, updateDiscountProduct)
 router.put('/:id', protect, admin, updateProduct)
 router.delete('/:id', protect, admin, deleteProduct)
 router.delete('/:id/force', protect, admin, forceDeleteProduct)

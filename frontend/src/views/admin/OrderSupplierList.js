@@ -167,22 +167,15 @@ const OrderSupplierList = ({ history }) => {
             render={(_, record) => {
               return (
                 <Space size='middle'>
-                  {/* {record.status === 'WAIT' && (
-                    <Typography.Link
-                      onClick={() => {
-                        orderStatusHandler(record._id, 'ACCEPT')
-                        setStatus('success')
-                      }}>
-                      Xác nhận
-                    </Typography.Link>
-                  )} */}
-
                   <Typography.Link
                     onClick={() => {
                       history.push(`/admin/order-suppliers/${record._id}`)
                     }}>
-                    Chi tiết
+                    {record.status !== 'FINISH' && record.status !== 'CANCEL'
+                      ? 'Nhập hàng'
+                      : 'Chi tiết'}
                   </Typography.Link>
+
                   {record.status !== 'CANCEL' && record.status !== 'FINISH' && (
                     <Popconfirm
                       title='Chắc chắn hủy?'

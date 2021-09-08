@@ -255,7 +255,7 @@ const ProductEdit = ({ match, history }) => {
               <InputNumber min='0' />
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
               name='countInStock'
               label='Số lượng tồn'
               initialValue={countInStock}
@@ -266,7 +266,7 @@ const ProductEdit = ({ match, history }) => {
                 },
               ]}>
               <InputNumber min='0' />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item
               name='brand'

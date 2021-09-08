@@ -13,6 +13,7 @@ import {
   productAllReducer,
   productTopBuyReducer,
   productBestSellerReducer,
+  productUpdateDiscountReducer,
 } from './reducers/productReducers'
 import { cartReducer } from './reducers/cartReducers'
 import { wishlistReducer } from './reducers/wishlistReducers'
@@ -47,7 +48,11 @@ import {
   brandUpdateReducer,
   brandDeleteReducer,
 } from './reducers/brandReducers'
-import { statisticReducer } from './reducers/statisticReducers'
+import {
+  statisticTotalOrderReducer,
+  statisticTotalOrderWaitReducer,
+  statisticTotalUserReducer,
+} from './reducers/statisticReducers'
 import {
   supplierListReducer,
   supplierDetailsReducer,
@@ -72,6 +77,7 @@ const reducer = combineReducers({
   productDetails: productDetailsReducer,
   productCreate: productCreateReducer,
   productUpdate: productUpdateReducer,
+  productUpdateDiscount: productUpdateDiscountReducer,
   productDelete: productDeleteReducer,
   productReviewCreate: productReviewCreateReducer,
   productTopRated: productTopRatedReducer,
@@ -110,7 +116,9 @@ const reducer = combineReducers({
   brandUpdate: brandUpdateReducer,
   brandDelete: brandDeleteReducer,
 
-  statistic: statisticReducer,
+  statisticTotalOrder: statisticTotalOrderReducer,
+  statisticTotalOrderWait: statisticTotalOrderWaitReducer,
+  statisticTotalUser: statisticTotalUserReducer,
 
   supplierList: supplierListReducer,
   supplierDetails: supplierDetailsReducer,

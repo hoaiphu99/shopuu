@@ -22,6 +22,7 @@ import OrderSupplierDetails from './admin/OrderSupplierDetails'
 import ImportList from './admin/ImportList'
 import ImportDetails from './admin/ImportDetails'
 import ImportCreate from './admin/ImportCreate'
+import DiscountCreate from './admin/DiscountCreate'
 import Order from './Order'
 import { Form, Select, Layout, Menu } from 'antd'
 import { LaptopOutlined, BankOutlined } from '@ant-design/icons'
@@ -89,14 +90,17 @@ const Admin = ({ location, history }) => {
                 </SubMenu>
 
                 <SubMenu
-                  key='adminStorage'
+                  key='adminFunc'
                   icon={<BankOutlined />}
-                  title='Nhập hàng'>
+                  title='Chức năng'>
                   <Menu.Item key='orderSuppliers'>
-                    <Link to='/admin/order-suppliers'>Phiếu đặt hàng</Link>
+                    <Link to='/admin/order-suppliers'>Đặt hàng từ NCC</Link>
                   </Menu.Item>
                   <Menu.Item key='imports'>
-                    <Link to='/admin/imports'>Phiếu nhập hàng</Link>
+                    <Link to='/admin/imports'>Nhập hàng</Link>
+                  </Menu.Item>
+                  <Menu.Item key='addDiscount'>
+                    <Link to='/admin/discount'>Giảm giá sản phẩm</Link>
                   </Menu.Item>
                 </SubMenu>
               </>
@@ -166,6 +170,7 @@ const Admin = ({ location, history }) => {
               <Route
                 path='/admin/imports/create/:id'
                 component={ImportCreate}></Route>
+              <Route path='/admin/discount' component={DiscountCreate}></Route>
             </Switch>
           </Content>
         </Layout>

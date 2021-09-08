@@ -19,7 +19,7 @@ import {
   Upload,
   Modal,
 } from 'antd'
-import {  PlusOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 import { listCategories } from '../../actions/categoryActions'
 import { listBrands } from '../../actions/brandActions'
 
@@ -193,11 +193,11 @@ const ProductCreate = ({ history }) => {
           <InputNumber min='0' />
         </Form.Item>
 
-        <Form.Item name='discount' label='Giảm giá (%)'>
+        {/* <Form.Item name='discount' label='Giảm giá (%)'>
           <InputNumber min='0' />
-        </Form.Item>
+        </Form.Item> */}
 
-        <Form.Item
+        {/* <Form.Item
           name='countInStock'
           label='Số lượng tồn'
           rules={[
@@ -207,7 +207,7 @@ const ProductCreate = ({ history }) => {
             },
           ]}>
           <InputNumber min='0' />
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item
           name='brand'
@@ -264,7 +264,7 @@ const ProductCreate = ({ history }) => {
             fileList={fileList}
             onPreview={handlePreview}
             onChange={handleChange}>
-            {fileList.length >= 8 ? null : (
+            {fileList.length >= 5 ? null : (
               <div>
                 <PlusOutlined />
                 <div style={{ marginTop: 8 }}>Tải ảnh lên</div>

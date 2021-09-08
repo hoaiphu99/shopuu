@@ -197,7 +197,6 @@ const createProduct = asyncHandler(async (req, res) => {
       images: req.body.images,
       brand: req.body.brand,
       category: req.body.category,
-      countInStock: req.body.countInStock,
       description: req.body.description,
     })
 
@@ -221,12 +220,10 @@ const updateProduct = asyncHandler(async (req, res) => {
     const {
       name,
       price,
-      discount,
       description,
       images,
       brand,
       category,
-      countInStock,
     } = req.body
 
     const product = await Product.findById(req.params.id)
@@ -234,13 +231,10 @@ const updateProduct = asyncHandler(async (req, res) => {
     if (product) {
       product.name = name || product.name
       product.price = price || product.price
-      product.discount = discount === 0 ? 0 : discount || product.discount
       product.description = description || product.description
       product.images = images || product.images
       product.brand = brand || product.brand
       product.category = category || product.category
-      product.countInStock =
-        countInStock === 0 ? 0 : countInStock || product.countInStock
 
       const updateProduct = await product.save()
       res
@@ -255,6 +249,32 @@ const updateProduct = asyncHandler(async (req, res) => {
     res
       .status(errors.statusCode)
       .json({ status: 'fail', data: null, errors: errors.message })
+  }
+})
+
+// Update product discount
+// [PUT] /api/products/discount-update
+// private/admin
+const updateDiscountProduct = asyncHandler(async (req, res) => {
+  const { discount, discountProducts } = req.body
+  try {
+    discountProducts.map(async (item) => {
+      const existProduct = await Product.findById(item.product)
+      if (!existProduct) {
+        res.status(404)
+        throw new Error('Không tìm thấy sản phẩm này!')
+      }
+      existProduct.discount = discount
+      await existProduct.save()
+    })
+    res.status(200).json({
+      successCode: 'success',
+      message: 'Đã cập nhật giảm giá',
+      errorCode: null,
+    })
+  } catch (error) {
+    res.status(400)
+    throw new Error(`${error}`)
   }
 })
 
@@ -450,4 +470,5 @@ export {
   getTopProducts,
   getTopBuyProducts,
   productBestSeller,
+  updateDiscountProduct,
 }

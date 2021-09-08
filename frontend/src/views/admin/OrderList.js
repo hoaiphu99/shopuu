@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Moment from 'react-moment'
 import NumberFormat from 'react-number-format'
-import Message from '../../components/Message'
+import Breadcrumb from '../../components/BreadcrumbComp'
 import Loader from '../../components/Loader'
 import { listOrder, statusOrder } from '../../actions/orderActions'
 import { ORDER_STATUS_RESET } from '../../constants/orderConstants'
@@ -52,6 +52,7 @@ const OrderList = ({ history }) => {
 
   return (
     <>
+      <Breadcrumb link1='Admin' link2='Tất cả đơn hàng' />
       {error && message.error({ content: `${error}`, duration: 2 })}
       {loading ? (
         <Loader />
@@ -67,6 +68,12 @@ const OrderList = ({ history }) => {
             key='_id'
             width='15%'
             render={(text) => <Link to={`/admin/order/${text}`}>{text}</Link>}
+          />
+          <Column
+            title='NGƯỜI ĐẶT'
+            dataIndex='user'
+            key='user'
+            render={(user) => user.name}
           />
           <Column
             title='NGÀY ĐẶT'
@@ -92,29 +99,28 @@ const OrderList = ({ history }) => {
             )}
           />
           <Column
-            title='THANH TOÁN'
-            dataIndex='isPaid'
-            key='isPaid'
-            render={(isPaid) => {
-              let color = isPaid ? 'green' : 'red'
-              let msg = isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'
-              return <Tag color={color}>{msg}</Tag>
-            }}
-          />
-          <Column
-            title='NHẬN HÀNG'
-            dataIndex='isDelivered'
-            key='isDelivered'
-            render={(isDelivered) => {
-              let color = isDelivered ? 'green' : 'red'
-              let msg = isDelivered ? 'Đã nhận hàng' : 'Chưa nhận hàng'
-              return <Tag color={color}>{msg}</Tag>
-            }}
-          />
-          <Column
             title='TRẠNG THÁI'
             dataIndex='status'
             key='status'
+            filters={[
+              {
+                text: 'Chờ xác nhận',
+                value: 'WAIT',
+              },
+              {
+                text: 'Đã xác nhận',
+                value: 'ACCEPT',
+              },
+              {
+                text: 'Đã hủy',
+                value: 'CANCEL',
+              },
+              {
+                text: 'Đã hoàn thành',
+                value: 'FINISH',
+              },
+            ]}
+            onFilter={(value, record) => record.status.indexOf(value) === 0}
             render={(status) => {
               let color =
                 status === 'CANCEL'
@@ -147,6 +153,27 @@ const OrderList = ({ history }) => {
               return <Tag color={color}>{msg}</Tag>
             }}
           />
+          <Column
+            title='THANH TOÁN'
+            dataIndex='isPaid'
+            key='isPaid'
+            render={(isPaid) => {
+              let color = isPaid ? 'green' : 'red'
+              let msg = isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'
+              return <Tag color={color}>{msg}</Tag>
+            }}
+          />
+          <Column
+            title='NHẬN HÀNG'
+            dataIndex='isDelivered'
+            key='isDelivered'
+            render={(isDelivered) => {
+              let color = isDelivered ? 'green' : 'red'
+              let msg = isDelivered ? 'Đã nhận hàng' : 'Chưa nhận hàng'
+              return <Tag color={color}>{msg}</Tag>
+            }}
+          />
+
           <Column
             fixed='right'
             width='100'

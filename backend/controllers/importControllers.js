@@ -141,6 +141,18 @@ const updateImportOrderStatus = asyncHandler(async (req, res) => {
         case OrderStatus.CANCEL:
           if (order.status === OrderStatus.WAIT) {
             order.status = OrderStatus.CANCEL
+            const findOrderSupplier = await OrderSupplier.findById(
+              order.orderSupplier
+            )
+            if (findOrderSupplier) {
+              if (findOrderSupplier.status === 'FINISH') {
+                findOrderSupplier.status = OrderStatus.CANCEL
+                await findOrderSupplier.save()
+              } else {
+                res.status(404)
+                throw new Error('Phếu đặt này đã có phiếu nhập hoặc bị hủy!')
+              }
+            }
           } else {
             res.status(400)
             throw new Error('Phiếu đặt đã được hủy!')

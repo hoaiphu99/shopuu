@@ -2,11 +2,11 @@ import React from 'react'
 import { Statistic, Card, Row, Col } from 'antd'
 import {
   HourglassOutlined,
-  DollarOutlined,
+  UserOutlined,
   CalendarOutlined,
 } from '@ant-design/icons'
 
-const DashboardStatistic = ({ totalOrders, totalOrdersWait, sales }) => {
+const DashboardStatistic = ({ totalOrders, totalOrdersWait, totalUsers }) => {
   return (
     <Row gutter={16}>
       <Col span={8}>
@@ -30,9 +30,8 @@ const DashboardStatistic = ({ totalOrders, totalOrdersWait, sales }) => {
         <Card>
           <Statistic
             title='Đơn hàng chờ xác nhận'
-            value={11.28}
-            precision={2}
-            valueStyle={{ color: '#3f8600' }}
+            value={totalOrdersWait}
+            valueStyle={{ color: '#eb4034' }}
             prefix={
               <HourglassOutlined
                 style={{
@@ -47,12 +46,11 @@ const DashboardStatistic = ({ totalOrders, totalOrdersWait, sales }) => {
       <Col span={8}>
         <Card>
           <Statistic
-            title='Doanh thu'
-            value={9.3}
-            precision={2}
-            valueStyle={{ color: '#3f8600' }}
+            title='Khách hàng'
+            value={totalUsers}
+            valueStyle={{ color: '#3d34eb' }}
             prefix={
-              <DollarOutlined
+              <UserOutlined
                 style={{
                   display: 'inline-block',
                   verticalAlign: 'middle',

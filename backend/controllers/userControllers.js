@@ -2,10 +2,9 @@ import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 import generateToken from '../utils/generateToken.js'
 
-const maxAge = 3 * 24 * 60 * 60
-// @desc    Auth user & get token
-// @router  POST /api/users/login
-// @access  public
+// Auth user & get token
+// [POST] /api/users/login
+// public
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body
 
@@ -30,9 +29,9 @@ const authUser = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Get user profile
-// @router  GET /api/users/profile
-// @access  private
+// Get user profile
+// [GET] /api/users/profile
+// private
 const getUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).populate({
     path: 'cartItems',
@@ -55,9 +54,9 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Register new user
-// @router  GET /api/users
-// @access  Public
+// Register new user
+// [GET] /api/users
+// Public
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, isAdmin, phone, shippingAddress } = req.body
 
@@ -93,9 +92,9 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Update user profile
-// @router  PUT /api/users/profile
-// @access  private
+// Update user profile
+// [PUT] /api/users/profile
+// private
 const updateUserProfile = asyncHandler(async (req, res) => {
   const { name, email, phone, shippingAddress } = req.body
   const user = await User.findById(req.user._id)
@@ -123,18 +122,18 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Get all user
-// @router  GET /api/users
-// @access  private/admin
+// Get all user
+// [GET] /api/users
+// private/admin
 const getUsers = asyncHandler(async (req, res) => {
   const users = await User.find({}).sort({ createdAt: 'desc' })
 
   res.json(users)
 })
 
-// @desc    Delete user
-// @router  DELETE /api/users
-// @access  private/admin
+// Delete user
+// [DELETE] /api/users
+// private/admin
 const deleteUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id)
 
@@ -147,9 +146,9 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Get user by id
-// @router  GET /api/users/:id
-// @access  private/admin
+// Get user by id
+// [GET] /api/users/:id
+// private/admin
 const getUserById = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id).select('-password')
 
@@ -161,9 +160,9 @@ const getUserById = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Update user
-// @router  PUT /api/users/:id
-// @access  private/admin
+// Update user
+// [PUT] /api/users/:id
+// private/admin
 const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id)
 
@@ -190,9 +189,9 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Change password
-// @router  PUT /api/users/change-password
-// @access  Private
+// Change password
+// [PUT] /api/users/change-password
+// Private
 const changePassword = asyncHandler(async (req, res) => {
   const { password, newPassword } = req.body
   try {
@@ -204,9 +203,9 @@ const changePassword = asyncHandler(async (req, res) => {
         await user.save()
 
         res.status(200).json({
-          status: 'success',
+          successCode: 'success',
           message: 'Đổi mật khẩu thành công!',
-          error: null,
+          errorCode: null,
         })
       }
       res.status(400)
@@ -215,6 +214,21 @@ const changePassword = asyncHandler(async (req, res) => {
       res.status(404)
       throw new Error('Không tìm thấy người dùng này!')
     }
+  } catch (error) {
+    res.status(400)
+    throw new Error(`${error}`)
+  }
+})
+
+// Total user
+// [GET] /api/users/total
+// Private/admin
+const totalUser = asyncHandler(async (req, res) => {
+  try {
+    const count = await User.countDocuments({ isAdmin: false })
+    res
+      .status(200)
+      .json({ successCode: 'success', data: count, errorCode: null })
   } catch (error) {
     res.status(400)
     throw new Error(`${error}`)
@@ -231,4 +245,5 @@ export {
   getUserById,
   updateUser,
   changePassword,
+  totalUser,
 }

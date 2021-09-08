@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import NumberFormat from 'react-number-format'
 import { useDispatch, useSelector } from 'react-redux'
 import { message, Table, Space, Typography, Popconfirm, Button } from 'antd'
@@ -6,10 +6,13 @@ import Loader from '../../components/Loader'
 import Breadcrumb from '../../components/BreadcrumbComp'
 import { listAllProducts, deleteProduct } from '../../actions/productActions'
 import { PRODUCT_DELETE_RESET } from '../../constants/productConstants'
+import { listCategories } from '../../actions/categoryActions'
+import { listBrands } from '../../actions/brandActions'
 
 const ProductList = ({ match, history }) => {
   const dispatch = useDispatch()
-  console.log(history)
+  const [cateSelect, setCateSelect] = useState([])
+  const [brandSelect, setBrandSelect] = useState([])
   const productAll = useSelector((state) => state.productAll)
   const { loading, error, products } = productAll
 
@@ -22,6 +25,12 @@ const ProductList = ({ match, history }) => {
 
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
+
+  const categoryList = useSelector((state) => state.categoryList)
+  const { loading: loadingCate, categories } = categoryList
+
+  const brandList = useSelector((state) => state.brandList)
+  const { loading: loadingBrand, brands } = brandList
 
   const key = 'msg'
   useEffect(() => {
@@ -36,15 +45,41 @@ const ProductList = ({ match, history }) => {
       } else if (!products) {
         dispatch(listAllProducts())
       }
+      if (
+        !categories ||
+        !brands ||
+        categories.length === 0 ||
+        brands.length === 0
+      ) {
+        dispatch(listCategories())
+        dispatch(listBrands())
+      } else {
+        setCateSelect(
+          categories.map((category) => {
+            return {
+              text: category.name,
+              value: category.name,
+            }
+          })
+        )
+        setBrandSelect(
+          brands.map((item) => {
+            return {
+              text: item.name,
+              value: item.name,
+            }
+          })
+        )
+      }
     } else {
       history.push('/login')
     }
-  }, [dispatch, history, products, successDelete])
+  }, [dispatch, history, products, successDelete, loadingCate])
 
   const columns = [
     {
       title: 'ID',
-      width: 100,
+      width: 80,
       dataIndex: '_id',
       key: '_id',
     },
@@ -70,6 +105,8 @@ const ProductList = ({ match, history }) => {
           </NumberFormat>
         )
       },
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.price - b.price,
     },
     {
       title: 'Danh mục',
@@ -78,22 +115,26 @@ const ProductList = ({ match, history }) => {
       render: (_, record) => {
         return <>{record.category.name}</>
       },
-      width: 100,
+      width: 70,
+      filters: cateSelect,
+      onFilter: (value, record) => record.category.name.indexOf(value) === 0,
     },
     {
       title: 'Thương hiệu',
       dataIndex: 'brand',
       key: 'brand',
-      width: 80,
+      width: 70,
       render: (_, record) => {
         return <>{record.brand.name}</>
       },
+      filters: brandSelect,
+      onFilter: (value, record) => record.brand.name.indexOf(value) === 0,
     },
     {
       title: 'SL tồn',
       dataIndex: 'countInStock',
       key: 'countInStock',
-      width: 30,
+      width: 50,
     },
     {
       title: 'Hành động',
