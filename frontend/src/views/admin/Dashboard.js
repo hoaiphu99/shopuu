@@ -8,6 +8,7 @@ import {
   topBuyProducts,
   bestSellerProducts,
 } from '../../actions/productActions'
+import { getTotalOrders } from '../../actions/statisticActions'
 
 const Dashboard = ({ history }) => {
   const { Option } = Select
@@ -21,6 +22,9 @@ const Dashboard = ({ history }) => {
   const productBestSeller = useSelector((state) => state.productBestSeller)
   const { loading: loadingBestSeller, dataBestSeller } = productBestSeller
 
+  const statistic = useSelector((state) => state.statistic)
+  const { totalOrders, totalOrdersWait, sales } = statistic
+
   const [date, setDate] = useState([])
   const [total, setTotal] = useState([])
   const [dataToPieChart, setDataToPieChart] = useState([])
@@ -31,6 +35,9 @@ const Dashboard = ({ history }) => {
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
+      if (!totalOrders) {
+        dispatch(getTotalOrders())
+      }
       if (chart === '1') {
         if (!dataTopBuy) {
           dispatch(topBuyProducts())
@@ -60,7 +67,7 @@ const Dashboard = ({ history }) => {
     } else {
       history.push('/login')
     }
-  }, [dispatch, dataTopBuy, dataBestSeller, chart])
+  }, [dispatch, dataTopBuy, dataBestSeller, chart, totalOrders])
 
   const handleChange = (value) => {
     setChart(value)
@@ -117,7 +124,7 @@ const Dashboard = ({ history }) => {
 
   return (
     <>
-      <DashboardStatistic />
+      <DashboardStatistic totalOrders={totalOrders} />
       <Typography.Title level={5} style={{ margin: '10px 0' }}>
         Thống kê
       </Typography.Title>

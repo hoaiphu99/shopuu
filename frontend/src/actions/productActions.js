@@ -31,6 +31,7 @@ import {
   PRODUCT_ALL_REQUEST,
   PRODUCT_ALL_SUCCESS,
   PRODUCT_ALL_FAIL,
+  PRODUCT_ALL_RESET,
   PRODUCT_BEST_SELLER_REQUEST,
   PRODUCT_BEST_SELLER_SUCCESS,
   PRODUCT_BEST_SELLER_FAIL,
@@ -303,6 +304,9 @@ export const updateProduct = (product) => async (dispatch, getState) => {
     dispatch({
       type: PRODUCT_DETAILS_RESET,
       payload: data,
+    })
+    dispatch({
+      type: PRODUCT_ALL_RESET,
     })
   } catch (error) {
     dispatch({

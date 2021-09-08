@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { OrderStatus } from '../constants/orderStatusConstants.js'
+import { OrderStatus } from '../libs/constants/orderStatusConstants.js'
 
 const orderSchema = mongoose.Schema(
   {

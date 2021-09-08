@@ -3,7 +3,7 @@ import Order from '../models/orderModel.js'
 import Product from '../models/productModel.js'
 import User from '../models/userModel.js'
 import { customErrorHandler } from '../middleware/errorMiddleware.js'
-import { OrderStatus } from '../constants/orderStatusConstants.js'
+import { OrderStatus } from '../libs/constants/orderStatusConstants.js'
 
 // Create new order
 // [POST] /api/orders
@@ -224,15 +224,34 @@ const getMyOrders = asyncHandler(async (req, res) => {
   res.json(orders)
 })
 
-// @desc    Get all orders
-// @router  GET /api/orders
-// @access  private/admin
+// Get all orders
+// [GET] /api/orders
+// private/admin
 const getOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({})
     .populate('user', 'id name')
     .sort('-createdAt')
 
   res.json(orders)
+})
+
+// Get total orders by status
+// [GET] /api/orders/total?
+// private/admin
+const getTotalOrdersByStatus = asyncHandler(async (req, res) => {
+  const status = req.query.status || ''
+  try {
+    if (status) {
+      const total = await Order.countDocuments({ status: status })
+      res.json({ statusCode: 'success', data: total, errorCode: null })
+    } else {
+      const total = await Order.countDocuments()
+      res.json({ statusCode: 'success', data: total, errorCode: null })
+    }
+  } catch (error) {
+    res.status(400)
+    throw new Error(`${error}`)
+  }
 })
 
 export {
@@ -243,4 +262,5 @@ export {
   updateOrderToDelivered,
   getMyOrders,
   getOrders,
+  getTotalOrdersByStatus,
 }

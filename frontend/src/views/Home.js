@@ -6,6 +6,7 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import Paginate from '../components/Paginate'
 import ProductCarousel from '../components/ProductCarousel'
+import ProductSlider from '../components/ProductSlider'
 import Meta from '../components/Meta'
 import { listProducts } from '../actions/productActions'
 import { listCategories } from '../actions/categoryActions'
@@ -14,7 +15,6 @@ import { Layout, Row, Col, Divider, Button } from 'antd'
 import { SwapLeftOutlined } from '@ant-design/icons'
 
 const Home = ({ match, history, location }) => {
-  
   const { Content } = Layout
 
   const keyword = match.params.keyword
@@ -55,9 +55,19 @@ const Home = ({ match, history, location }) => {
     <>
       <Layout>
         <Meta />
+
         <Content style={{ padding: '0 50px' }}>
           {!keyword && !category ? (
-            <ProductCarousel />
+            <>
+              <ProductCarousel />
+              <Divider />
+              <div
+                className='site-layout-content product-title'
+                style={{ margin: '16px 0 0', fontSize: '25px' }}>
+                sản phẩm đang giảm giá
+              </div>
+              <ProductSlider products={products} history={history} />
+            </>
           ) : (
             <Link to='/'>
               <Button
@@ -87,9 +97,19 @@ const Home = ({ match, history, location }) => {
           ) : (
             <>
               <div className='product-list'>
-                <Row gutter={16} align='middle' justify='start'>
+                <Row
+                  gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+                  align='middle'
+                  justify='start'>
                   {products.map((product) => (
-                    <Col key={product._id} span={6} className='col__card-item'>
+                    <Col
+                      className='col__card-item'
+                      key={product._id}
+                      xs={24}
+                      sm={18}
+                      md={14}
+                      lg={10}
+                      xl={6}>
                       <Product product={product} history={history} />
                     </Col>
                   ))}

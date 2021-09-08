@@ -13,10 +13,10 @@ const supplierSchema = mongoose.Schema(
       type: String,
     },
     supplierAddress: {
-      address: { type: String, required: true, default: ' ' },
-      city: { type: String, required: true, default: ' ' },
-      district: { type: String, required: true, default: ' ' },
-      ward: { type: String, required: true, default: ' ' },
+      address: { type: String, required: true, default: '' },
+      city: { type: String, required: true, default: '' },
+      district: { type: String, required: true, default: '' },
+      ward: { type: String, required: true, default: '' },
     },
   },
   {

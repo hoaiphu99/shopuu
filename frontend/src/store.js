@@ -47,6 +47,25 @@ import {
   brandUpdateReducer,
   brandDeleteReducer,
 } from './reducers/brandReducers'
+import { statisticReducer } from './reducers/statisticReducers'
+import {
+  supplierListReducer,
+  supplierDetailsReducer,
+  supplierUpdateReducer,
+  supplierDeleteReducer,
+} from './reducers/supplierReducers'
+import {
+  orderSupplierCreateReducer,
+  orderSupplierListReducer,
+  orderSupplierDetailsReducer,
+  orderSupplierStatusReducer,
+} from './reducers/orderSupplierReducers'
+import {
+  importCreateReducer,
+  importListReducer,
+  importDetailsReducer,
+  importOrderStatusReducer,
+} from './reducers/importReducers'
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -90,6 +109,23 @@ const reducer = combineReducers({
   brandCreate: brandCreateReducer,
   brandUpdate: brandUpdateReducer,
   brandDelete: brandDeleteReducer,
+
+  statistic: statisticReducer,
+
+  supplierList: supplierListReducer,
+  supplierDetails: supplierDetailsReducer,
+  supplierUpdate: supplierUpdateReducer,
+  supplierDelete: supplierDeleteReducer,
+
+  orderSupplierCreate: orderSupplierCreateReducer,
+  orderSupplierList: orderSupplierListReducer,
+  orderSupplierDetails: orderSupplierDetailsReducer,
+  orderSupplierStatus: orderSupplierStatusReducer,
+
+  importCreate: importCreateReducer,
+  importList: importListReducer,
+  importDetails: importDetailsReducer,
+  importOrderStatus: importOrderStatusReducer,
 })
 const userInfoFromStorage = localStorage.getItem('userInfo')
   ? JSON.parse(localStorage.getItem('userInfo'))

@@ -24,7 +24,12 @@ const Product = ({ product, history }) => {
               />
             }>
             <Link to={`/${product.category.slug}/${product.slug}`}>
-              <h1>
+              <h1
+                style={{
+                  height: '50px',
+                  overflow: 'hidden',
+                  marginBottom: '3px',
+                }}>
                 <strong>{product.name}</strong>
               </h1>
               <Space align='baseline'>
@@ -74,7 +79,12 @@ const Product = ({ product, history }) => {
               />
             }>
             <Link to={`/${product.category.slug}/${product.slug}`}>
-              <h1>
+              <h1
+                style={{
+                  height: '50px',
+                  overflow: 'hidden',
+                  marginBottom: '3px',
+                }}>
                 <strong>{product.name}</strong>
               </h1>
               <Typography.Title level={5}>
@@ -112,7 +122,12 @@ const Product = ({ product, history }) => {
             />
           }>
           <Link to={`/${product.category.slug}/${product.slug}`}>
-            <h1>
+            <h1
+              style={{
+                height: '50px',
+                overflow: 'hidden',
+                marginBottom: '3px',
+              }}>
               <strong>{product.name}</strong>
             </h1>
             <Typography.Title level={5}>

@@ -344,6 +344,7 @@ const getTopBuyProducts = asyncHandler(async (req, res) => {
         $gte: dateStartOfWeek,
         $lte: dateNow,
       },
+      status: 'FINISH',
     })
       .populate([
         {
@@ -373,7 +374,7 @@ const getTopBuyProducts = asyncHandler(async (req, res) => {
       })
     }
 
-    console.log(data)
+    // console.log(data)
 
     // const product = await Order.aggregate([
     //   // {
@@ -386,13 +387,14 @@ const getTopBuyProducts = asyncHandler(async (req, res) => {
     //       buy: { $sum: '$orderItems.qty' },
     //     },
     //   },
-    //   // {
-    //   //   $project: {
-    //   //     _id: 0,
-    //   //     name: 1,
-    //   //   },
-    //   // },
-    //   // { $unwind: { path: '$name' } },
+    //   {
+    //     $project: {
+    //       _id: 0,
+    //       name: 1,
+    //       buy: 1,
+    //     },
+    //   },
+    //   { $unwind: { path: '$name' } },
     //   { $limit: 10 },
     // ])
 
@@ -408,6 +410,11 @@ const getTopBuyProducts = asyncHandler(async (req, res) => {
 const productBestSeller = asyncHandler(async (req, res, next) => {
   try {
     const bestSeller = await Order.aggregate([
+      {
+        $match: {
+          status: 'FINISH',
+        },
+      },
       {
         $unwind: { path: '$orderItems' },
       },

@@ -1,14 +1,38 @@
 import asyncHandler from 'express-async-handler'
 import Supplier from '../models/supplierModel.js'
+import Product from '../models/productModel.js'
 import { customErrorHandler } from '../middleware/errorMiddleware.js'
 
 // Fetch all suppliers
 // [GET] /api/suppliers
 // private/admin
 const getSuppliers = asyncHandler(async (req, res) => {
-  const suppliers = await Supplier.find({})
+  try {
+    const suppliers = await Supplier.find({})
 
-  res.json(suppliers)
+    res.json({ successCode: 'success', data: suppliers, errorCode: null })
+  } catch (error) {
+    res.status(400)
+    throw new Error(`${error}`)
+  }
+})
+
+// Get supplier by id
+// [GET] /api/suppliers/:id
+// private/admin
+const getSupplierById = asyncHandler(async (req, res) => {
+  try {
+    const supplier = await Supplier.findById(req.params.id)
+    if (supplier) {
+      res.json({ successCode: 'success', data: supplier, errorCode: null })
+    } else {
+      res.status(404)
+      throw new Error('Không tìm thấy nhà cung cấp!')
+    }
+  } catch (error) {
+    res.status(400)
+    throw new Error(`${error}`)
+  }
 })
 
 // Create suppliers
@@ -33,45 +57,53 @@ const createSupplier = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Update brands
-// @router  PUT /api/brands/:id
-// @access  private/admin
-const updateBrand = asyncHandler(async (req, res) => {
-  const brand = await Brand.findById(req.params.id)
+// Update brands
+// [PUT] /api/suppliers/:id
+// private/admin
+const updateSupplier = asyncHandler(async (req, res) => {
+  const { name, phone, supplierAddress } = req.body
+  try {
+    const supplier = await Supplier.findById(req.params.id)
 
-  if (brand) {
-    brand.name = req.body.name || brand.name
-    brand.description = req.body.description || brand.description
-    const updateBrand = await brand.save()
+    if (supplier) {
+      supplier.name = name || supplier.name
+      supplier.phone = phone || supplier.phone
+      supplier.supplierAddress = supplierAddress || supplier.supplierAddress
+      const updateSupplier = await supplier.save()
 
-    res.status(200).json(updateBrand)
-  } else {
+      res
+        .status(200)
+        .json({ successCode: 'success', data: updateSupplier, errorCode: null })
+    } else {
+      res.status(404)
+      throw new Error('Không tìm thấy nhà cung cấp')
+    }
+  } catch (error) {
     res.status(404)
-    throw new Error('Brand not found')
+    throw new Error(`${error}`)
   }
 })
 
-// @desc    Delete brands
-// @router  DELETE /api/brands/:id
-// @access  private/admin
-const deleteBrand = asyncHandler(async (req, res) => {
-  const brand = await Brand.findById(req.params.id)
+// Delete supplier
+// [DELETE] /api/suppliers/:id
+// private/admin
+const deleteSupplier = asyncHandler(async (req, res) => {
+  const supplier = await Supplier.findById(req.params.id)
 
-  if (brand) {
+  if (supplier) {
     const alreadyHaveProducts = await Product.findOne({
-      brand: brand._id,
+      supplier: supplier._id,
     })
     if (alreadyHaveProducts) {
       res.status(400)
-      throw new Error('Brand already have products')
+      throw new Error('Có sản phẩm nhập từ nhà cung cấp này')
     } else {
-      await brand.delete()
-
-      res.status(200).json({ message: 'Brand deleted' })
+      await supplier.delete()
+      res.status(200).json({ successCode: 'success', errorCode: null })
     }
   } else {
     res.status(404)
-    throw new Error('Brand not found')
+    throw new Error('Không tìm thấy nhà cung cấp này')
   }
 })
 
@@ -79,22 +111,23 @@ const deleteBrand = asyncHandler(async (req, res) => {
 // @router  DELETE /api/brands/:id/force
 // @access  private/admin
 const deleteBrandForce = asyncHandler(async (req, res) => {
-  const brand = await Brand.findOneWithDeleted({ _id: req.params.id })
+  const supplier = await Supplier.findOneWithDeleted({ _id: req.params.id })
 
-  if (brand) {
-    await brand.deleteOne()
+  if (supplier) {
+    await supplier.deleteOne()
 
-    res.status(200).json({ message: 'Brand deleted' })
+    res.status(200).json({ successCode: 'success', errorCode: null })
   } else {
     res.status(404)
-    throw new Error('Brand not found')
+    throw new Error('Không tìm thấy nhà cung cấp này!')
   }
 })
 
 export {
   getSuppliers,
+  getSupplierById,
   createSupplier,
-  updateBrand,
-  deleteBrand,
+  updateSupplier,
+  deleteSupplier,
   deleteBrandForce,
 }

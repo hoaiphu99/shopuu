@@ -34,7 +34,7 @@ const Navbar = ({ location, category, brand }) => {
         selectedKeys={[key]}
         theme='light'
         mode='horizontal'
-        style={{ display: 'flex', justifyContent: 'space-around' }}>
+        style={{ display: 'flex', justifyContent: 'center' }}>
         {category && (
           <Menu.Item key='home'>
             <Link to='/'>Trang chủ</Link>

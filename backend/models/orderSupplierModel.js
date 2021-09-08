@@ -1,11 +1,11 @@
 import mongoose from 'mongoose'
-import { OrderStatus } from '../constants/orderStatusConstants.js'
+import { OrderStatus } from '../libs/constants/orderStatusConstants.js'
 
 const orderSupplierSchema = mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      required: [true, 'Chưa chọn nhân viên!'],
+      required: true,
       ref: 'User',
     },
     supplier: {
@@ -16,8 +16,6 @@ const orderSupplierSchema = mongoose.Schema(
     orderItems: [
       {
         qty: { type: Number, required: true },
-        name: { type: String, required: true },
-        image: { type: String, required: true },
         price: { type: Number, required: true },
         product: {
           type: mongoose.Schema.Types.ObjectId,

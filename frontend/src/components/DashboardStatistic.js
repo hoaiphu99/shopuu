@@ -1,11 +1,32 @@
 import React from 'react'
 import { Statistic, Card, Row, Col } from 'antd'
-import { HourglassOutlined, DollarOutlined } from '@ant-design/icons'
+import {
+  HourglassOutlined,
+  DollarOutlined,
+  CalendarOutlined,
+} from '@ant-design/icons'
 
-const DashboardStatistic = () => {
+const DashboardStatistic = ({ totalOrders, totalOrdersWait, sales }) => {
   return (
     <Row gutter={16}>
-      <Col span={12}>
+      <Col span={8}>
+        <Card>
+          <Statistic
+            title='Tổng số đơn hàng'
+            value={totalOrders}
+            valueStyle={{ color: '#3f8600' }}
+            prefix={
+              <CalendarOutlined
+                style={{
+                  display: 'inline-block',
+                  verticalAlign: 'middle',
+                }}
+              />
+            }
+          />
+        </Card>
+      </Col>
+      <Col span={8}>
         <Card>
           <Statistic
             title='Đơn hàng chờ xác nhận'
@@ -23,7 +44,7 @@ const DashboardStatistic = () => {
           />
         </Card>
       </Col>
-      <Col span={12}>
+      <Col span={8}>
         <Card>
           <Statistic
             title='Doanh thu'

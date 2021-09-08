@@ -41,15 +41,15 @@ const Header = () => {
 
   const menu = (
     <Menu>
-      <Menu.Item>
+      <Menu.Item key='profile'>
         <Link to='/profile'>Trang cá nhân</Link>
       </Menu.Item>
       {userInfo && userInfo.isAdmin && (
-        <Menu.Item>
+        <Menu.Item key='admin'>
           <Link to='/admin'>Admin Dashboard</Link>
         </Menu.Item>
       )}
-      <Menu.Item>
+      <Menu.Item key='logout'>
         <a href='#' onClick={logoutHandler}>
           Đăng xuất
         </a>
@@ -141,7 +141,7 @@ const Header = () => {
         </Row>
       </header>
       <Row justify='center'>
-        <Col span={18}>
+        <Col span={16}>
           <Route
             render={({ location }) => (
               <Navbar location={location} category={true} />

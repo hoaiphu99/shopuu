@@ -1,14 +1,7 @@
 import React, { useEffect } from 'react'
 import NumberFormat from 'react-number-format'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  message,
-  Table,
-  Space,
-  Typography,
-  Popconfirm,
-  Button,
-} from 'antd'
+import { message, Table, Space, Typography, Popconfirm, Button } from 'antd'
 import Loader from '../../components/Loader'
 import Breadcrumb from '../../components/BreadcrumbComp'
 import { listAllProducts, deleteProduct } from '../../actions/productActions'
@@ -33,7 +26,6 @@ const ProductList = ({ match, history }) => {
   const key = 'msg'
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
-      dispatch(listAllProducts())
       // if (!products || products.length <= 0) {
       //   //dispatch(listAllProducts())
       // } else
@@ -41,11 +33,13 @@ const ProductList = ({ match, history }) => {
         message.success({ content: 'Đã xóa!', key, duration: 2 })
         dispatch({ type: PRODUCT_DELETE_RESET })
         dispatch(listAllProducts())
+      } else if (!products) {
+        dispatch(listAllProducts())
       }
     } else {
       history.push('/login')
     }
-  }, [dispatch, history, successDelete])
+  }, [dispatch, history, products, successDelete])
 
   const columns = [
     {

@@ -40,6 +40,8 @@ import {
 const Order = ({ match, history }) => {
   const orderId = match.params.id
 
+  const usdExchange = 0.00004
+
   const desc = ['Rất tệ', 'Tệ', 'Bình thường', 'Tốt', 'Rất tuyệt vời']
   //const { confirm } = Modal
   const [productId, setProductId] = useState('')
@@ -112,7 +114,7 @@ const Order = ({ match, history }) => {
       dispatch({ type: ORDER_STATUS_RESET })
       dispatch(getOrderDetails(orderId))
     }
-    if (!order || successPay || successDeliver || order._id !== orderId) {
+    if (!order || successPay || successDeliver) {
       dispatch({ type: ORDER_PAY_RESET })
       dispatch({ type: ORDER_DELIVER_RESET })
       dispatch(getOrderDetails(orderId))
@@ -122,7 +124,6 @@ const Order = ({ match, history }) => {
       } else {
         setSdkReady(true)
       }
-    } else {
     }
     if (successProductReview) {
       setIsModalVisible(false)
@@ -330,7 +331,7 @@ const Order = ({ match, history }) => {
                     <Loader />
                   ) : (
                     <PayPalButton
-                      amount={order.totalPrice}
+                      amount={order.totalPrice * usdExchange}
                       onSuccess={successPaymentHandler}></PayPalButton>
                   )}
                 </>
