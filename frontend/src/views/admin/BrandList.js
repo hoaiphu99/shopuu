@@ -75,15 +75,15 @@ const BrandList = ({ history }) => {
         dispatch(listBrands())
       }
       if (successCreate) {
-        message.success({ content: 'Created!', key, duration: 2 })
+        message.success({ content: 'Đã tạo!', key, duration: 2 })
         dispatch({ type: BRAND_CREATE_RESET })
         dispatch(listBrands())
       } else if (success) {
-        message.success({ content: 'Saved!', key, duration: 2 })
+        message.success({ content: 'Đã lưu!', key, duration: 2 })
         dispatch({ type: BRAND_UPDATE_RESET })
         dispatch(listBrands())
       } else if (successDelete) {
-        message.success({ content: 'Deleted!', key, duration: 2 })
+        message.success({ content: 'Đã xóa!', key, duration: 2 })
         dispatch({ type: BRAND_DELETE_RESET })
         dispatch(listBrands())
       }
@@ -233,15 +233,15 @@ const BrandList = ({ history }) => {
           {!isAdd ? 'Thêm mới' : 'Hủy'}
         </Button>
         {loadingCreate &&
-          message.loading({ content: 'Creating...', key, duration: 10 })}
+          message.loading({ content: 'Đang tạo...', key, duration: 10 })}
         {errorCreate &&
           message.error({ content: `${errorCreate}`, key, duration: 2 })}
         {loadingUpdate &&
-          message.loading({ content: 'Saving...', key, duration: 10 })}
+          message.loading({ content: 'Đang lưu...', key, duration: 10 })}
         {errorUpdate &&
           message.error({ content: `${errorUpdate}`, key, duration: 2 })}
         {loadingDelete &&
-          message.loading({ content: 'Deleting...', key, duration: 10 })}
+          message.loading({ content: 'Đang xóa...', key, duration: 10 })}
         {errorDelete &&
           message.error({ content: `${errorDelete}`, key, duration: 2 })}
         {error && message.error({ content: `${error}`, duration: 2 })}
@@ -277,7 +277,7 @@ const BrandList = ({ history }) => {
               <Form.Item
                 label='Tên'
                 name='name'
-                rules={[{ required: true, message: 'Vui lòng nhậ tên!' }]}>
+                rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}>
                 <Input />
               </Form.Item>
 

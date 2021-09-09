@@ -29,6 +29,9 @@ import {
   PRODUCT_TOP_REQUEST,
   PRODUCT_TOP_SUCCESS,
   PRODUCT_TOP_FAIL,
+  PRODUCT_DISCOUNT_REQUEST,
+  PRODUCT_DISCOUNT_SUCCESS,
+  PRODUCT_DISCOUNT_FAIL,
   PRODUCT_TOP_BUY_REQUEST,
   PRODUCT_TOP_BUY_SUCCESS,
   PRODUCT_TOP_BUY_FAIL,
@@ -162,6 +165,20 @@ export const productTopRatedReducer = (state = { products: [] }, action) => {
     case PRODUCT_TOP_SUCCESS:
       return { loading: false, products: action.payload.data }
     case PRODUCT_TOP_FAIL:
+      return { loading: false, error: action.payload.errors }
+
+    default:
+      return state
+  }
+}
+
+export const productDiscountReducer = (state = { products: [] }, action) => {
+  switch (action.type) {
+    case PRODUCT_DISCOUNT_REQUEST:
+      return { loading: true, products: [] }
+    case PRODUCT_DISCOUNT_SUCCESS:
+      return { loading: false, products: action.payload.data }
+    case PRODUCT_DISCOUNT_FAIL:
       return { loading: false, error: action.payload.errors }
 
     default:

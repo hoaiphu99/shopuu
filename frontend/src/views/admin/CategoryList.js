@@ -75,15 +75,15 @@ const CategoryList = ({ history }) => {
         dispatch(listCategories())
       }
       if (successCreate) {
-        message.success({ content: 'Created!', key, duration: 2 })
+        message.success({ content: 'Đã tạo!', key, duration: 2 })
         dispatch({ type: CATEGORY_CREATE_RESET })
         dispatch(listCategories())
       } else if (success) {
-        message.success({ content: 'Saved!', key, duration: 2 })
+        message.success({ content: 'Đã lưu!', key, duration: 2 })
         dispatch({ type: CATEGORY_UPDATE_RESET })
         dispatch(listCategories())
       } else if (successDelete) {
-        message.success({ content: 'Deleted!', key, duration: 2 })
+        message.success({ content: 'Đã xóa!', key, duration: 2 })
         dispatch({ type: CATEGORY_DELETE_RESET })
         dispatch(listCategories())
       }
@@ -223,7 +223,7 @@ const CategoryList = ({ history }) => {
   return (
     <>
       <div>
-        <Breadcrumb link1='Admin' link2='Danh mục' />
+        <Breadcrumb link1='Admin' link2='Loại sản phẩm' />
         <Button
           type='primary'
           onClick={() => setIsAdd(!isAdd)}
@@ -233,15 +233,15 @@ const CategoryList = ({ history }) => {
           {!isAdd ? 'Thêm mới' : 'Hủy'}
         </Button>
         {loadingCreate &&
-          message.loading({ content: 'Creating...', key, duration: 10 })}
+          message.loading({ content: 'Đang tạo...', key, duration: 10 })}
         {errorCreate &&
           message.error({ content: `${errorCreate}`, key, duration: 2 })}
         {loadingUpdate &&
-          message.loading({ content: 'Saving...', key, duration: 10 })}
+          message.loading({ content: 'Đang lưu...', key, duration: 10 })}
         {errorUpdate &&
           message.error({ content: `${errorUpdate}`, key, duration: 2 })}
         {loadingDelete &&
-          message.loading({ content: 'Deleting...', key, duration: 10 })}
+          message.loading({ content: 'Đang xóa...', key, duration: 10 })}
         {errorDelete &&
           message.error({ content: `${errorDelete}`, key, duration: 2 })}
         {error && message.error({ content: `${error}`, duration: 2 })}
@@ -277,7 +277,7 @@ const CategoryList = ({ history }) => {
               <Form.Item
                 label='Tên'
                 name='name'
-                rules={[{ required: true, message: 'Vui lòng nhậ tên!' }]}>
+                rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}>
                 <Input />
               </Form.Item>
 

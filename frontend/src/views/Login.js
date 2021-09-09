@@ -88,13 +88,13 @@ const Login = ({ location, history }) => {
                 placeholder='Mật khẩu'
               />
             </Form.Item>
-            <Form.Item>
-              {/* <Form.Item name='remember' valuePropName='checked' noStyle>
+            {/* <Form.Item>
+              <Form.Item name='remember' valuePropName='checked' noStyle>
                 <Checkbox>Nhớ tài khoản</Checkbox>
-              </Form.Item> */}
+              </Form.Item>
 
               <Link to='/'>Quên mật khẩu</Link>
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item>
               <Button

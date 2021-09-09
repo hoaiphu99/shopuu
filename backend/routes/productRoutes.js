@@ -14,6 +14,7 @@ import {
   getTopBuyProducts,
   productBestSeller,
   updateDiscountProduct,
+  getDiscountProduct,
 } from '../controllers/productController.js'
 import { protect, admin } from '../middleware/authMiddleware.js'
 
@@ -22,6 +23,7 @@ const router = express.Router()
 router.get('/', getProducts)
 router.get('/all', getAllProducts)
 router.get('/top', getTopProducts)
+router.get('/discount', getDiscountProduct)
 router.get('/topbuy', protect, admin, getTopBuyProducts)
 router.get('/best-seller', protect, admin, productBestSeller)
 router.get('/category/:slug', getProductsByCategory)

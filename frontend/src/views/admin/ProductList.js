@@ -96,13 +96,14 @@ const ProductList = ({ match, history }) => {
       key: 'price',
       render: (_, record) => {
         return (
-          <NumberFormat
-            value={record.price}
-            displayType={'text'}
-            thousandSeparator={true}>
-            {' '}
-            VNĐ{' '}
-          </NumberFormat>
+          <>
+            <NumberFormat
+              value={record.price}
+              displayType={'text'}
+              thousandSeparator={true}
+            />
+            <sup>đ</sup>
+          </>
         )
       },
       defaultSortOrder: 'descend',

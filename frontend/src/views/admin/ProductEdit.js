@@ -289,15 +289,15 @@ const ProductEdit = ({ match, history }) => {
 
             <Form.Item
               name='category'
-              label='Danh mục'
+              label='Loại sản phẩm'
               initialValue={category.name}
               rules={[
                 {
                   required: true,
-                  message: 'Vui lòng chọn danh mục',
+                  message: 'Vui lòng chọn loại sản phẩm',
                 },
               ]}>
-              <Select placeholder='Chọn danh mục'>
+              <Select placeholder='Chọn loại sản phẩm'>
                 {cateSelect.map((c) => (
                   <Select.Option key={c._id} value={c._id}>
                     {c.name}

@@ -217,14 +217,7 @@ const createProduct = asyncHandler(async (req, res) => {
 // private/admin
 const updateProduct = asyncHandler(async (req, res) => {
   try {
-    const {
-      name,
-      price,
-      description,
-      images,
-      brand,
-      category,
-    } = req.body
+    const { name, price, description, images, brand, category } = req.body
 
     const product = await Product.findById(req.params.id)
 
@@ -249,6 +242,33 @@ const updateProduct = asyncHandler(async (req, res) => {
     res
       .status(errors.statusCode)
       .json({ status: 'fail', data: null, errors: errors.message })
+  }
+})
+
+// Get product discount
+// [GET] /api/products/discount
+// public
+const getDiscountProduct = asyncHandler(async (req, res) => {
+  try {
+    const discount = await Product.find({ discount: { $gt: 0 } })
+      .populate([
+        { path: 'category', select: 'name slug' },
+        { path: 'brand', select: 'name slug' },
+      ])
+      .sort({ discount: 'desc' })
+    if (discount) {
+      res.status(200).json({
+        successCode: 'success',
+        data: discount,
+        errorCode: null,
+      })
+    } else {
+      res.status(404)
+      throw new Error('Không tìm được!')
+    }
+  } catch (error) {
+    res.status(400)
+    throw new Error(`${error}`)
   }
 })
 
@@ -471,4 +491,5 @@ export {
   getTopBuyProducts,
   productBestSeller,
   updateDiscountProduct,
+  getDiscountProduct,
 }

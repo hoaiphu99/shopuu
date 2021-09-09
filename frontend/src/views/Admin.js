@@ -76,7 +76,7 @@ const Admin = ({ location, history }) => {
                     <Link to='/admin/orders'>Đơn hàng</Link>
                   </Menu.Item>
                   <Menu.Item key='categories'>
-                    <Link to='/admin/categories'>Danh mục</Link>
+                    <Link to='/admin/categories'>Loại sản phẩm</Link>
                   </Menu.Item>
                   <Menu.Item key='brands'>
                     <Link to='/admin/brands'>Thương hiệu</Link>

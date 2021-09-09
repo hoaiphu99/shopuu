@@ -86,7 +86,7 @@ const Home = ({ match, history, location }) => {
           <div
             className='site-layout-content product-title'
             style={{ margin: '16px 0 0', fontSize: '25px' }}>
-            {keyword ? `Kết quả tìm kiếm cho: ${keyword}` : 'Sản phẩm mới nhất'}
+            {keyword ? `Kết quả tìm kiếm cho: ${keyword}` : 'tất cả sản phẩm'}
           </div>
           {loading ? (
             <Loader />

@@ -14,6 +14,7 @@ import {
   productTopBuyReducer,
   productBestSellerReducer,
   productUpdateDiscountReducer,
+  productDiscountReducer,
 } from './reducers/productReducers'
 import { cartReducer } from './reducers/cartReducers'
 import { wishlistReducer } from './reducers/wishlistReducers'
@@ -81,6 +82,7 @@ const reducer = combineReducers({
   productDelete: productDeleteReducer,
   productReviewCreate: productReviewCreateReducer,
   productTopRated: productTopRatedReducer,
+  productDiscount: productDiscountReducer,
   productByCategory: productByCategoryReducer,
   productAll: productAllReducer,
   productTopBuy: productTopBuyReducer,

@@ -25,6 +25,9 @@ import {
   PRODUCT_TOP_REQUEST,
   PRODUCT_TOP_SUCCESS,
   PRODUCT_TOP_FAIL,
+  PRODUCT_DISCOUNT_REQUEST,
+  PRODUCT_DISCOUNT_SUCCESS,
+  PRODUCT_DISCOUNT_FAIL,
   PRODUCT_TOP_BUY_REQUEST,
   PRODUCT_TOP_BUY_SUCCESS,
   PRODUCT_TOP_BUY_FAIL,
@@ -99,6 +102,27 @@ export const listTopProducts = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: PRODUCT_TOP_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+export const listDiscountProducts = () => async (dispatch) => {
+  try {
+    dispatch({ type: PRODUCT_DISCOUNT_REQUEST })
+
+    const { data } = await axios.get(`/api/products/discount`)
+
+    dispatch({
+      type: PRODUCT_DISCOUNT_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_DISCOUNT_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

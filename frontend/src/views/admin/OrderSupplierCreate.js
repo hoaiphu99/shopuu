@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../components/Loader'
+import NumberFormat from 'react-number-format'
 import Breadcrumb from '../../components/BreadcrumbComp'
 import {
   Form,
@@ -245,8 +246,27 @@ const OrderSupplierCreate = ({ history }) => {
         <Typography.Title level={5}>
           Tổng giá:{' '}
           {selectedItems.reduce((acc, cur) => {
-            if (cur && cur.qty) return acc + cur.price * cur.qty
-            return acc
+            if (cur && cur.qty)
+              return (
+                <>
+                  <NumberFormat
+                    value={acc + cur.price * cur.qty}
+                    displayType={'text'}
+                    thousandSeparator={true}
+                  />
+                  <sup>đ</sup>
+                </>
+              )
+            return (
+              <>
+                <NumberFormat
+                  value={acc}
+                  displayType={'text'}
+                  thousandSeparator={true}
+                />
+                <sup>đ</sup>
+              </>
+            )
           }, 0)}
         </Typography.Title>
         <Form.Item>
